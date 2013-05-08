@@ -453,7 +453,7 @@ float4 main( VS_OUTPUT In ) : SV_Target
 	{
 		float4 nmap = texture_normalMap.Sample( sampler_normalMap, newCoords.xy * float2( 1, -1 ) );
 		float height = nmap.a * plxScale + plxBias;
-		newCoords += (height - newCoords.p) * nmap.z * eye;
+		newCoords += (height - newCoords.z) * nmap.z * eye;
 	}
 #endif
 
@@ -477,7 +477,7 @@ float4 main( VS_OUTPUT In ) : SV_Target
 	fragColor.a = 1.0f;
 		
 	fragColor.rgb = albedo.rgb * texture_ambientMap.Sample( sampler_ambientMap, normal ).rgb;
-	
+
 #ifdef _F04_EnvMapping
 	float3 refl = texture_envMap.Sample( sampler_envMap, reflect( In.pos.xyz - viewerPos, normalize( normal ) ) ).rgb;
 	fragColor.rgb = refl * 1.5;

@@ -27,7 +27,7 @@ context TRANSLUCENT
 [[VS_SHADOWMAP]]
 // =================================================================================================
 
-#include "shaders/d3d11/utilityLib/vertParticle.glsl"
+#include "shaders/d3d11/utilityLib/vertParticle.hlsl"
 
 uniform float4x4 viewProjMat;
 uniform float4 lightPos;

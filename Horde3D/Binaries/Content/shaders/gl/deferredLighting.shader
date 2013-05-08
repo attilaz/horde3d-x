@@ -88,7 +88,7 @@ void main( void )
 
 [[FS_AMBIENT]]
 
-#include "shaders/utilityLib/fragDeferredRead.glsl"
+#include "shaders/gl/utilityLib/fragDeferredRead.glsl"
 
 uniform samplerCube ambientMap;
 varying vec2 texCoords;
@@ -112,8 +112,8 @@ void main( void )
 
 [[FS_LIGHTING]]
 
-#include "shaders/utilityLib/fragLighting.glsl"
-#include "shaders/utilityLib/fragDeferredRead.glsl"
+#include "shaders/gl/utilityLib/fragLighting.glsl"
+#include "shaders/gl/utilityLib/fragDeferredRead.glsl"
 
 uniform mat4 viewMat;
 varying vec4 vpos;
