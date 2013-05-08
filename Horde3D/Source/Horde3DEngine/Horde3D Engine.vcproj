@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8.00"
+	Version="9.00"
 	Name="Horde3D Engine"
 	ProjectGUID="{1D558D7D-DA57-4908-BCFC-902054FE6B63}"
 	RootNamespace="Horde3D"
 	Keyword="Win32Proj"
+	TargetFrameworkVersion="131072"
 	>
 	<Platforms>
 		<Platform
@@ -68,6 +69,8 @@
 				IgnoreDefaultLibraryNames="libc.lib"
 				GenerateDebugInformation="true"
 				SubSystem="2"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary="$(TargetDir)$(RootNamespace)_vc8.lib"
 				TargetMachine="1"
 			/>
@@ -88,9 +91,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -151,6 +151,8 @@
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary="$(TargetDir)$(RootNamespace)_vc8.lib"
 				TargetMachine="1"
 			/>
@@ -173,11 +175,170 @@
 				Name="VCAppVerifierTool"
 			/>
 			<Tool
-				Name="VCWebDeploymentTool"
+				Name="VCPostBuildEventTool"
+				CommandLine="xcopy &quot;$(TargetPath)&quot; &quot;$(ProjectDir)../../Binaries/Win32&quot; /y&#x0D;&#x0A;xcopy &quot;$(TargetDir)$(RootNamespace)_vc8.lib&quot; &quot;$(ProjectDir)../../Bindings/C++&quot; /y&#x0D;&#x0A;"
+			/>
+		</Configuration>
+		<Configuration
+			Name="Debug_d3d11|Win32"
+			OutputDirectory="$(ProjectDir)../../Build/$(ProjectName)/$(ConfigurationName)"
+			IntermediateDirectory="$(ProjectDir)../../Build/$(ProjectName)/$(ConfigurationName)"
+			ConfigurationType="2"
+			CharacterSet="2"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="0"
+				AdditionalIncludeDirectories="&quot;$(ProjectDir)../Shared&quot;;&quot;$(ProjectDir)../../Dependencies/Include&quot;;&quot;$(ProjectDir)../../Extensions&quot;;&quot;$(ProjectDir)../../../Extensions&quot;"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;HORDE3D_EXPORTS;HORDE3D_D3D11"
+				MinimalRebuild="true"
+				BasicRuntimeChecks="3"
+				RuntimeLibrary="1"
+				UsePrecompiledHeader="0"
+				WarningLevel="3"
+				Detect64BitPortabilityProblems="true"
+				DebugInformationFormat="4"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalDependencies="d3d11.lib d3dcompiler.lib dxguid.lib d3dx11.lib"
+				OutputFile="$(OutDir)\$(RootNamespace).dll"
+				LinkIncremental="2"
+				AdditionalLibraryDirectories="&quot;$(ProjectDir)../../Dependencies/Libs_VC8&quot;;&quot;$(ProjectDir)../../Build&quot;"
+				IgnoreDefaultLibraryNames="libc.lib"
+				GenerateDebugInformation="true"
+				SubSystem="2"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
+				ImportLibrary="$(TargetDir)$(RootNamespace)_vc8.lib"
+				TargetMachine="1"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="xcopy &quot;$(TargetPath)&quot; &quot;$(ProjectDir)../../Binaries/Win32&quot; /y&#x0D;&#x0A;xcopy &quot;$(TargetDir)$(RootNamespace)_vc8.lib&quot; &quot;$(ProjectDir)../../Bindings/C++&quot; /y&#x0D;&#x0A;"
+				CommandLine="xcopy &quot;$(TargetPath)&quot; &quot;$(ProjectDir)../../Binaries/Win32_d3d11&quot; /y&#x0D;&#x0A;xcopy &quot;$(TargetDir)$(RootNamespace)_vc8.lib&quot; &quot;$(ProjectDir)../../Bindings/C++&quot; /y&#x0D;&#x0A;"
+			/>
+		</Configuration>
+		<Configuration
+			Name="Debug_gles2|Win32"
+			OutputDirectory="$(ProjectDir)../../Build/$(ProjectName)/$(ConfigurationName)"
+			IntermediateDirectory="$(ProjectDir)../../Build/$(ProjectName)/$(ConfigurationName)"
+			ConfigurationType="2"
+			CharacterSet="2"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="0"
+				AdditionalIncludeDirectories="&quot;$(ProjectDir)../Shared&quot;;&quot;$(ProjectDir)../../Dependencies/Include&quot;;&quot;$(ProjectDir)../../Extensions&quot;;&quot;$(ProjectDir)../../../Extensions&quot;;&quot;$(ProjectDir)../Win32-GLES2&quot;"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;HORDE3D_EXPORTS;HORDE3D_GLES2"
+				MinimalRebuild="true"
+				BasicRuntimeChecks="3"
+				RuntimeLibrary="1"
+				UsePrecompiledHeader="0"
+				WarningLevel="3"
+				Detect64BitPortabilityProblems="true"
+				DebugInformationFormat="4"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalDependencies="libEGL.lib libGLESv2.lib"
+				OutputFile="$(OutDir)\$(RootNamespace).dll"
+				LinkIncremental="2"
+				AdditionalLibraryDirectories="&quot;$(ProjectDir)../../Dependencies/Libs_VC8&quot;;&quot;$(ProjectDir)../../Build&quot;;&quot;$(ProjectDir)../Win32-GLES2/EGL&quot;;&quot;$(ProjectDir)../Win32-GLES2/GLES2&quot;"
+				IgnoreDefaultLibraryNames="libc.lib"
+				GenerateDebugInformation="true"
+				SubSystem="2"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
+				ImportLibrary="$(TargetDir)$(RootNamespace)_vc8.lib"
+				TargetMachine="1"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+				CommandLine="xcopy &quot;$(TargetPath)&quot; &quot;$(ProjectDir)../../Binaries/Win32_gles2&quot; /y&#x0D;&#x0A;xcopy &quot;$(TargetDir)$(RootNamespace)_vc8.lib&quot; &quot;$(ProjectDir)../../Bindings/C++&quot; /y&#x0D;&#x0A;"
 			/>
 		</Configuration>
 	</Configurations>
@@ -250,10 +411,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\egRendererBase.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\egResource.cpp"
 				>
 			</File>
@@ -292,11 +449,135 @@
 						Detect64BitPortabilityProblems="false"
 					/>
 				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug_d3d11|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						Detect64BitPortabilityProblems="false"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug_gles2|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						Detect64BitPortabilityProblems="false"
+					/>
+				</FileConfiguration>
 			</File>
-			<File
-				RelativePath=".\utOpenGL.cpp"
+			<Filter
+				Name="D3D11"
 				>
-			</File>
+				<File
+					RelativePath=".\D3D11\egRendererBaseD3D11.cpp"
+					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Debug_gles2|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+				</File>
+			</Filter>
+			<Filter
+				Name="GL"
+				>
+				<File
+					RelativePath=".\GL\egRendererBaseGL.cpp"
+					>
+					<FileConfiguration
+						Name="Debug_d3d11|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Debug_gles2|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+				</File>
+				<File
+					RelativePath=".\GL\utOpenGL.cpp"
+					>
+					<FileConfiguration
+						Name="Debug_d3d11|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Debug_gles2|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+				</File>
+			</Filter>
+			<Filter
+				Name="GLES2"
+				>
+				<File
+					RelativePath=".\GLES2\egRendererBaseGLES2.cpp"
+					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Debug_d3d11|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+				</File>
+				<File
+					RelativePath=".\GLES2\utOpenGLES2.cpp"
+					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Debug_d3d11|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -404,10 +685,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\utOpenGL.h"
-				>
-			</File>
-			<File
 				RelativePath="..\Shared\utPlatform.h"
 				>
 			</File>
@@ -419,6 +696,38 @@
 				RelativePath="..\Shared\utXML.h"
 				>
 			</File>
+			<Filter
+				Name="GL"
+				>
+				<File
+					RelativePath=".\GL\egRendererBaseGL.h"
+					>
+				</File>
+				<File
+					RelativePath=".\GL\utOpenGL.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="D3D11"
+				>
+				<File
+					RelativePath=".\D3D11\egRendererBaseD3D11.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="GLES2"
+				>
+				<File
+					RelativePath=".\GLES2\egRendererBaseGLES2.h"
+					>
+				</File>
+				<File
+					RelativePath=".\GLES2\utOpenGLES2.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Resource Files"

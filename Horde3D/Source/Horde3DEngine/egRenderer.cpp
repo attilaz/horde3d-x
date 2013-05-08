@@ -140,10 +140,11 @@ bool Renderer::init()
 	_defColShader_color = gRDI->getShaderConstLoc( _defColorShader.shaderObj, "color" );
 	
 	// Create shadow map render target
-	if( !createShadowRB( Modules::config().shadowMapSize, Modules::config().shadowMapSize ) )
+	if( gRDI->getCaps().texDepth && !createShadowRB( Modules::config().shadowMapSize, Modules::config().shadowMapSize ) )
 	{
-		Modules::log().writeError( "Failed to create shadow map" );
-		return false;
+		Modules::log().writeWarning( "Failed to create shadow map. disabling depth texture and shadowCompare caps" );
+		gRDI->getCaps().texDepth = false;
+		gRDI->getCaps().texShadowCompare = false;
 	}
 
 	// Create default shadow map
@@ -189,7 +190,8 @@ bool Renderer::init()
 	useScratchBuf( 4 * 1024*1024 );
 
 	// Reset states
-	finishRendering();
+	gRDI->resetStates();
+//	finishRendering();
 
 	// Start frame timer
 	Timer *timer = Modules::stats().getTimer( EngineStats::FrameTime );
@@ -838,8 +840,9 @@ void Renderer::updateShadowMap()
 	
 	uint32 prevRendBuf = gRDI->_curRendBuf;
 	int prevVPX = gRDI->_vpX, prevVPY = gRDI->_vpY, prevVPWidth = gRDI->_vpWidth, prevVPHeight = gRDI->_vpHeight;
-	RDIRenderBuffer &shadowRT = gRDI->_rendBufs.getRef( _shadowRB );
-	gRDI->setViewport( 0, 0, shadowRT.width, shadowRT.height );
+	int shadowRTwidth,shadowRTheight;
+	gRDI->getRenderBufferSize( _shadowRB, &shadowRTwidth, &shadowRTheight );
+	gRDI->setViewport( 0, 0, shadowRTwidth, shadowRTheight );
 	gRDI->setRenderBuffer( _shadowRB );
 	
 	gRDI->setColorWriteMask( false );
@@ -1265,7 +1268,7 @@ void Renderer::drawLightGeometry( const string &shaderContext, const string &the
 		}
 	
 		// Update shadow map
-		if( !noShadows && _curLight->_shadowMapCount > 0 )
+		if( !noShadows && _curLight->_shadowMapCount > 0 && _shadowRB > 0)
 		{
 			timer->endQuery();
 			GPUTimer *timerShadows = Modules::stats().getGPUTimer( EngineStats::ShadowsGPUTime );
@@ -2039,6 +2042,7 @@ void Renderer::finishRendering()
 	gRDI->setRenderBuffer( 0 );
 	setMaterial( 0x0, "" );
 	gRDI->resetStates();
+	gRDI->finishRendering();
 }
 
 }  // namespace

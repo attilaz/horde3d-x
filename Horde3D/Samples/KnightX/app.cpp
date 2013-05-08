@@ -27,7 +27,8 @@ static Application* app;
 extern "C" void sfwMain(unsigned int w, unsigned int h, void* device)
 {
 	app = new Application();
-	app->init(device);
+	if (!app->init(device))
+		exit(-1);
 	app->resize( w, h );
 }
 
@@ -100,8 +101,10 @@ bool Application::init( void* device )
 	// Load resources
 #ifdef HORDE3D_D3D11
 	sfwLoadResourcesFromDisk( _contentDir.c_str(), "d3d11" );
-#else
-	h3dutLoadResourcesFromDisk( _contentDir.c_str() );
+#elif HORDE3D_GL
+	sfwLoadResourcesFromDisk( _contentDir.c_str(), "gl" );
+#elif HORDE3D_GLES2
+	sfwLoadResourcesFromDisk( _contentDir.c_str(), "gles2" );
 #endif
 
 	// Add scene nodes

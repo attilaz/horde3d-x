@@ -98,7 +98,7 @@ using namespace Horde3DUtils;
 
 DLLEXP bool h3dutInitOpenGL( int hdc )
 {
-#ifdef PLATFORM_WIN
+#if defined(PLATFORM_WIN) && defined(HORDE3D_GL)
 	hDC = (HDC)(__int64)hdc;
 	
 	// Init OpenGL rendering context
@@ -157,7 +157,7 @@ DLLEXP bool h3dutInitOpenGL( int hdc )
 
 DLLEXP void h3dutReleaseOpenGL()
 {
-#ifdef PLATFORM_WIN
+#if defined(PLATFORM_WIN) && defined(HORDE3D_GL)
 	if( hDC == 0 || hRC == 0 ) return;
 
 	if( !wglMakeCurrent( 0x0, 0x0 ) ) 
@@ -175,7 +175,7 @@ DLLEXP void h3dutReleaseOpenGL()
 
 DLLEXP void h3dutSwapBuffers()
 {
-#ifdef PLATFORM_WIN
+#if defined(PLATFORM_WIN) && defined(HORDE3D_GL)
 	if( hDC == 0 || hRC == 0 ) return;
 
 	SwapBuffers( hDC );

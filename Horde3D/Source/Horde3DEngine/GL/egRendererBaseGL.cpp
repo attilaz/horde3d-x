@@ -10,7 +10,7 @@
 //
 // *************************************************************************************************
 
-#include "egRendererBase.h"
+#include "../egRendererBase.h"
 #include "../egModules.h"
 #include "../egCom.h"
 #include "utOpenGL.h"
@@ -206,11 +206,6 @@ bool RenderDevice::init()
 		Modules::log().writeError( "Extension EXT_texture_filter_anisotropic not supported" );
 		failed = true;
 	}
-	if( !glExt::EXT_texture_compression_s3tc )
-	{
-		Modules::log().writeError( "Extension EXT_texture_compression_s3tc not supported" );
-		failed = true;
-	}
 	if( !glExt::EXT_texture_sRGB )
 	{
 		Modules::log().writeError( "Extension EXT_texture_sRGB not supported" );
@@ -227,9 +222,24 @@ bool RenderDevice::init()
 	}
 	
 	// Get capabilities
-	_caps.texFloat = glExt::ARB_texture_float ? 1 : 0;
-	_caps.texNPOT = glExt::ARB_texture_non_power_of_two ? 1 : 0;
-	_caps.rtMultisampling = glExt::EXT_framebuffer_multisample ? 1 : 0;
+	_caps.texS3TC = glExt::EXT_texture_compression_s3tc;	//DXT1-3, BC1,3,5 in d3d11
+	_caps.texPVRTCI = false;
+	_caps.texETC1 = false;
+
+	_caps.texFloat = glExt::ARB_texture_float;
+	_caps.texDepth = true;
+	_caps.texShadowCompare = true;
+
+	_caps.tex3D = true;
+	_caps.texNPOT = glExt::ARB_texture_non_power_of_two;
+
+	_caps.rtMultisampling = glExt::EXT_framebuffer_multisample;
+	GLint maxColorAttachments;
+	glGetIntegerv( GL_MAX_COLOR_ATTACHMENTS_EXT, &maxColorAttachments );
+	_caps.rtMaxColBufs = maxColorAttachments;
+
+	_caps.occQuery = true;
+	_caps.timerQuery = glExt::ARB_timer_query;
 
 	// Find supported depth format (some old ATI cards only support 16 bit depth for FBOs)
 	_depthFormat = GL_DEPTH_COMPONENT24;
@@ -1057,6 +1067,21 @@ void RenderDevice::setRenderBuffer( uint32 rbObj )
 	}
 }
 
+void RenderDevice::getRenderBufferSize( uint32 rbObj, int *width, int *height )
+{
+	if( rbObj == 0 )
+	{
+		if( width != 0x0 ) *width = _vpWidth;
+		if( height != 0x0 ) *height = _vpHeight;
+	}
+	else
+	{
+		RDIRenderBuffer &rb = _rendBufs.getRef( rbObj );
+		
+		if( width != 0x0 ) *width = rb.width;
+		if( height != 0x0 ) *height = rb.height;
+	}
+}
 
 bool RenderDevice::getRenderBufferData( uint32 rbObj, int bufIndex, int *width, int *height,
                                         int *compCount, void *dataBuffer, int bufferSize )
@@ -1236,7 +1261,7 @@ void RenderDevice::applySamplerState( RDITexture &tex )
 	
 	const uint32 magFilters[] = { GL_LINEAR, GL_LINEAR, GL_NEAREST };
 	const uint32 minFiltersMips[] = { GL_LINEAR_MIPMAP_NEAREST, GL_LINEAR_MIPMAP_LINEAR, GL_NEAREST_MIPMAP_NEAREST };
-	const uint32 maxAniso[] = { 1, 2, 4, 0, 8, 0, 0, 0, 16 };
+	const uint32 maxAniso[] = { 1, 2, 4, 8, 16, 1, 1, 1 };
 	const uint32 wrapModes[] = { GL_CLAMP_TO_EDGE, GL_REPEAT, GL_CLAMP_TO_BORDER };
 
 	if( tex.hasMips )

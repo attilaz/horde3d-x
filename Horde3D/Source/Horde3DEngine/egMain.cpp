@@ -84,7 +84,7 @@ DLLEXP bool h3dGetError()
 }
 
 
-DLLEXP bool h3dInit()
+DLLEXP bool h3dInit(void* device)
 {
 	if( initialized )
 	{	
@@ -94,7 +94,7 @@ DLLEXP bool h3dInit()
 	}
 	initialized = true;
 
-	return Modules::init();
+	return Modules::init(device);
 }
 
 

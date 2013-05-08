@@ -36,7 +36,7 @@ class ExtensionManager;
 class Modules
 {
 public:
-	static bool init();
+	static bool init( void *device );
 	static void release();
 
 	static void setError( const char *errorStr1 = 0x0, const char *errorStr2 = 0x0 );

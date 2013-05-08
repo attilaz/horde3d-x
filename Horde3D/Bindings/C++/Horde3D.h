@@ -720,12 +720,13 @@ DLL bool h3dGetError();
 		called several times on different rendering contexts in order to initialize them.
 	
 	Parameters:
-		none
+		device - on d3d11 backend this must be a pointer to an existing d3d11 device
+			   - on opengl backends this should be 0
 		
 	Returns:
 		true in case of success, otherwise false
 */
-DLL bool h3dInit();
+DLL bool h3dInit(void* device);
 
 /* Function: h3dRelease
 		Releases the engine.

@@ -51,7 +51,7 @@ Application::Application( const std::string &appPath )
 bool Application::init()
 {	
 	// Initialize engine
-	if( !h3dInit() )
+	if( !h3dInit( 0x0 ) )
 	{	
 		h3dutDumpMessages();
 		return false;

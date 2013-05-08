@@ -23,6 +23,22 @@ protected:
 };
 
 #elif HORDE3D_GLES2
+#include "EGL/EGL.h"
+class Device
+{
+public:
+	Device(HWND hWnd);
+	~Device();
+	void SwapBuffers();
+	void* GetNativeHandle() { return NULL; }
+protected:
+	EGLNativeWindowType     _eglNativeWindow;
+	EGLNativeDisplayType    _eglNativeDisplay;
+	EGLDisplay              _eglDisplay;
+	EGLConfig               _eglConfig;
+	EGLSurface              _eglSurface;
+	EGLContext              _eglContext;
+};
 #elif HORDE3D_D3D11
 #include "DXGI.h" 
 #include <d3d11.h>
@@ -231,6 +247,86 @@ void Device::SwapBuffers()
 {
     HDC hDC = GetDC(_hWnd);
 	::SwapBuffers(hDC); 
+}
+
+#elif HORDE3D_GLES2
+
+Device::Device(HWND hWnd)
+{
+	_eglNativeWindow = hWnd;
+	_eglNativeDisplay = GetDC(hWnd);
+
+	EGLDisplay eglDisplay;
+	if (EGL_NO_DISPLAY == (eglDisplay = eglGetDisplay(_eglNativeDisplay)))
+		return;
+
+	EGLint nMajor, nMinor;
+	if (EGL_FALSE == eglInitialize(eglDisplay, &nMajor, &nMinor) || 1 != nMajor)
+		return;
+
+	const EGLint aConfigAttribs[] =
+	{
+		EGL_LEVEL,				0,
+		EGL_SURFACE_TYPE,		EGL_WINDOW_BIT,
+		EGL_RENDERABLE_TYPE,	EGL_OPENGL_ES2_BIT,
+		EGL_NATIVE_RENDERABLE,	EGL_FALSE,
+		EGL_DEPTH_SIZE,			16,
+		EGL_NONE,
+	};
+	EGLint iConfigs;
+	EGLConfig eglConfig;
+	if (EGL_FALSE == eglChooseConfig(eglDisplay, aConfigAttribs, &eglConfig, 1, &iConfigs) || (iConfigs != 1))
+		return;
+
+	const EGLint contextAttribs[] = 
+	{
+		EGL_CONTEXT_CLIENT_VERSION, 2,
+		EGL_NONE
+	};
+
+	EGLContext eglContext;
+	eglContext = eglCreateContext(eglDisplay, eglConfig, EGL_NO_CONTEXT , contextAttribs);
+	if	(EGL_NO_CONTEXT == eglContext)
+		return;
+
+	EGLSurface eglSurface;
+	eglSurface = eglCreateWindowSurface(eglDisplay, eglConfig, _eglNativeWindow, NULL);
+	if (EGL_NO_SURFACE == eglSurface)
+		return;
+
+	if (EGL_FALSE == eglMakeCurrent(eglDisplay, eglSurface, eglSurface, eglContext))
+		return;
+
+	_eglDisplay = eglDisplay;
+	_eglConfig  = eglConfig;
+	_eglContext = eglContext;
+	_eglSurface = eglSurface;
+}
+
+Device::~Device()
+{
+	if (EGL_NO_SURFACE != _eglSurface)
+	{
+		eglDestroySurface(_eglDisplay, _eglSurface);
+	}
+	if (EGL_NO_CONTEXT != _eglContext)
+	{
+		eglDestroyContext(_eglDisplay, _eglContext);
+	}
+	eglMakeCurrent(_eglDisplay, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
+	eglTerminate(_eglDisplay);
+	if (_eglNativeDisplay)
+	{
+		ReleaseDC(_eglNativeWindow, _eglNativeDisplay);
+	}
+}
+
+void Device::SwapBuffers()
+{
+	if (EGL_NO_DISPLAY != _eglDisplay)
+	{
+		eglSwapBuffers(_eglDisplay, _eglSurface);
+	}
 }
 
 #elif HORDE3D_D3D11

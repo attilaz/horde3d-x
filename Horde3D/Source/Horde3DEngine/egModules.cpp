@@ -65,7 +65,7 @@ void Modules::installExtensions()
 }
 
 
-bool Modules::init()
+bool Modules::init( void *device )
 {
 	// Create modules (order is important because of dependencies)
 	if( _extensionManager == 0x0 ) _extensionManager = new ExtensionManager();
@@ -73,7 +73,7 @@ bool Modules::init()
 	if( _engineConfig == 0x0 ) _engineConfig = new EngineConfig();
 	if( _sceneManager == 0x0 ) _sceneManager = new SceneManager();
 	if( _resourceManager == 0x0 ) _resourceManager = new ResourceManager();
-	if( _renderDevice == 0x0 ) _renderDevice = new RenderDevice();
+	if( _renderDevice == 0x0 ) _renderDevice = new RenderDevice( device );
 	gRDI = _renderDevice;
 	if( _renderer == 0x0 ) _renderer = new Renderer();
 	if( _statManager == 0x0 ) _statManager = new StatManager();
