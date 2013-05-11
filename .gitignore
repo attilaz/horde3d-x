@@ -66,3 +66,20 @@
 /Horde3D/Build/glfw/*.idb
 
 /Horde3D/Build/glfw/*.pdb
+
+/Horde3D/Bindings/C++/*.lib
+
+/Horde3D/Build/*.lib
+
+/Horde3D/Samples/glfw/*.lib
+
+/Extensions/Terrain/Source/Extension Terrain.vcproj.Attila-HP.Attila.user
+
+/Horde3D/Samples/Chicago/Sample Chicago.vcproj.Attila-HP.Attila.user
+
+/Horde3D/Samples/Knight/Sample Knight.vcproj.Attila-HP.Attila.user
+/Horde3D/Samples/KnightX/win32/Sample KnightX.vcproj.Attila-HP.Attila.user
+/Horde3D/Samples/glfw/glfw.vcproj.Attila-HP.Attila.user
+/Horde3D/Source/ColladaConverter/Collada Converter.vcproj.Attila-HP.Attila.user
+/Horde3D/Source/Horde3DEngine/Horde3D Engine.vcproj.Attila-HP.Attila.user
+/Horde3D/Source/Horde3DUtils/Horde3D Utils.vcproj.Attila-HP.Attila.user
