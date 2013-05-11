@@ -1,0 +1,68 @@
+/Horde3D/Binaries/Win32_d3d11/Sample_KnightX.exe
+
+/Horde3D/Binaries/Win32_d3d11/Horde3D_Log.html
+
+/Horde3D/Binaries/Win32_d3d11/Horde3DUtils.dll
+
+/Horde3D/Binaries/Win32_d3d11/Horde3D.dll
+
+/Horde3D/Binaries/win32_gles2/Sample_KnightX.exe
+
+/Horde3D/Binaries/win32_gles2/Horde3D_Log.html
+
+/Horde3D/Binaries/win32_gles2/Horde3D.dll
+
+/Horde3D/Binaries/win32_gles2/Horde3DUtils.dll
+
+/Horde3D/Build/Collada Converter/Debug
+
+/Horde3D/Build/Extension Terrain/Debug
+
+/Horde3D/Build/Extension Terrain/Debug_d3d11
+
+/Horde3D/Build/Extension Terrain/Debug_gles2
+
+/Horde3D/Build/Horde3D Engine/Debug
+
+/Horde3D/Build/Horde3D Engine/Debug_d3d11
+
+/Horde3D/Build/Horde3D Engine/Debug_gles2
+
+/Horde3D/Build/Horde3D Utils/Debug
+
+/Horde3D/Build/Horde3D Utils/Debug_d3d11
+
+/Horde3D/Build/Horde3D Utils/Debug_gles2
+
+/Horde3D/Build/Sample Chicago/Debug
+
+/Horde3D/Build/Sample Knight/Debug
+
+/Horde3D/Build/Sample KnightX/Debug
+
+/Horde3D/Build/Sample KnightX/Debug_d3d11
+
+/Horde3D/Build/Sample KnightX/Debug_gles2
+
+/Horde3D/Build/glfw/Debug
+
+/Horde3D/Source/Horde3DUtils/Debug_d3d11
+
+/Horde3D/Source/Horde3DUtils/Debug_gles2
+
+/Extensions/Terrain/Source/Debug_d3d11
+
+/Extensions/Terrain/Source/Debug_gles2
+/Horde3D/*.ncb
+
+/Horde3D/*.suo
+
+/Horde3D/Binaries/Win32/*.exe
+
+/Horde3D/Binaries/Win32/*.dll
+
+/Horde3D/Binaries/Win32/*.html
+
+/Horde3D/Build/glfw/*.idb
+
+/Horde3D/Build/glfw/*.pdb

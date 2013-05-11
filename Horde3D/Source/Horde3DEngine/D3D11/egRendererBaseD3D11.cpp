@@ -11,7 +11,7 @@
 //
 // *************************************************************************************************
 
-#include "egRendererBase.h"
+#include "../egRendererBase.h"
 #include "../egRenderer.h"	//*todo: used for scratch - remove this when it is optimized
 #include "../egModules.h"
 #include "../egCom.h"
@@ -223,10 +223,22 @@ bool RenderDevice::init()
 	}
 	
 	// Get capabilities
+	_caps.texS3TC = true;	//DXT1-3, BC1,3,5 in d3d11
+	_caps.texPVRTCI = false;
+	_caps.texETC1 = false;
+
 	_caps.texFloat = _d3dDevice->GetFeatureLevel() >= D3D_FEATURE_LEVEL_10_0;
-	_caps.texNPOT = _d3dDevice->GetFeatureLevel() >= D3D_FEATURE_LEVEL_10_0;
-//*	TODO
-	_caps.rtMultisampling = 0; //glExt::EXT_framebuffer_multisample ? 1 : 0;//should check device formats
+	_caps.texDepth = _d3dDevice->GetFeatureLevel() >= D3D_FEATURE_LEVEL_10_0;
+	_caps.texShadowCompare = _d3dDevice->GetFeatureLevel() >= D3D_FEATURE_LEVEL_10_0;
+
+	_caps.tex3D = true; // always true but depends on format
+	_caps.texNPOT = _d3dDevice->GetFeatureLevel() >= D3D_FEATURE_LEVEL_9_3;
+
+	_caps.rtMultisampling = _d3dDevice->GetFeatureLevel() >= D3D_FEATURE_LEVEL_9_1;	//depends on format (B8G8R8A8_UNORM 9.1+, R8G8B8A8_UNORM 9.3+)
+	_caps.rtMaxColBufs = _d3dDevice->GetFeatureLevel() >= D3D_FEATURE_LEVEL_9_3 ? 4 : 1;
+
+	_caps.occQuery = _d3dDevice->GetFeatureLevel() >= D3D_FEATURE_LEVEL_9_2; 
+	_caps.timerQuery = false; // TODO
 
 	if ( _d3dDevice->GetFeatureLevel() <= D3D_FEATURE_LEVEL_9_3 )
 		_depthFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;	//no shadow sampling, cannot be used as texture
@@ -1276,6 +1288,21 @@ void RenderDevice::setRenderBuffer( uint32 rbObj )
 	}
 }
 
+void RenderDevice::getRenderBufferSize( uint32 rbObj, int *width, int *height )
+{
+	if( rbObj == 0 )
+	{
+		if( width != 0x0 ) *width = _vpWidth;
+		if( height != 0x0 ) *height = _vpHeight;
+	}
+	else
+	{
+		RDIRenderBuffer &rb = _rendBufs.getRef( rbObj );
+		
+		if( width != 0x0 ) *width = rb.width;
+		if( height != 0x0 ) *height = rb.height;
+	}
+}
 
 bool RenderDevice::getRenderBufferData( uint32 rbObj, int bufIndex, int *width, int *height,
                                         int *compCount, void *dataBuffer, int bufferSize )

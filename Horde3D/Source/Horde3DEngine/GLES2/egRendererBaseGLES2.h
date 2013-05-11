@@ -15,7 +15,6 @@
 
 #include "egPrerequisites.h"
 #include "utMath.h"
-#include "utOpenGL.h"
 #include <string>
 #include <vector>
 
@@ -50,86 +49,9 @@ private:
 	bool                    _activeQuery;
 };
 
-
-// =================================================================================================
-// Render Device Interface
-// =================================================================================================
-
-// ---------------------------------------------------------
-// General
-// ---------------------------------------------------------
-
-template< class T > class RDIObjects
-{
-public:
-
-	uint32 add( const T &obj )
-	{
-		if( !_freeList.empty() )
-		{
-			uint32 index = _freeList.back();
-			_freeList.pop_back();
-			_objects[index] = obj;
-			return index + 1;
-		}
-		else
-		{
-			_objects.push_back( obj );
-			return (uint32)_objects.size();
-		}
-	}
-
-	void remove( uint32 handle )
-	{
-		ASSERT( handle > 0 && handle <= _objects.size() );
-		
-		_objects[handle - 1] = T();  // Destruct and replace with default object
-		_freeList.push_back( handle - 1 );
-	}
-
-	T &getRef( uint32 handle )
-	{
-		ASSERT( handle > 0 && handle <= _objects.size() );
-		
-		return _objects[handle - 1];
-	}
-
-	T *get( uint32 idx )
-	{
-		if ( idx < _objects.size() )
-			return &_objects[idx];
-		
-		return NULL;
-	}
-
-	friend class RenderDevice;
-
-private:
-	std::vector< T >       _objects;
-	std::vector< uint32 >  _freeList;
-};
-
-
-struct DeviceCaps
-{
-	bool  texFloat;
-	bool  texNPOT;
-	bool  rtMultisampling;
-};
-
-
 // ---------------------------------------------------------
 // Vertex layout
 // ---------------------------------------------------------
-
-struct VertexLayoutAttrib
-{
-	std::string  semanticName;
-	uint32       vbSlot;
-	uint32       size;
-	uint32       offset;
-	uint32		 type; //0 - FLOAT, 1 - UNSIGNED_BYTE_NORMALIZED
-};
 
 struct RDIVertexLayout
 {
@@ -147,7 +69,6 @@ struct RDIBuffer
 	uint32  type;
 	uint32  glObj;
 	uint32  size;
-	void*   buffer;
 };
 
 struct RDIVertBufSlot
@@ -165,40 +86,6 @@ struct RDIVertBufSlot
 // ---------------------------------------------------------
 // Textures
 // ---------------------------------------------------------
-
-struct TextureTypes
-{
-	enum List
-	{
-		Tex2D = GL_TEXTURE_2D,
-		Tex3D = GL_TEXTURE_3D,
-		TexCube = GL_TEXTURE_CUBE_MAP
-	};
-};
-
-struct TextureFormats
-{
-	enum List
-	{
-		Unknown,
-		BGRA8,
-		DXT1,
-		DXT3,
-		DXT5,
-		RGBA16F,
-		RGBA32F,
-		DEPTH,
-
-        PVRTC2,
-        PVRTCA2,
-        PVRTC4,
-        PVRTCA4,
-		RGB5_A1,
-		RGB565,
-		RGBA4,
-		ETC1,
-	};
-};
 
 struct RDITexture
 {
@@ -227,16 +114,6 @@ struct RDITexSlot
 // ---------------------------------------------------------
 // Shaders
 // ---------------------------------------------------------
-
-enum RDIShaderConstType
-{
-	CONST_FLOAT,
-	CONST_FLOAT2,
-	CONST_FLOAT3,
-	CONST_FLOAT4,
-	CONST_FLOAT44,
-	CONST_FLOAT33
-};
 
 struct RDIInputLayout
 {
@@ -280,62 +157,6 @@ struct RDIRenderBuffer
 // Note: Render states use unions to provide a hash value. Writing to and reading from different members of a
 //       union is not guaranteed to work by the C++ standard but is common practice and supported by many compilers.
 
-enum RDISamplerState
-{
-	SS_FILTER_BILINEAR   = 0x0,
-	SS_FILTER_TRILINEAR  = 0x0001,
-	SS_FILTER_POINT      = 0x0002,
-	SS_ANISO1            = 0x0,
-	SS_ANISO2            = 0x0004,
-	SS_ANISO4            = 0x0008,
-	SS_ANISO8            = 0x0010,
-	SS_ANISO16           = 0x0020,
-	SS_ADDRU_CLAMP       = 0x0,
-	SS_ADDRU_WRAP        = 0x0040,
-	SS_ADDRU_CLAMPCOL    = 0x0080,
-	SS_ADDRV_CLAMP       = 0x0,
-	SS_ADDRV_WRAP        = 0x0100,
-	SS_ADDRV_CLAMPCOL    = 0x0200,
-	SS_ADDRW_CLAMP       = 0x0,
-	SS_ADDRW_WRAP        = 0x0400,
-	SS_ADDRW_CLAMPCOL    = 0x0800,
-	SS_ADDR_CLAMP        = SS_ADDRU_CLAMP | SS_ADDRV_CLAMP | SS_ADDRW_CLAMP,
-	SS_ADDR_WRAP         = SS_ADDRU_WRAP | SS_ADDRV_WRAP | SS_ADDRW_WRAP,
-	SS_ADDR_CLAMPCOL     = SS_ADDRU_CLAMPCOL | SS_ADDRV_CLAMPCOL | SS_ADDRW_CLAMPCOL,
-#ifdef PLATFORM_ES2
-	SS_COMP_LEQUAL		 = 0x0
-#else
-	SS_COMP_LEQUAL       = 0x1000
-#endif
-};
-
-const uint32 SS_FILTER_START = 0;
-const uint32 SS_FILTER_MASK = SS_FILTER_BILINEAR | SS_FILTER_TRILINEAR | SS_FILTER_POINT;
-const uint32 SS_ANISO_START = 2;
-const uint32 SS_ANISO_MASK = SS_ANISO1 | SS_ANISO2 | SS_ANISO4 | SS_ANISO8 | SS_ANISO16;
-const uint32 SS_ADDRU_START = 6;
-const uint32 SS_ADDRU_MASK = SS_ADDRU_CLAMP | SS_ADDRU_WRAP | SS_ADDRU_CLAMPCOL;
-const uint32 SS_ADDRV_START = 8;
-const uint32 SS_ADDRV_MASK = SS_ADDRV_CLAMP | SS_ADDRV_WRAP | SS_ADDRV_CLAMPCOL;
-const uint32 SS_ADDRW_START = 10;
-const uint32 SS_ADDRW_MASK = SS_ADDRW_CLAMP | SS_ADDRW_WRAP | SS_ADDRW_CLAMPCOL;
-const uint32 SS_ADDR_START = 6;
-const uint32 SS_ADDR_MASK = SS_ADDR_CLAMP | SS_ADDR_WRAP | SS_ADDR_CLAMPCOL;
-
-
-enum RDIFillMode
-{
-	RS_FILL_SOLID = 0,
-	RS_FILL_WIREFRAME = 1
-};
-
-enum RDICullMode
-{
-	RS_CULL_BACK = 0,
-	RS_CULL_FRONT,
-	RS_CULL_NONE,
-};
-
 struct RDIRasterState
 {
 	union
@@ -352,15 +173,6 @@ struct RDIRasterState
 	};
 };
 
-enum RDIBlendFunc
-{
-	BS_BLEND_ZERO = 0,
-	BS_BLEND_ONE,
-	BS_BLEND_SRC_ALPHA,
-	BS_BLEND_INV_SRC_ALPHA,
-	BS_BLEND_DEST_COLOR
-};
-
 struct RDIBlendState
 {
 	union
@@ -374,16 +186,6 @@ struct RDIBlendState
 			uint32  destBlendFunc : 4;
 		};
 	};
-};
-
-enum RDIDepthFunc
-{
-	DSS_DEPTHFUNC_LESS_EQUAL = 0,
-	DSS_DEPTHFUNC_LESS,
-	DSS_DEPTHFUNC_EQUAL,
-	DSS_DEPTHFUNC_GREATER,
-	DSS_DEPTHFUNC_GREATER_EQUAL,
-	DSS_DEPTHFUNC_ALWAYS
 };
 
 struct RDIDepthStencilState
@@ -404,41 +206,20 @@ struct RDIDepthStencilState
 // Draw calls and clears
 // ---------------------------------------------------------
 
-enum RDIClearFlags
-{
-	CLR_COLOR_RT0 = 0x00000001,
-	CLR_COLOR_RT1 = 0x00000002,
-	CLR_COLOR_RT2 = 0x00000004,
-	CLR_COLOR_RT3 = 0x00000008,
-	CLR_DEPTH = 0x00000010
-};
-
-enum RDIIndexFormat
-{
-	IDXFMT_16 = GL_UNSIGNED_SHORT,
-	IDXFMT_32 = GL_UNSIGNED_INT
-};
-
-enum RDIPrimType
-{
-	PRIM_TRILIST = GL_TRIANGLES,
-	PRIM_TRISTRIP = GL_TRIANGLE_STRIP,
-	PRIM_LINELIST = GL_LINES
-};
-
-// =================================================================================================
-
 
 class RenderDevice
 {
 public:
 
-	RenderDevice();
+	RenderDevice(void*);
 	~RenderDevice();
 	
 	void initStates();
 	bool init();
 	void handleContextLost();
+
+	void beginRendering();
+	void finishRendering();
 	
 // -----------------------------------------------------------------------------
 // Resources
@@ -448,8 +229,7 @@ public:
 	uint32 registerVertexLayout( uint32 numAttribs, VertexLayoutAttrib *attribs );
 	
 	// Buffers
-	void beginRendering();
-	uint32 createVertexBuffer( uint32 size, const void *data, bool sysmem = false);
+	uint32 createVertexBuffer( uint32 size, const void *data);
 	uint32 createIndexBuffer( uint32 size, const void *data );
 	void destroyBuffer( uint32 bufObj );
 	void updateBufferData( uint32 bufObj, uint32 offset, uint32 size, void *data );
@@ -484,6 +264,7 @@ public:
 	void destroyRenderBuffer( uint32 rbObj );
 	uint32 getRenderBufferTex( uint32 rbObj, uint32 bufIndex );
 	void setRenderBuffer( uint32 rbObj );
+	void getRenderBufferSize( uint32 rbObj, int *width, int *height );
 	bool getRenderBufferData( uint32 rbObj, int bufIndex, int *width, int *height,
 	                          int *compCount, void *dataBuffer, int bufferSize );
 
@@ -574,7 +355,7 @@ public:
 // Getters
 // -----------------------------------------------------------------------------
 
-	const DeviceCaps &getCaps() { return _caps; }
+	DeviceCaps &getCaps() { return _caps; }
 	const RDIBuffer &getBuffer( uint32 bufObj ) { return _buffers.getRef( bufObj ); }
 	const RDITexture &getTexture( uint32 texObj ) { return _textures.getRef( texObj ); }
 	const RDIRenderBuffer &getRenderBuffer( uint32 rbObj ) { return _rendBufs.getRef( rbObj ); }
@@ -643,4 +424,4 @@ protected:
 };
 
 }
-#endif // _egRendererBase_H_
+#endif // _egRendererBaseGLES2_H_
