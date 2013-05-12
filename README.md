@@ -24,3 +24,11 @@ The source code of the engine and tools is included in the SDK. It has the follo
 		
 These libraries are included directly as code in the SDK.
 
+## Branch Overview
+In this branch we are going to perform general optimizations benefical to all hardware.
+
+## Branch Goals
+- Tuning source code to generate smaller and faster code
+- Full CPU register usage by breaking dependency chains
+- Taking advantage of out of order code execution
+- Eliminating divisions and replacing them with multiplies
