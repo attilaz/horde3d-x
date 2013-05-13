@@ -200,14 +200,14 @@ void ModelNode::updateLocalMeshAABBs()
 			}
 
 			// Avoid zero box dimensions for planes
-			if( bBMax.x - bBMin.x == 0 ) bBMax.x += Math::Epsilon;
-			if( bBMax.y - bBMin.y == 0 ) bBMax.y += Math::Epsilon;
-			if( bBMax.z - bBMin.z == 0 ) bBMax.z += Math::Epsilon;
+			if( bBMax.x - bBMin.x == 0.0f ) bBMax.x += Math::Epsilon;
+			if( bBMax.y - bBMin.y == 0.0f ) bBMax.y += Math::Epsilon;
+			if( bBMax.z - bBMin.z == 0.0f ) bBMax.z += Math::Epsilon;
 		}
 		else
 		{
-			bBMin = Vec3f( 0, 0, 0 );
-			bBMax = Vec3f( 0, 0, 0 );
+			bBMin = Vec3f( 0.0f, 0.0f, 0.0f );
+			bBMax = Vec3f( 0.0f, 0.0f, 0.0f );
 		}
 	}
 }
@@ -219,9 +219,9 @@ void ModelNode::setGeometryRes( GeometryResource &geoRes )
 	_skinMatRows.resize( geoRes._joints.size() * 3 );
 	for( uint32 i = 0; i < _skinMatRows.size() / 3; ++i )
 	{
-		_skinMatRows[i * 3 + 0] = Vec4f( 1, 0, 0, 0 );
-		_skinMatRows[i * 3 + 1] = Vec4f( 0, 1, 0, 0 );
-		_skinMatRows[i * 3 + 2] = Vec4f( 0, 0, 1, 0 );
+		_skinMatRows[i * 3 + 0] = Vec4f( 1.0f, 0.0f, 0.0f, 0.0f );
+		_skinMatRows[i * 3 + 1] = Vec4f( 0.0f, 1.0f, 0.0f, 0.0f );
+		_skinMatRows[i * 3 + 2] = Vec4f( 0.0f, 0.0f, 1.0f, 0.0f );
 	}
 
 	// Copy morph targets
@@ -232,7 +232,7 @@ void ModelNode::setGeometryRes( GeometryResource &geoRes )
 		
 		morpher.name = geoRes._morphTargets[i].name;
 		morpher.index = i;
-		morpher.weight = 0;
+		morpher.weight = 0.0f;
 	}
 
 	if( !_morphers.empty() || _softwareSkinning )
@@ -500,7 +500,7 @@ void ModelNode::onFinishedUpdate()
 		// Calculate AABB of skeleton
 		for( uint32 i = 0, s = (uint32)_jointList.size(); i < s; ++i )
 		{
-			Vec3f pos = _jointList[i]->_relModelMat * Vec3f( 0, 0, 0 );
+			Vec3f pos = _jointList[i]->_relModelMat * Vec3f( 0.0f, 0.0f, 0.0f );
 
 			if( pos.x < bmin.x ) bmin.x = pos.x;
 			if( pos.y < bmin.y ) bmin.y = pos.y;
@@ -519,8 +519,8 @@ void ModelNode::onFinishedUpdate()
 			Vec3f dmax = bmax - _geometryRes->_skelAABB.max;
 			
 			// Clamp so that bounding boxes can only grow and not shrink
-			if( dmin.x > 0 ) dmin.x = 0; if( dmin.y > 0 ) dmin.y = 0; if( dmin.z > 0 ) dmin.z = 0;
-			if( dmax.x < 0 ) dmax.x = 0; if( dmax.y < 0 ) dmax.y = 0; if( dmax.z < 0 ) dmax.z = 0;
+			if( dmin.x > 0.0f ) dmin.x = 0.0f; if( dmin.y > 0.0f ) dmin.y = 0.0f; if( dmin.z > 0.0f ) dmin.z = 0.0f;
+			if( dmax.x < 0.0f ) dmax.x = 0.0f; if( dmax.y < 0.0f ) dmax.y = 0.0f; if( dmax.z < 0.0f ) dmax.z = 0.0f;
 			
 			_meshList[i]->_bBox = _meshList[i]->_localBBox;
 			_meshList[i]->_bBox.min += dmin;

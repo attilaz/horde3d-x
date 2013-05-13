@@ -244,8 +244,8 @@ void LightNode::calcScreenSpaceAABB( const Matrix4f &mat, float &x, float &y, fl
 	{
 		// Generate frustum for spot light
 		numPoints = 5;
-		float val = 1.0f * tanf( degToRad( _fov / 2 ) );
-		points[0] = _absTrans * Vec3f( 0, 0, 0 );
+		float val = tanf( degToRad( _fov * 0.5f ) );
+		points[0] = _absTrans * Vec3f( 0.0f, 0.0f, 0.0f );
 		points[1] = _absTrans * Vec3f( -val * _radius, -val * _radius, -_radius );
 		points[2] = _absTrans * Vec3f(  val * _radius, -val * _radius, -_radius );
 		points[3] = _absTrans * Vec3f(  val * _radius,  val * _radius, -_radius );
@@ -268,12 +268,13 @@ void LightNode::calcScreenSpaceAABB( const Matrix4f &mat, float &x, float &y, fl
 	// Project points to screen-space and find extents
 	for( uint32 i = 0; i < numPoints; ++i )
 	{
-		pts[i] = mat * Vec4f( points[i].x, points[i].y, points[i].z, 1 );
+		pts[i] = mat * Vec4f( points[i].x, points[i].y, points[i].z, 1.0f );
 		
-		if( pts[i].w != 0 )
+		if( pts[i].w != 0.0f )
 		{
-			pts[i].x = (pts[i].x / pts[i].w) * 0.5f + 0.5f;
-			pts[i].y = (pts[i].y / pts[i].w) * 0.5f + 0.5f;
+			const float invPtsW = 1.0f / pts[i].w;
+			pts[i].x = (pts[i].x * invPtsW) * 0.5f + 0.5f;
+			pts[i].y = (pts[i].y * invPtsW) * 0.5f + 0.5f;
 		}
 
 		if( pts[i].x < min_x ) min_x = pts[i].x;
@@ -283,22 +284,22 @@ void LightNode::calcScreenSpaceAABB( const Matrix4f &mat, float &x, float &y, fl
 	}
 	
 	// Clamp values
-	if( min_x < 0 ) min_x = 0; if( min_x > 1 ) min_x = 1;
-	if( max_x < 0 ) max_x = 0; if( max_x > 1 ) max_x = 1;
-	if( min_y < 0 ) min_y = 0; if( min_y > 1 ) min_y = 1;
-	if( max_y < 0 ) max_y = 0; if( max_y > 1 ) max_y = 1;
+	if( min_x < 0.0f ) min_x = 0.0f; if( min_x > 1.0f ) min_x = 1.0f;
+	if( max_x < 0.0f ) max_x = 0.0f; if( max_x > 1.0f ) max_x = 1.0f;
+	if( min_y < 0.0f ) min_y = 0.0f; if( min_y > 1.0f ) min_y = 1.0f;
+	if( max_y < 0.0f ) max_y = 0.0f; if( max_y > 1.0f ) max_y = 1.0f;
 	
 	x = min_x; y = min_y;
 	w = max_x - min_x; h = max_y - min_y;
 
 	// Check if viewer is inside bounding box
-	if( pts[0].w < 0 || pts[1].w < 0 || pts[2].w < 0 || pts[3].w < 0 || pts[4].w < 0 )
+	if( pts[0].w < 0.0f || pts[1].w < 0.0f || pts[2].w < 0.0f || pts[3].w < 0.0f || pts[4].w < 0.0f )
 	{
-		x = 0; y = 0; w = 1; h = 1;
+		x = 0.0f; y = 0.0f; w = 1.0f; h = 1.0f;
 	}
-	else if( numPoints == 8 && (pts[5].w < 0 || pts[6].w < 0 || pts[7].w < 0) )
+	else if( numPoints == 8 && (pts[5].w < 0.0f || pts[6].w < 0.0f || pts[7].w < 0.0f) )
 	{
-		x = 0; y = 0; w = 1; h = 1;
+		x = 0.0f; y = 0.0f; w = 1.0f; h = 1.0f;
 	}
 }
 
@@ -310,13 +311,13 @@ void LightNode::onPostUpdate()
 	
 	// Get position and spot direction
 	Matrix4f m = _absTrans;
-	m.c[3][0] = 0; m.c[3][1] = 0; m.c[3][2] = 0;
-	_spotDir = m * Vec3f( 0, 0, -1 );
+	m.c[3][0] = 0.0f; m.c[3][1] = 0.0f; m.c[3][2] = 0.0f;
+	_spotDir = m * Vec3f( 0.0f, 0.0f, -1.0f );
 	_spotDir.normalize();
 	_absPos = Vec3f( _absTrans.c[3][0], _absTrans.c[3][1], _absTrans.c[3][2] );
 
 	// Generate frustum
-	if( _fov < 180 )
+	if( _fov < 180.0f )
 		_frustum.buildViewFrustum( _absTrans, _fov, 1.0f, 0.1f, _radius );
 	else
 		_frustum.buildBoxFrustum( _absTrans, -_radius, _radius, -_radius, _radius, _radius, -_radius );

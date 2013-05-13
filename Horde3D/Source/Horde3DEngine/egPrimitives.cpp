@@ -23,7 +23,7 @@ namespace Horde3D {
 
 void Frustum::buildViewFrustum( const Matrix4f &transMat, float fov, float aspect, float nearPlane, float farPlane )
 {
-	float ymax = nearPlane * tanf( degToRad( fov / 2 ) );
+	float ymax = nearPlane * tanf( degToRad( fov * 0.5f ) );
 	float xmax = ymax * aspect;
 	
 	buildViewFrustum( transMat, -xmax, xmax, -ymax, ymax, nearPlane, farPlane );
@@ -34,10 +34,11 @@ void Frustum::buildViewFrustum( const Matrix4f &transMat, float left, float righ
 							    float bottom, float top, float nearPlane, float farPlane ) 
 {
 	// Use intercept theorem to get params for far plane
-	float left_f = left * farPlane / nearPlane;
-	float right_f = right * farPlane / nearPlane;
-	float bottom_f = bottom * farPlane / nearPlane;
-	float top_f = top * farPlane / nearPlane;
+	const float invNearPlane = 1.0f / nearPlane;
+	float left_f = left * farPlane * invNearPlane;
+	float right_f = right * farPlane * invNearPlane;
+	float bottom_f = bottom * farPlane * invNearPlane;
+	float top_f = top * farPlane * invNearPlane;
 
 	// Get points on near plane
 	_corners[0] = Vec3f( left, bottom, -nearPlane );
@@ -52,7 +53,7 @@ void Frustum::buildViewFrustum( const Matrix4f &transMat, float left, float righ
 	_corners[7] = Vec3f( left_f, top_f, -farPlane );
 
 	// Transform points to fit camera position and rotation
-	_origin = transMat * Vec3f( 0, 0, 0 );
+	_origin = transMat * Vec3f( 0.0f, 0.0f, 0.0f );
 	for( uint32 i = 0; i < 8; ++i )
 		_corners[i] = transMat * _corners[i];
 
@@ -87,26 +88,34 @@ void Frustum::buildViewFrustum( const Matrix4f &viewMat, const Matrix4f &projMat
 	_planes[5] = Plane( -(m.c[0][3] - m.c[0][2]), -(m.c[1][3] - m.c[1][2]),
 						-(m.c[2][3] - m.c[2][2]), -(m.c[3][3] - m.c[3][2]) );	// Far
 
-	_origin = viewMat.inverted() * Vec3f( 0, 0, 0 );
+	_origin = viewMat.inverted() * Vec3f( 0.0f, 0.0f, 0.0f );
 
 	// Calculate corners
 	Matrix4f mm = m.inverted();
-	Vec4f corner = mm * Vec4f( -1, -1,  -1, 1 );
-	_corners[0] = Vec3f( corner.x / corner.w, corner.y / corner.w, corner.z / corner.w );
-	corner = mm * Vec4f( 1, -1,  -1, 1 );
-	_corners[1] = Vec3f( corner.x / corner.w, corner.y / corner.w, corner.z / corner.w );
-	corner = mm * Vec4f( 1,  1,  -1, 1 );
-	_corners[2] = Vec3f( corner.x / corner.w, corner.y / corner.w, corner.z / corner.w );
-	corner = mm * Vec4f( -1,  1,  -1, 1 );
-	_corners[3] = Vec3f( corner.x / corner.w, corner.y / corner.w, corner.z / corner.w );
-	corner = mm * Vec4f( -1, -1, 1, 1 );
-	_corners[4] = Vec3f( corner.x / corner.w, corner.y / corner.w, corner.z / corner.w );
-	corner = mm * Vec4f( 1, -1, 1, 1 );
-	_corners[5] = Vec3f( corner.x / corner.w, corner.y / corner.w, corner.z / corner.w );
-	corner = mm * Vec4f( 1, 1, 1, 1 );
-	_corners[6] = Vec3f( corner.x / corner.w, corner.y / corner.w, corner.z / corner.w );
-	corner = mm * Vec4f( -1, 1, 1, 1 );
-	_corners[7] = Vec3f( corner.x / corner.w, corner.y / corner.w, corner.z / corner.w );
+	Vec4f corner = mm * Vec4f( -1.0f, -1.0f,  -1.0f, 1.0f );
+	float invCornerW = 1.0f / corner.w;
+	_corners[0] = Vec3f( corner.x * invCornerW, corner.y * invCornerW, corner.z * invCornerW );
+	corner = mm * Vec4f( 1.0f, -1.0f,  -1.0f, 1.0f );
+	invCornerW = 1.0f / corner.w;
+	_corners[1] = Vec3f( corner.x * invCornerW, corner.y * invCornerW, corner.z * invCornerW );
+	corner = mm * Vec4f( 1.0f,  1.0f,  -1.0f, 1.0f );
+	invCornerW = 1.0f / corner.w;
+	_corners[2] = Vec3f( corner.x * invCornerW, corner.y * invCornerW, corner.z * invCornerW );
+	corner = mm * Vec4f( -1.0f,  1.0f,  -1.0f, 1.0f );
+	invCornerW = 1.0f / corner.w;
+	_corners[3] = Vec3f( corner.x * invCornerW, corner.y * invCornerW, corner.z * invCornerW );
+	corner = mm * Vec4f( -1.0f, -1.0f, 1.0f, 1.0f );
+	invCornerW = 1.0f / corner.w;
+	_corners[4] = Vec3f( corner.x * invCornerW, corner.y * invCornerW, corner.z * invCornerW );
+	corner = mm * Vec4f( 1.0f, -1.0f, 1.0f, 1.0f );
+	invCornerW = 1.0f / corner.w;
+	_corners[5] = Vec3f( corner.x * invCornerW, corner.y * invCornerW, corner.z * invCornerW );
+	corner = mm * Vec4f( 1.0f, 1.0f, 1.0f, 1.0f );
+	invCornerW = 1.0f / corner.w;
+	_corners[6] = Vec3f( corner.x * invCornerW, corner.y * invCornerW, corner.z * invCornerW );
+	corner = mm * Vec4f( -1.0f, 1.0f, 1.0f, 1.0f );
+	invCornerW = 1.0f / corner.w;
+	_corners[7] = Vec3f( corner.x * invCornerW, corner.y * invCornerW, corner.z * invCornerW );
 }
 
 
@@ -126,7 +135,7 @@ void Frustum::buildBoxFrustum( const Matrix4f &transMat, float left, float right
 	_corners[7] = Vec3f( left, top, back );
 
 	// Transform points to fit camera position and rotation
-	_origin = transMat * Vec3f( 0, 0, 0 );
+	_origin = transMat * Vec3f( 0.0f, 0.0f, 0.0f );
 	for( uint32 i = 0; i < 8; ++i )
 		_corners[i] = transMat * _corners[i];
 
@@ -160,11 +169,11 @@ bool Frustum::cullBox( BoundingBox &b ) const
 		const Vec3f &n = _planes[i].normal;
 		
 		Vec3f positive = b.min;
-		if( n.x <= 0 ) positive.x = b.max.x;
-		if( n.y <= 0 ) positive.y = b.max.y;
-		if( n.z <= 0 ) positive.z = b.max.z;
+		if( n.x <= 0.0f ) positive.x = b.max.x;
+		if( n.y <= 0.0f ) positive.y = b.max.y;
+		if( n.z <= 0.0f ) positive.z = b.max.z;
 
-		if( _planes[i].distToPoint( positive ) > 0 ) return true;
+		if( _planes[i].distToPoint( positive ) > 0.0f ) return true;
 	}
 	
 	return false;
@@ -179,7 +188,7 @@ bool Frustum::cullFrustum( const Frustum &frust ) const
 		
 		for( uint32 j = 0; j < 8; ++j )
 		{
-			if( _planes[i].distToPoint( frust._corners[j] ) < 0 )
+			if( _planes[i].distToPoint( frust._corners[j] ) < 0.0f )
 			{
 				allOut = false;
 				break;

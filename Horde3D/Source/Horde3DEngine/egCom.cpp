@@ -96,22 +96,22 @@ bool EngineConfig::setOption( EngineOptions::List param, float value )
 		Modules::log().setMaxNumMessages( (uint32)ftoi_r( value ) );
 		return true;
 	case EngineOptions::TrilinearFiltering:
-		trilinearFiltering = (value != 0);
+		trilinearFiltering = (value != 0.0f);
 		return true;
 	case EngineOptions::MaxAnisotropy:
 		maxAnisotropy = ftoi_r( value );
 		return true;
 	case EngineOptions::TexCompression:
-		texCompression = (value != 0);
+		texCompression = (value != 0.0f);
 		return true;
 	case EngineOptions::SRGBLinearization:
-		sRGBLinearization = (value != 0);
+		sRGBLinearization = (value != 0.0f);
 		return true;
 	case EngineOptions::LoadTextures:
-		loadTextures = (value != 0);
+		loadTextures = (value != 0.0f);
 		return true;
 	case EngineOptions::FastAnimation:
-		fastAnimation = (value != 0);
+		fastAnimation = (value != 0.0f);
 		return true;
 	case EngineOptions::ShadowMapSize:
 		size = ftoi_r( value );
@@ -138,16 +138,16 @@ bool EngineConfig::setOption( EngineOptions::List param, float value )
 		sampleCount = ftoi_r( value );
 		return true;
 	case EngineOptions::WireframeMode:
-		wireframeMode = (value != 0);
+		wireframeMode = (value != 0.0f);
 		return true;
 	case EngineOptions::DebugViewMode:
-		debugViewMode = (value != 0);
+		debugViewMode = (value != 0.0f);
 		return true;
 	case EngineOptions::DumpFailedShaders:
-		dumpFailedShaders = (value != 0);
+		dumpFailedShaders = (value != 0.0f);
 		return true;
 	case EngineOptions::GatherTimeStats:
-		gatherTimeStats = (value != 0);
+		gatherTimeStats = (value != 0.0f);
 		return true;
 	default:
 		Modules::setError( "Invalid param for h3dSetOption" );
@@ -169,7 +169,7 @@ EngineLog::EngineLog()
 
 void EngineLog::pushMessage( int level, const char *msg, va_list args )
 {
-	float time = _timer.getElapsedTimeMS() / 1000.0f;
+	float time = _timer.getElapsedTimeMS() * 0.001f;
 
 #if defined( PLATFORM_WIN )
 #pragma warning( push )
@@ -304,7 +304,7 @@ float StatManager::getStat( int param, bool reset )
 		return value;
 	case EngineStats::FrameTime:
 		value = _frameTime;
-		if( reset ) _frameTime = 0;
+		if( reset ) _frameTime = 0.0f;
 		return value;
 	case EngineStats::AnimationTime:
 		value = _animTimer.getElapsedTimeMS();
@@ -335,9 +335,9 @@ float StatManager::getStat( int param, bool reset )
 		if( reset ) _shadowsGPUTimer->reset();
 		return value;
 	case EngineStats::TextureVMem:
-		return (gRDI->getTextureMem() / 1024) / 1024.0f;
+		return (gRDI->getTextureMem() * (1.0f / (1024.0f * 1024.0f)));
 	case EngineStats::GeometryVMem:
-		return (gRDI->getBufferMem() / 1024) / 1024.0f;
+		return (gRDI->getBufferMem() * (1.0f / (1024.0f * 1024.0f)));
 	default:
 		Modules::setError( "Invalid param for h3dGetStat" );
 		return Math::NaN;

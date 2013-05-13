@@ -32,7 +32,7 @@ class Timer
 {
 public:
 
-	Timer() : _elapsedTime( 0 ), _enabled( false )
+	Timer() : _elapsedTime( 0.0 ), _enabled( false )
 	{
 	#if defined( PLATFORM_WIN ) 
 		// Find first available CPU
@@ -67,7 +67,7 @@ public:
 
 	void reset()
 	{
-		_elapsedTime = 0;
+		_elapsedTime = 0.0;
 		if( _enabled ) _startTime = getTime();
 	}
 	
@@ -102,7 +102,7 @@ protected:
 	#else
 		timeval tv;
 		gettimeofday( &tv, 0x0 );
-		return (double)tv.tv_sec * 1000.0 + (double)tv.tv_usec / 1000.0;
+		return (double)tv.tv_sec * 1000.0 + (double)tv.tv_usec * 0.001;
 	#endif
 	}
 

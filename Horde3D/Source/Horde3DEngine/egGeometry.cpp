@@ -96,8 +96,8 @@ void GeometryResource::initDefault()
 	_tanVBuf = defVertBuffer;
 	_staticVBuf = defVertBuffer;
 	_minMorphIndex = 0; _maxMorphIndex = 0;
-	_skelAABB.min = Vec3f( 0, 0, 0 );
-	_skelAABB.max = Vec3f( 0, 0, 0 );
+	_skelAABB.min = Vec3f( 0.0f, 0.0f, 0.0f );
+	_skelAABB.max = Vec3f( 0.0f, 0.0f, 0.0f );
 }
 
 
@@ -225,27 +225,27 @@ bool GeometryResource::load( const char *data, int size )
 			if( streamElemSize != 6 ) return raiseError( "Invalid normal base stream" );
 			for( uint32 j = 0; j < streamSize; ++j )
 			{
-				memcpy( &sh, pData, sizeof( short ) ); pData += sizeof( short ); _vertTanData[j].normal.x = sh / 32767.0f;
-				memcpy( &sh, pData, sizeof( short ) ); pData += sizeof( short ); _vertTanData[j].normal.y = sh / 32767.0f;
-				memcpy( &sh, pData, sizeof( short ) ); pData += sizeof( short ); _vertTanData[j].normal.z = sh / 32767.0f;
+				memcpy( &sh, pData, sizeof( short ) ); pData += sizeof( short ); _vertTanData[j].normal.x = sh * (1.0f / 32767.0f);
+				memcpy( &sh, pData, sizeof( short ) ); pData += sizeof( short ); _vertTanData[j].normal.y = sh * (1.0f / 32767.0f);
+				memcpy( &sh, pData, sizeof( short ) ); pData += sizeof( short ); _vertTanData[j].normal.z = sh * (1.0f / 32767.0f);
 			}
 			break;
 		case 2:		// Tangent
 			if( streamElemSize != 6 ) return raiseError( "Invalid tangent base stream" );
 			for( uint32 j = 0; j < streamSize; ++j )
 			{
-				memcpy( &sh, pData, sizeof( short ) ); pData += sizeof( short ); _vertTanData[j].tangent.x = sh / 32767.0f;
-				memcpy( &sh, pData, sizeof( short ) ); pData += sizeof( short ); _vertTanData[j].tangent.y = sh / 32767.0f;
-				memcpy( &sh, pData, sizeof( short ) ); pData += sizeof( short ); _vertTanData[j].tangent.z = sh / 32767.0f;
+				memcpy( &sh, pData, sizeof( short ) ); pData += sizeof( short ); _vertTanData[j].tangent.x = sh * (1.0f / 32767.0f);
+				memcpy( &sh, pData, sizeof( short ) ); pData += sizeof( short ); _vertTanData[j].tangent.y = sh * (1.0f / 32767.0f);
+				memcpy( &sh, pData, sizeof( short ) ); pData += sizeof( short ); _vertTanData[j].tangent.z = sh * (1.0f / 32767.0f);
 			}
 			break;
 		case 3:		// Bitangent
 			if( streamElemSize != 6 ) return raiseError( "Invalid bitangent base stream" );
 			for( uint32 j = 0; j < streamSize; ++j )
 			{
-				memcpy( &sh, pData, sizeof( short ) ); pData += sizeof( short ); bitangents[j].x = sh / 32767.0f;
-				memcpy( &sh, pData, sizeof( short ) ); pData += sizeof( short ); bitangents[j].y = sh / 32767.0f;
-				memcpy( &sh, pData, sizeof( short ) ); pData += sizeof( short ); bitangents[j].z = sh / 32767.0f;
+				memcpy( &sh, pData, sizeof( short ) ); pData += sizeof( short ); bitangents[j].x = sh * (1.0f / 32767.0f);
+				memcpy( &sh, pData, sizeof( short ) ); pData += sizeof( short ); bitangents[j].y = sh * (1.0f / 32767.0f);
+				memcpy( &sh, pData, sizeof( short ) ); pData += sizeof( short ); bitangents[j].z = sh * (1.0f / 32767.0f);
 			}
 			break;
 		case 4:		// Joint indices
@@ -262,10 +262,10 @@ bool GeometryResource::load( const char *data, int size )
 			if( streamElemSize != 4 ) return raiseError( "Invalid weight stream" );
 			for( uint32 j = 0; j < streamSize; ++j )
 			{
-				memcpy( &uc, pData, sizeof( char ) ); pData += sizeof( char ); _vertStaticData[j].weightVec[0] = uc / 255.0f;
-				memcpy( &uc, pData, sizeof( char ) ); pData += sizeof( char ); _vertStaticData[j].weightVec[1] = uc / 255.0f;
-				memcpy( &uc, pData, sizeof( char ) ); pData += sizeof( char ); _vertStaticData[j].weightVec[2] = uc / 255.0f;
-				memcpy( &uc, pData, sizeof( char ) ); pData += sizeof( char ); _vertStaticData[j].weightVec[3] = uc / 255.0f;
+				memcpy( &uc, pData, sizeof( char ) ); pData += sizeof( char ); _vertStaticData[j].weightVec[0] = uc * (1.0f / 255.0f);
+				memcpy( &uc, pData, sizeof( char ) ); pData += sizeof( char ); _vertStaticData[j].weightVec[1] = uc * (1.0f / 255.0f);
+				memcpy( &uc, pData, sizeof( char ) ); pData += sizeof( char ); _vertStaticData[j].weightVec[2] = uc * (1.0f / 255.0f);
+				memcpy( &uc, pData, sizeof( char ) ); pData += sizeof( char ); _vertStaticData[j].weightVec[3] = uc * (1.0f / 255.0f);
 			}
 			break;
 		case 6:		// Texture Coord Set 1
@@ -294,7 +294,7 @@ bool GeometryResource::load( const char *data, int size )
 	// Prepare bitangent data (TODO: Should be done in ColladaConv)
 	for( uint32 i = 0; i < _vertCount; ++i )
 	{
-		_vertTanData[i].handedness = _vertTanData[i].normal.cross( _vertTanData[i].tangent ).dot( bitangents[i] ) < 0 ? -1.0f : 1.0f;
+		_vertTanData[i].handedness = _vertTanData[i].normal.cross( _vertTanData[i].tangent ).dot( bitangents[i] ) < 0.0f ? -1.0f : 1.0f;
 	}
 	delete[] bitangents;
 		
@@ -415,7 +415,7 @@ bool GeometryResource::load( const char *data, int size )
 	// Find AABB of skeleton in bind pose
 	for( uint32 i = 0; i < (uint32)_joints.size(); ++i )
 	{
-		Vec3f pos = _joints[i].invBindMat.inverted() * Vec3f( 0, 0, 0 );
+		Vec3f pos = _joints[i].invBindMat.inverted() * Vec3f( 0.0f, 0.0f, 0.0f );
 		if( pos.x < _skelAABB.min.x ) _skelAABB.min.x = pos.x;
 		if( pos.y < _skelAABB.min.y ) _skelAABB.min.y = pos.y;
 		if( pos.z < _skelAABB.min.z ) _skelAABB.min.z = pos.z;

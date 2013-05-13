@@ -123,14 +123,14 @@ bool GPUTimer::updateResults()
 		timeAccum += timeEnd - timeStart;
 	}
 	
-	_time = (float)((double)timeAccum / 1000000.0);
+	_time = (float)timeAccum * 0.000001f;
 	return true;
 }
 
 
 void GPUTimer::reset()
 {
-	_time = glExt::ARB_timer_query ? 0.f : -1.f;
+	_time = glExt::ARB_timer_query ? 0.0f : -1.0f;
 }
 
 

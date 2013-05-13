@@ -36,7 +36,7 @@ ParticleChannel::ParticleChannel()
 
 void ParticleChannel::reset()
 {
-	startMin = 0; startMax = 0; endRate = 0;
+	startMin = 0.0f; startMax = 0.0f; endRate = 0.0f;
 }
 
 
@@ -75,7 +75,7 @@ ParticleEffectResource::~ParticleEffectResource()
 
 void ParticleEffectResource::initDefault()
 {
-	_lifeMin = 0; _lifeMax = 0;
+	_lifeMin = 0.0f; _lifeMax = 0.0f;
 	_moveVel.reset();
 	_rotVel.reset();
 	_drag.reset();
@@ -308,7 +308,7 @@ EmitterNode::EmitterNode( const EmitterNodeTpl &emitterTpl ) :
 	_spreadAngle = emitterTpl.spreadAngle;
 	_force = Vec3f( emitterTpl.fx, emitterTpl.fy, emitterTpl.fz );
 
-	_emissionAccum = 0;
+	_emissionAccum = 0.0f;
 	_prevAbsTrans = _absTrans;
 
 	_particles = 0x0;
@@ -410,7 +410,7 @@ void EmitterNode::setMaxParticleCount( uint32 maxParticleCount )
 	_parColors = new float[_particleCount * 4];
 	for( uint32 i = 0; i < _particleCount; ++i )
 	{
-		_particles[i].life = 0;
+		_particles[i].life = 0.0f;
 		_particles[i].respawnCounter = 0;
 		
 		_parPositions[i*3+0] = 0.0f;
@@ -542,7 +542,7 @@ void EmitterNode::update( float timeDelta )
 	Vec3f bBMin( Math::MaxFloat, Math::MaxFloat, Math::MaxFloat );
 	Vec3f bBMax( -Math::MaxFloat, -Math::MaxFloat, -Math::MaxFloat );
 	
-	if( _delay <= 0 )
+	if( _delay <= 0.0f )
 		_emissionAccum += _emissionRate * timeDelta;
 	else
 		_delay -= timeDelta;
@@ -550,11 +550,11 @@ void EmitterNode::update( float timeDelta )
 	Vec3f motionVec = _absTrans.getTrans() - _prevAbsTrans.getTrans();
 
 	// Check how many particles will be spawned
-	float spawnCount = 0;
+	float spawnCount = 0.0f;
 	for( uint32 i = 0; i < _particleCount; ++i )
 	{
 		ParticleData &p = _particles[i];
-		if( p.life <= 0 && ((int)p.respawnCounter < _respawnCount || _respawnCount < 0) )
+		if( p.life <= 0.0f && ((int)p.respawnCounter < _respawnCount || _respawnCount < 0.0f) )
 		{
 			spawnCount += 1.0f;
 			if( spawnCount >= _emissionAccum ) break;
@@ -562,7 +562,7 @@ void EmitterNode::update( float timeDelta )
 	}
 
 	// Particles are distributed along emitter's motion vector to avoid blobs when fps is low
-	float curStep = 0, stepWidth = 0.5f;
+	float curStep = 0.0f, stepWidth = 0.5f;
 	if( spawnCount > 2.0f ) stepWidth = motionVec.length() / spawnCount;
 	
 	for( uint32 i = 0; i < _particleCount; ++i )
@@ -570,18 +570,18 @@ void EmitterNode::update( float timeDelta )
 		ParticleData &p = _particles[i];
 		
 		// Create particle
-		if( p.life <= 0 && ((int)p.respawnCounter < _respawnCount || _respawnCount < 0) )
+		if( p.life <= 0.0f && ((int)p.respawnCounter < _respawnCount || _respawnCount < 0) )
 		{
 			if( _emissionAccum >= 1.0f )
 			{
 				// Respawn
 				p.maxLife = randomF( _effectRes->_lifeMin, _effectRes->_lifeMax );
 				p.life = p.maxLife;
-				float angle = degToRad( _spreadAngle / 2 );
+				float angle = degToRad( _spreadAngle * 0.5f );
 				Matrix4f m = _absTrans;
-				m.c[3][0] = 0; m.c[3][1] = 0; m.c[3][2] = 0;
+				m.c[3][0] = 0.0f; m.c[3][1] = 0.0f; m.c[3][2] = 0.0f;
 				m.rotate( randomF( -angle, angle ), randomF( -angle, angle ), randomF( -angle, angle ) );
-				p.dir = (m * Vec3f( 0, 0, -1 )).normalized();
+				p.dir = (m * Vec3f( 0.0f, 0.0f, -1.0f )).normalized();
 				p.dragVec = motionVec / timeDelta;
 				++p.respawnCounter;
 
@@ -600,22 +600,22 @@ void EmitterNode::update( float timeDelta )
 				_parPositions[i * 3 + 1] = _absTrans.c[3][1] - motionVec.y * curStep;
 				_parPositions[i * 3 + 2] = _absTrans.c[3][2] - motionVec.z * curStep;
 				_parSizesANDRotations[i * 2 + 0] = p.size0;
-				_parSizesANDRotations[i * 2 + 1] = randomF( 0, 360 );
+				_parSizesANDRotations[i * 2 + 1] = randomF( 0.0f, 360.0f );
 				_parColors[i * 4 + 0] = p.r0;
 				_parColors[i * 4 + 1] = p.g0;
 				_parColors[i * 4 + 2] = p.b0;
 				_parColors[i * 4 + 3] = p.a0;
 
 				// Update emitter
-				_emissionAccum -= 1.f;
-				if( _emissionAccum < 0 ) _emissionAccum = 0.f;
+				_emissionAccum -= 1.0f;
+				if( _emissionAccum < 0.0f ) _emissionAccum = 0.0f;
 
 				curStep += stepWidth;
 			}
 		}
 		
 		// Update particle
-		if( p.life > 0 )
+		if( p.life > 0.0f )
 		{
 			// Interpolate data
 			float fac = 1.0f - (p.life / p.maxLife);
@@ -640,7 +640,7 @@ void EmitterNode::update( float timeDelta )
 			p.life -= timeDelta;
 			
 			// Check if particle is dying
-			if( p.life <= 0 )
+			if( p.life <= 0.0f )
 			{
 				_parSizesANDRotations[i * 2 + 0] = 0.0f;
 			}
@@ -657,9 +657,9 @@ void EmitterNode::update( float timeDelta )
 	}
 
 	// Avoid zero box dimensions for planes
-	if( bBMax.x - bBMin.x == 0 ) bBMax.x += Math::Epsilon;
-	if( bBMax.y - bBMin.y == 0 ) bBMax.y += Math::Epsilon;
-	if( bBMax.z - bBMin.z == 0 ) bBMax.z += Math::Epsilon;
+	if( bBMax.x - bBMin.x == 0.0f ) bBMax.x += Math::Epsilon;
+	if( bBMax.y - bBMin.y == 0.0f ) bBMax.y += Math::Epsilon;
+	if( bBMax.z - bBMin.z == 0.0f ) bBMax.z += Math::Epsilon;
 	
 	_bBox.min = bBMin;
 	_bBox.max = bBMax;
@@ -676,7 +676,7 @@ bool EmitterNode::hasFinished()
 
 	for( uint32 i = 0; i < _particleCount; ++i )
 	{	
-		if( _particles[i].life > 0 || (int)_particles[i].respawnCounter < _respawnCount )
+		if( _particles[i].life > 0.0f || (int)_particles[i].respawnCounter < _respawnCount )
 		{
 			return false;
 		}

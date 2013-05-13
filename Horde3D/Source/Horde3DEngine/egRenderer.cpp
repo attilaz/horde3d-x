@@ -147,7 +147,7 @@ bool Renderer::init()
 	}
 
 	// Create default shadow map
-	float shadowTex[16] = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
+	float shadowTex[16] = { 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f };
 	_defShadowMap = gRDI->createTexture( TextureTypes::Tex2D, 4, 4, 1, TextureFormats::DEPTH, false, false, false, false );
 	gRDI->uploadTextureData( _defShadowMap, 0, 0, shadowTex );
 
@@ -233,8 +233,8 @@ void Renderer::createPrimitives()
 {
 	// Unit cube
 	float cubeVerts[8 * 3] = {  // x, y, z
-		0.f, 0.f, 1.f,   1.f, 0.f, 1.f,   1.f, 1.f, 1.f,   0.f, 1.f, 1.f,
-		0.f, 0.f, 0.f,   1.f, 0.f, 0.f,   1.f, 1.f, 0.f,   0.f, 1.f, 0.f
+		0.0f, 0.0f, 1.0f,   1.0f, 0.0f, 1.0f,   1.0f, 1.0f, 1.0f,   0.0f, 1.0f, 1.0f,
+		0.0f, 0.0f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f, 0.0f
 	};
 	uint16 cubeInds[36] = {
 		0, 1, 2, 2, 3, 0,   1, 5, 6, 6, 2, 1,   5, 4, 7, 7, 6, 5,
@@ -245,9 +245,9 @@ void Renderer::createPrimitives()
 
 	// Unit (geodesic) sphere (created by recursively subdividing a base octahedron)
 	Vec3f spVerts[126] = {  // x, y, z
-		Vec3f( 0.f, 1.f, 0.f ),   Vec3f( 0.f, -1.f, 0.f ),
-		Vec3f( -0.707f, 0.f, 0.707f ),   Vec3f( 0.707f, 0.f, 0.707f ),
-		Vec3f( 0.707f, 0.f, -0.707f ),   Vec3f( -0.707f, 0.f, -0.707f )
+		Vec3f( 0.0f, 1.0f, 0.0f ),   Vec3f( 0.0f, -1.0f, 0.0f ),
+		Vec3f( -0.707f, 0.0f, 0.707f ),   Vec3f( 0.707f, 0.0f, 0.707f ),
+		Vec3f( 0.707f, 0.0f, -0.707f ),   Vec3f( -0.707f, 0.0f, -0.707f )
 	};
 	uint16 spInds[128 * 3] = {  // Number of faces: (4 ^ iterations) * 8
 		2, 3, 0,   3, 4, 0,   4, 5, 0,   5, 2, 0,   2, 1, 3,   3, 1, 4,   4, 1, 5,   5, 1, 2
@@ -272,11 +272,11 @@ void Renderer::createPrimitives()
 	
 	// Unit cone
 	float coneVerts[13 * 3] = {  // x, y, z
-		0.f, 0.f, 0.f,
-		0.f, 1.f, -1.f,   -0.5f, 0.866f, -1.f,   -0.866f, 0.5f, -1.f,
-		-1.f, 0.f, -1.f,   -0.866f, -0.5f, -1.f,   -0.5f, -0.866f, -1.f,
-		0.f, -1.f, -1.f,   0.5f, -0.866f, -1.f,   0.866f, -0.5f, -1.f,
-		1.f, 0.f, -1.f,   0.866f, 0.5f, -1.f,   0.5f, 0.866f, -1.f,
+		0.0f, 0.0f, 0.0f,
+		0.0f, 1.0f, -1.0f,   -0.5f, 0.866f, -1.0f,   -0.866f, 0.5f, -1.0f,
+		-1.0f, 0.0f, -1.0f,   -0.866f, -0.5f, -1.0f,   -0.5f, -0.866f, -1.0f,
+		0.0f, -1.0f, -1.0f,   0.5f, -0.866f, -1.0f,   0.866f, -0.5f, -1.0f,
+		1.0f, 0.0f, -1.0f,   0.866f, 0.5f, -1.0f,   0.5f, 0.866f, -1.0f,
 	};
 	uint16 coneInds[22 * 3] = {
 		0, 1, 2,   0, 2, 3,   0, 3, 4,   0, 4, 5,   0, 5, 6,   0, 6, 7,
@@ -289,7 +289,7 @@ void Renderer::createPrimitives()
 
 	// Fullscreen polygon
 	float fsVerts[3 * 3] = {  // x, y, z
-		0.f, 0.f, 1.f,   2.f, 0.f, 1.f,   0.f, 2.f, 1.f
+		0.0f, 0.0f, 1.0f,   2.0f, 0.0f, 1.0f,   0.0f, 2.0f, 1.0f
 	};
 	_vbFSPoly = gRDI->createVertexBuffer( 3 * 3 * sizeof( float ), fsVerts );
 }
@@ -461,7 +461,7 @@ void Renderer::commitGeneralUniforms()
 			if( _curShader->uni_lightDir >= 0 )
 			{
 				float data[4] = { _curLight->_spotDir.x, _curLight->_spotDir.y,
-				                  _curLight->_spotDir.z, cosf( degToRad( _curLight->_fov / 2.0f ) ) };
+				                  _curLight->_spotDir.z, cosf( degToRad( _curLight->_fov * 0.5f ) ) };
 				gRDI->setShaderConst( _curShader->uni_lightDir, CONST_FLOAT4, data );
 			}
 			
@@ -760,15 +760,15 @@ Matrix4f Renderer::calcCropMatrix( const Frustum &frustSlice, const Vec3f lightP
 		if( lightPos.x >= aabb.min.x && lightPos.y >= aabb.min.y && lightPos.z >= aabb.min.z &&
 			lightPos.x <= aabb.max.x && lightPos.y <= aabb.max.y && lightPos.z <= aabb.max.z )
 		{
-			bbMinX = bbMinY = bbMinZ = -1;
-			bbMaxX = bbMaxY = bbMaxZ = 1;
+			bbMinX = bbMinY = bbMinZ = -1.0f;
+			bbMaxX = bbMaxY = bbMaxZ = 1.0f;
 			break;
 		}
 		
 		for( uint32 j = 0; j < 8; ++j )
 		{
 			Vec4f v1 = lightViewProjMat * Vec4f( aabb.getCorner( j ) );
-			v1.w = 1.f / fabsf( v1.w );
+			v1.w = 1.0f / fabsf( v1.w );
 			v1.x *= v1.w; v1.y *= v1.w; v1.z *= v1.w;
 			
 			if( v1.x < bbMinX ) bbMinX = v1.x;
@@ -781,14 +781,14 @@ Matrix4f Renderer::calcCropMatrix( const Frustum &frustSlice, const Vec3f lightP
 	}
 
 	// Find post-projective space AABB of frustum slice if light is not inside
-	if( frustSlice.cullSphere( _curLight->_absPos, 0 ) )
+	if( frustSlice.cullSphere( _curLight->_absPos, 0.0f ) )
 	{
 		// Get frustum in post-projective space
 		for( uint32 i = 0; i < 8; ++i )
 		{
 			// Frustum slice
 			Vec4f v1 = lightViewProjMat * Vec4f( frustSlice.getCorner( i ) );
-			v1.w = 1.f / fabsf( v1.w );  // Use absolute value to reduce problems with back projection when v1.w < 0
+			v1.w = 1.0f / fabsf( v1.w );  // Use absolute value to reduce problems with back projection when v1.w < 0
 			v1.x *= v1.w; v1.y *= v1.w; v1.z *= v1.w;
 
 			if( v1.x < frustMinX ) frustMinX = v1.x;
@@ -801,17 +801,17 @@ Matrix4f Renderer::calcCropMatrix( const Frustum &frustSlice, const Vec3f lightP
 	}
 	else
 	{
-		frustMinX = frustMinY = frustMinZ = -1;
-		frustMaxX = frustMaxY = frustMaxZ = 1;
+		frustMinX = frustMinY = frustMinZ = -1.0f;
+		frustMaxX = frustMaxY = frustMaxZ = 1.0f;
 	}
 
 	// Merge frustum and AABB bounds and clamp to post-projective range [-1, 1]
-	float minX = clamp( maxf( frustMinX, bbMinX ), -1, 1 );
-	float minY = clamp( maxf( frustMinY, bbMinY ), -1, 1 );
-	float minZ = clamp( minf( frustMinZ, bbMinZ ), -1, 1 );
-	float maxX = clamp( minf( frustMaxX, bbMaxX ), -1, 1 );
-	float maxY = clamp( minf( frustMaxY, bbMaxY ), -1, 1 );
-	float maxZ = clamp( minf( frustMaxZ, bbMaxZ ), -1, 1 );
+	float minX = clamp( maxf( frustMinX, bbMinX ), -1.0f, 1.0f );
+	float minY = clamp( maxf( frustMinY, bbMinY ), -1.0f, 1.0f );
+	float minZ = clamp( minf( frustMinZ, bbMinZ ), -1.0f, 1.0f );
+	float maxX = clamp( minf( frustMaxX, bbMaxX ), -1.0f, 1.0f );
+	float maxY = clamp( minf( frustMaxY, bbMaxY ), -1.0f, 1.0f );
+	float maxZ = clamp( minf( frustMaxZ, bbMaxZ ), -1.0f, 1.0f );
 
 	// Zoom-in slice to make better use of available shadow map space
 	float scaleX = 2.0f / (maxX - minX);
@@ -823,10 +823,10 @@ Matrix4f Renderer::calcCropMatrix( const Frustum &frustSlice, const Vec3f lightP
 	float offsetZ = -0.5f * (maxZ + minZ) * scaleZ;
 
 	// Build final matrix
-	float cropMat[16] = { scaleX, 0, 0, 0,
-	                      0, scaleY, 0, 0,
-	                      0, 0, scaleZ, 0,
-	                      offsetX, offsetY, offsetZ, 1 };
+	float cropMat[16] = { scaleX, 0.0f, 0.0f, 0.0f,
+	                      0.0f, scaleY, 0.0f, 0.0f,
+	                      0.0f, 0.0f, scaleZ, 0.0f,
+	                      offsetX, offsetY, offsetZ, 1.0f };
 
 	return Matrix4f( cropMat );
 }
@@ -844,7 +844,7 @@ void Renderer::updateShadowMap()
 	
 	gRDI->setColorWriteMask( false );
 	gRDI->setDepthMask( true );
-	gRDI->clear( CLR_DEPTH, 0x0, 1.f );
+	gRDI->clear( CLR_DEPTH, 0x0, 1.0f );
 
 	// ********************************************************************************************
 	// Cascaded Shadow Maps
@@ -887,7 +887,7 @@ void Renderer::updateShadowMap()
 		float logDist = nearDist * powf( farDist / nearDist, f );
 		float uniformDist = nearDist + (farDist - nearDist) * f;
 		
-		_splitPlanes[i] = (1 - lambda) * uniformDist + lambda * logDist;  // Lerp
+		_splitPlanes[i] = (1.0f - lambda) * uniformDist + lambda * logDist;  // Lerp
 	}
 	
 	// Prepare shadow map rendering
@@ -901,10 +901,11 @@ void Renderer::updateShadowMap()
 		// Create frustum slice
 		if( !_curCamera->_orthographic )
 		{
-			float newLeft = _curCamera->_frustLeft * _splitPlanes[i] / _curCamera->_frustNear;
-			float newRight = _curCamera->_frustRight * _splitPlanes[i] / _curCamera->_frustNear;
-			float newBottom = _curCamera->_frustBottom * _splitPlanes[i] / _curCamera->_frustNear;
-			float newTop = _curCamera->_frustTop * _splitPlanes[i] / _curCamera->_frustNear;
+			const float invCurCameraFrustNear = 1.0f / _curCamera->_frustNear;
+			float newLeft = _curCamera->_frustLeft * _splitPlanes[i] * invCurCameraFrustNear;
+			float newRight = _curCamera->_frustRight * _splitPlanes[i] * invCurCameraFrustNear;
+			float newBottom = _curCamera->_frustBottom * _splitPlanes[i] * invCurCameraFrustNear;
+			float newTop = _curCamera->_frustTop * _splitPlanes[i] * invCurCameraFrustNear;
 			frustum.buildViewFrustum( _curCamera->_absTrans, newLeft, newRight, newBottom, newTop,
 			                          _splitPlanes[i], _splitPlanes[i + 1] );
 		}
@@ -916,7 +917,7 @@ void Renderer::updateShadowMap()
 		}
 		
 		// Get light projection matrix
-		float ymax = _curCamera->_frustNear * tanf( degToRad( _curLight->_fov / 2 ) );
+		float ymax = _curCamera->_frustNear * tanf( degToRad( _curLight->_fov * 0.5f ) );
 		float xmax = ymax * 1.0f;  // ymax * aspect
 		Matrix4f lightProjMat = Matrix4f::PerspectiveMat(
 			-xmax, xmax, -ymax, ymax, _curCamera->_frustNear, _curLight->_radius );
@@ -1094,7 +1095,7 @@ void Renderer::drawOverlays( const string &shaderContext )
 	ASSERT( QuadIndexBufCount >= MaxNumOverlayVerts * 6 );
 
 	float aspect = (float)_curCamera->_vpWidth / (float)_curCamera->_vpHeight;
-	setupViewMatrices( Matrix4f(), Matrix4f::OrthoMat( 0, aspect, 1, 0, -1, 1 ) );
+	setupViewMatrices( Matrix4f(), Matrix4f::OrthoMat( 0.0f, aspect, 1.0f, 0.0f, -1.0f, 1.0f ) );
 	
 	MaterialResource *curMatRes = 0x0;
 	
@@ -1250,7 +1251,7 @@ void Renderer::drawLightGeometry( const string &shaderContext, const string &the
 					_curLight->getFrustum().calcAABB( bbMin, bbMax );
 					
 					// Check that viewer is outside light bounds
-					if( nearestDistToAABB( _curCamera->getFrustum().getOrigin(), bbMin, bbMax ) > 0 )
+					if( nearestDistToAABB( _curCamera->getFrustum().getOrigin(), bbMin, bbMax ) > 0.0f )
 					{
 						Modules::renderer().pushOccProxy( 1, bbMin, bbMax, _curLight->_occQueries[occSet] );
 
@@ -1288,7 +1289,7 @@ void Renderer::drawLightGeometry( const string &shaderContext, const string &the
 		                                bbx, bby, bbw, bbh );
 
 		// Set scissor rectangle
-		if( bbx != 0 || bby != 0 || bbw != 1 || bbh != 1 )
+		if( bbx != 0.0f || bby != 0.0f || bbw != 1.0f || bbh != 1.0f )
 		{
 			gRDI->setScissorRect( ftoi_r( bbx * gRDI->_fbWidth ), ftoi_r( bby * gRDI->_fbHeight ),
 			                      ftoi_r( bbw * gRDI->_fbWidth ), ftoi_r( bbh * gRDI->_fbHeight ) );
@@ -1302,7 +1303,7 @@ void Renderer::drawLightGeometry( const string &shaderContext, const string &the
 		drawRenderables( shaderContext.empty() ? _curLight->_lightingContext : shaderContext,
 		                 theClass, false, &_curCamera->getFrustum(),
 		                 &_curLight->getFrustum(), order, occSet );
-		Modules().stats().incStat( EngineStats::LightPassCount, 1 );
+		Modules().stats().incStat( EngineStats::LightPassCount, 1.0f );
 
 		// Reset
 		gRDI->setScissorTest( false );
@@ -1361,7 +1362,7 @@ void Renderer::drawLightShapes( const string &shaderContext, bool noShadows, int
 					_curLight->getFrustum().calcAABB( bbMin, bbMax );
 					
 					// Check that viewer is outside light bounds
-					if( nearestDistToAABB( _curCamera->getFrustum().getOrigin(), bbMin, bbMax ) > 0 )
+					if( nearestDistToAABB( _curCamera->getFrustum().getOrigin(), bbMin, bbMax ) > 0.0f )
 					{
 						Modules::renderer().pushOccProxy( 1, bbMin, bbMax, _curLight->_occQueries[occSet] );
 
@@ -1413,9 +1414,9 @@ void Renderer::drawLightShapes( const string &shaderContext, bool noShadows, int
 		gRDI->setCullMode( RS_CULL_FRONT );
 		gRDI->setDepthTest( false );
 
-		if( _curLight->_fov < 180 )
+		if( _curLight->_fov < 180.0f )
 		{
-			float r = _curLight->_radius * tanf( degToRad( _curLight->_fov / 2 ) );
+			float r = _curLight->_radius * tanf( degToRad( _curLight->_fov * 0.5f ) );
 			drawCone( _curLight->_radius, r, _curLight->_absTrans );
 		}
 		else
@@ -1423,7 +1424,7 @@ void Renderer::drawLightShapes( const string &shaderContext, bool noShadows, int
 			drawSphere( _curLight->_absPos, _curLight->_radius );
 		}
 
-		Modules().stats().incStat( EngineStats::LightPassCount, 1 );
+		Modules().stats().incStat( EngineStats::LightPassCount, 1.0f );
 
 		// Reset
 		gRDI->setCullMode( RS_CULL_BACK );
@@ -1602,11 +1603,11 @@ void Renderer::drawMeshes( uint32 firstItem, uint32 lastItem, const string &shad
 			
 			uint32 curLod = meshNode->getLodLevel();
 			Vec4f color;
-			if( curLod == 0 ) color = Vec4f( 0.5f, 0.75f, 1, 1 );
-			else if( curLod == 1 ) color = Vec4f( 0.25f, 0.75, 0.75f, 1 );
-			else if( curLod == 2 ) color = Vec4f( 0.25f, 0.75, 0.5f, 1 );
-			else if( curLod == 3 ) color = Vec4f( 0.5f, 0.5f, 0.25f, 1 );
-			else color = Vec4f( 0.75f, 0.5, 0.25f, 1 );
+			if( curLod == 0 ) color = Vec4f( 0.5f, 0.75f, 1.0f, 1.0f );
+			else if( curLod == 1 ) color = Vec4f( 0.25f, 0.75, 0.75f, 1.0f );
+			else if( curLod == 2 ) color = Vec4f( 0.25f, 0.75, 0.5f, 1.0f );
+			else if( curLod == 3 ) color = Vec4f( 0.5f, 0.5f, 0.25f, 1.0f );
+			else color = Vec4f( 0.75f, 0.5, 0.25f, 1.0f );
 
 			// Darken models with skeleton so that bones are more noticable
 			if( !modelNode->_jointList.empty() ) color = color * 0.3f;
@@ -1662,7 +1663,7 @@ void Renderer::drawMeshes( uint32 firstItem, uint32 lastItem, const string &shad
 		// Render
 		gRDI->drawIndexed( PRIM_TRILIST, meshNode->getBatchStart(), meshNode->getBatchCount(),
 		                   meshNode->getVertRStart(), meshNode->getVertREnd() - meshNode->getVertRStart() + 1 );
-		Modules::stats().incStat( EngineStats::BatchCount, 1 );
+		Modules::stats().incStat( EngineStats::BatchCount, 1.0f );
 		Modules::stats().incStat( EngineStats::TriCount, meshNode->getBatchCount() / 3.0f );
 
 		if( queryObj )
@@ -1978,7 +1979,7 @@ void Renderer::finalizeFrame()
 
 void Renderer::renderDebugView()
 {
-	float color[4] = { 0 };
+	float color[4] = { 0.4f, 0.4f, 0.4f, 1.0f };
 	
 	gRDI->setRenderBuffer( 0 );
 	setMaterial( 0x0, "" );
@@ -1999,7 +2000,6 @@ void Renderer::renderDebugView()
 	setShaderComb( &_defColorShader );
 	commitGeneralUniforms();
 	gRDI->setShaderConst( _defColorShader.uni_worldMat, CONST_FLOAT44, &Matrix4f().x[0] );
-	color[0] = 0.4f; color[1] = 0.4f; color[2] = 0.4f; color[3] = 1;
 	gRDI->setShaderConst( Modules::renderer()._defColShader_color, CONST_FLOAT4, color );
 	for( uint32 i = 0, s = (uint32)Modules::sceneMan().getRenderQueue().size(); i < s; ++i )
 	{
@@ -2013,15 +2013,15 @@ void Renderer::renderDebugView()
 	gRDI->setFillMode( RS_FILL_SOLID );
 	gRDI->setBlendMode( true, BS_BLEND_SRC_ALPHA, BS_BLEND_ONE );
 	gRDI->setCullMode( RS_CULL_FRONT );
-	color[0] = 1; color[1] = 1; color[2] = 0; color[3] = 0.25f;
+	color[0] = 1.0f; color[1] = 1.0f; color[2] = 0.0f; color[3] = 0.25f;
 	gRDI->setShaderConst( Modules::renderer()._defColShader_color, CONST_FLOAT4, color );
 	for( size_t i = 0, s = Modules::sceneMan().getLightQueue().size(); i < s; ++i )
 	{
 		LightNode *lightNode = (LightNode *)Modules::sceneMan().getLightQueue()[i];
 		
-		if( lightNode->_fov < 180 )
+		if( lightNode->_fov < 180.0f )
 		{
-			float r = lightNode->_radius * tanf( degToRad( lightNode->_fov / 2 ) );
+			float r = lightNode->_radius * tanf( degToRad( lightNode->_fov * 0.5f ) );
 			drawCone( lightNode->_radius, r, lightNode->_absTrans );
 		}
 		else
