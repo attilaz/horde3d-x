@@ -83,3 +83,8 @@
 /Horde3D/Source/ColladaConverter/Collada Converter.vcproj.Attila-HP.Attila.user
 /Horde3D/Source/Horde3DEngine/Horde3D Engine.vcproj.Attila-HP.Attila.user
 /Horde3D/Source/Horde3DUtils/Horde3D Utils.vcproj.Attila-HP.Attila.user
+
+/Extensions/Terrain/Source/Extension Terrain.vcproj.Attila-PC.Attila.user
+/Horde3D/Samples/KnightX/win32/Sample KnightX.vcproj.Attila-PC.Attila.user
+/Horde3D/Source/Horde3DEngine/Horde3D Engine.vcproj.Attila-PC.Attila.user
+/Horde3D/Source/Horde3DUtils/Horde3D Utils.vcproj.Attila-PC.Attila.user

@@ -7,9 +7,9 @@ static const char* kWindowClassName = "Horde3DSample";
 
 static HWND createWindow();
 static void destroyWindow(HWND hWnd);
-static void SetupPixelFormat(HDC hDC);
 
 #ifdef HORDE3D_GL
+static void SetupPixelFormat(HDC hDC);
 class Device
 {
 public:
@@ -192,37 +192,38 @@ void destroyWindow(HWND hWnd)
     UnregisterClass(kWindowClassName, GetModuleHandle(NULL));
 }
 
+
+#ifdef HORDE3D_GL
+
 static void SetupPixelFormat(HDC hDC)
 {
     int pixelFormat;
 
-    PIXELFORMATDESCRIPTOR pfd =
-    {
-        sizeof(PIXELFORMATDESCRIPTOR),  // size
-        1,                          // version
-        PFD_SUPPORT_OPENGL |        // OpenGL window
-        PFD_DRAW_TO_WINDOW |        // render to window
-        PFD_DOUBLEBUFFER,           // support double-buffering
-        PFD_TYPE_RGBA,              // color type
-        32,                         // preferred color depth
-        0, 0, 0, 0, 0, 0,           // color bits (ignored)
-        0,                          // no alpha buffer
-        0,                          // alpha bits (ignored)
-        0,                          // no accumulation buffer
-        0, 0, 0, 0,                 // accum bits (ignored)
-        24,                         // depth buffer
-        8,                          // no stencil buffer
-        0,                          // no auxiliary buffers
-        PFD_MAIN_PLANE,             // main layer
-        0,                          // reserved
-        0, 0, 0,                    // no layer, visible, damage masks
-    };
+	static PIXELFORMATDESCRIPTOR pfd = 
+	{
+		sizeof( PIXELFORMATDESCRIPTOR ),            // Size of this pixel format descriptor
+		1,                                          // Version number
+		PFD_DRAW_TO_WINDOW |                        // Format must support window
+		PFD_SUPPORT_OPENGL |                        // Format must support OpenGL
+		PFD_DOUBLEBUFFER,                           // Must support double buffering
+		PFD_TYPE_RGBA,                              // Request a RGBA format
+		32,                                         // Select our color depth
+		0, 0, 0, 0, 0, 0,                           // Color bits ignored
+		8,                                          // 8Bit alpha buffer
+		0,                                          // Shift bit ignored
+		0,                                          // No accumulation buffer
+		0, 0, 0, 0,                                 // Accumulation bits ignored
+		32,                                         // 32Bit z-buffer (depth buffer)  
+		8,                                          // 8Bit stencil buffer
+		0,                                          // No auxiliary buffer
+		PFD_MAIN_PLANE,                             // Main drawing layer
+		0,                                          // Reserved
+		0, 0, 0                                     // Layer masks ignored
+	};
 
     pixelFormat = ChoosePixelFormat(hDC, &pfd);
     SetPixelFormat(hDC, pixelFormat, &pfd);
 }
-
-#ifdef HORDE3D_GL
 
 Device::Device(HWND hWnd): _hWnd(hWnd)
 {
@@ -341,7 +342,7 @@ Device::Device(HWND hWnd)
 
 	D3D_DRIVER_TYPE driverTypes[] =
 	{
-//		D3D_DRIVER_TYPE_HARDWARE,
+		D3D_DRIVER_TYPE_HARDWARE,
 		D3D_DRIVER_TYPE_WARP,
 	};
 	UINT numDriverTypes = ARRAYSIZE( driverTypes );

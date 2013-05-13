@@ -296,7 +296,7 @@ private:
 #include "D3D11/egRendererBaseD3D11.h"
 #elif HORDE3D_GLES2
 #include "GLES2/egRendererBaseGLES2.h"
-#else
+#elif HORDE3D_GL
 #include "GL/egRendererBaseGL.h"
 #endif
 

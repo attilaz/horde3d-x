@@ -42,7 +42,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="&quot;$(ProjectDir)../Shared&quot;;&quot;$(ProjectDir)../../Dependencies/Include&quot;;&quot;$(ProjectDir)../../Extensions&quot;;&quot;$(ProjectDir)../../../Extensions&quot;"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;HORDE3D_EXPORTS"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;HORDE3D_EXPORTS;HORDE3D_GL"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"

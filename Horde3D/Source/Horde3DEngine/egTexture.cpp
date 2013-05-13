@@ -98,14 +98,17 @@ void TextureResource::initializationFunc()
 		gRDI->uploadTextureData( defTexCubeObject, i, 0, texData );
 	}
 
-	unsigned char *texData2 = new unsigned char[256];
-	memcpy( texData2, texData, 64 ); memcpy( texData2 + 64, texData, 64 );
-	memcpy( texData2 + 128, texData, 64 ); memcpy( texData2 + 192, texData, 64 );
+	if ( gRDI->getCaps().tex3D )
+	{
+		unsigned char *texData2 = new unsigned char[256];
+		memcpy( texData2, texData, 64 ); memcpy( texData2 + 64, texData, 64 );
+		memcpy( texData2 + 128, texData, 64 ); memcpy( texData2 + 192, texData, 64 );
 
-	defTex3DObject = gRDI->createTexture( TextureTypes::Tex3D, 4, 4, 4,
+		defTex3DObject = gRDI->createTexture( TextureTypes::Tex3D, 4, 4, 4,
 	                                      TextureFormats::BGRA8, true, true, false, false );
-	gRDI->uploadTextureData( defTex3DObject, 0, 0, texData2 );
-	delete[] texData2;
+		gRDI->uploadTextureData( defTex3DObject, 0, 0, texData2 );
+		delete[] texData2;
+	}
 }
 
 
@@ -158,7 +161,8 @@ TextureResource::TextureResource( const string &name, uint32 width, uint32 heigh
 		_hasMipMaps = !(_flags & ResourceFlags::NoTexMipmaps);
 		_texObject = gRDI->createTexture( _texType, _width, _height, _depth, _texFormat,
 		                                  _hasMipMaps, _hasMipMaps, false, _sRGB );
-		gRDI->uploadTextureData( _texObject, 0, 0, pixels );
+		if ( _texObject != 0 )
+			gRDI->uploadTextureData( _texObject, 0, 0, pixels );
 		
 		delete[] pixels;
 		if( _texObject == 0 ) initDefault();
@@ -338,6 +342,9 @@ bool TextureResource::loadDDS( const char *data, int size )
 	// Create texture
 	_texObject = gRDI->createTexture( _texType, _width, _height, _depth, _texFormat,
 	                                  mipCount > 1, false, false, _sRGB );
+
+	if ( _texObject == 0 )
+		return raiseError( "Unsupported pixel format" );
 	
 	// Upload texture subresources
 	int numSlices = _texType == TextureTypes::TexCube ? 6 : 1;
