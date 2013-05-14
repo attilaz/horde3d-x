@@ -458,13 +458,10 @@ bool AnimationController::animate()
 				Quaternion rotQuat( frame0.rotQuat );
 
 				// Inter-frame interpolation
-				if( !Modules::config().fastAnimation )
-				{
 					Frame &frame1 = animEnt->frames[f1];
 					transVec = transVec.lerp( frame1.transVec, amount );
 					scaleVec = scaleVec.lerp( frame1.scaleVec, amount );
 					rotQuat = rotQuat.nlerp( frame1.rotQuat, amount );
-				}
 
 				if( curStage.additive )
 				{
