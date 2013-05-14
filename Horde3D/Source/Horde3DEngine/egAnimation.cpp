@@ -386,11 +386,10 @@ bool AnimationController::animate()
 	Timer *timer = Modules::stats().getTimer( EngineStats::AnimationTime );
 	if( Modules::config().gatherTimeStats ) timer->setEnabled( true );
 	
-	// Animate
-	for( size_t i = 0, si = _nodeList.size(); i < si; ++i )
+	if( Modules::config().fastAnimation && _activeStages.size() == 1 )
 	{
-		// Fast path
-		if( Modules::config().fastAnimation && _activeStages.size() == 1 )
+		// Animate Fast path
+		for( size_t i = 0, si = _nodeList.size(); i < si; ++i )
 		{
 			uint32 firstStage = _activeStages[0];
 			AnimResEntity *animEnt = _nodeList[i].animEntities[firstStage];
@@ -402,8 +401,12 @@ bool AnimationController::animate()
 			}
 			continue;
 		}
-
-		// Standard path
+	}
+	else
+	{
+	// Animate Standard path
+	for( size_t i = 0, si = _nodeList.size(); i < si; ++i )
+	{
 		bool nodeUpdated = false;
 		float layerWeightSum = 0.0f, remainingWeight = 1.0f;
 		int prevLayer = 0;
@@ -511,6 +514,7 @@ bool AnimationController::animate()
 			Matrix4f::fastMult43( _nodeList[i].node->getANRelTransRef(),
 				Matrix4f::TransMat( nodeTransVec.x, nodeTransVec.y, nodeTransVec.z ), mat );
 		}
+	}
 	}
 
 	timer->setEnabled( false );
