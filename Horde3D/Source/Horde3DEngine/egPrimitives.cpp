@@ -209,12 +209,12 @@ void Frustum::calcAABB( Vec3f &mins, Vec3f &maxs ) const
 	
 	for( uint32 i = 0; i < 8; ++i )
 	{
-		if( _corners[i].x < mins.x ) mins.x = _corners[i].x;
-		if( _corners[i].y < mins.y ) mins.y = _corners[i].y;
-		if( _corners[i].z < mins.z ) mins.z = _corners[i].z;
-		if( _corners[i].x > maxs.x ) maxs.x = _corners[i].x;
-		if( _corners[i].y > maxs.y ) maxs.y = _corners[i].y;
-		if( _corners[i].z > maxs.z ) maxs.z = _corners[i].z;
+		mins.x = minf(_corners[i].x, mins.x);
+		mins.y = minf(_corners[i].y, mins.y);
+		mins.z = minf(_corners[i].z, mins.z);
+		maxs.x = maxf(_corners[i].x, maxs.x);
+		maxs.y = maxf(_corners[i].y, maxs.y);
+		maxs.z = maxf(_corners[i].z, maxs.z);
 	}
 }
 

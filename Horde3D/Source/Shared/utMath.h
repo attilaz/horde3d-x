@@ -73,14 +73,6 @@ static inline float radToDeg( float f )
 	return f * 57.29577951f;
 }
 
-static inline float clamp( float f, float min, float max )
-{
-	if( f < min ) f = min;
-	else if( f > max ) f = max;
-
-	return f;
-}
-
 static inline float minf( float a, float b )
 {
 	return a < b ? a : b;
@@ -91,10 +83,15 @@ static inline float maxf( float a, float b )
 	return a > b ? a : b;
 }
 
+static inline float clamp( float f, float min, float max )
+{
+	return maxf(minf(f, max), min);;
+}
+
 static inline float fsel( float test, float a, float b )
 {
 	// Branchless selection
-	return test >= 0 ? a : b;
+	return test >= 0.0f ? a : b;
 }
 
 

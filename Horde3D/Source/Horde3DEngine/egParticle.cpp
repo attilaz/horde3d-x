@@ -624,7 +624,7 @@ void EmitterNode::update( float timeDelta )
 			float rotVel = p.rotVel0 * (1.0f + (_effectRes->_rotVel.endRate - 1.0f) * fac);
 			float drag = p.drag0 * (1.0f + (_effectRes->_drag.endRate - 1.0f) * fac);
 			_parSizesANDRotations[i * 2 + 0] = p.size0 * (1.0f + (_effectRes->_size.endRate - 1.0f) * fac);
-			_parSizesANDRotations[i * 2 + 0] *= 2;  // Keep compatibility with old particle vertex shader
+			_parSizesANDRotations[i * 2 + 0] *= 2.0f;  // Keep compatibility with old particle vertex shader
 			_parColors[i * 4 + 0] = p.r0 * (1.0f + (_effectRes->_colR.endRate - 1.0f) * fac);
 			_parColors[i * 4 + 1] = p.g0 * (1.0f + (_effectRes->_colG.endRate - 1.0f) * fac);
 			_parColors[i * 4 + 2] = p.b0 * (1.0f + (_effectRes->_colB.endRate - 1.0f) * fac);
@@ -648,12 +648,12 @@ void EmitterNode::update( float timeDelta )
 
 		// Update bounding box
 		Vec3f vertPos( _parPositions[i*3+0], _parPositions[i*3+1], _parPositions[i*3+2] );
-		if( vertPos.x < bBMin.x ) bBMin.x = vertPos.x;
-		if( vertPos.y < bBMin.y ) bBMin.y = vertPos.y;
-		if( vertPos.z < bBMin.z ) bBMin.z = vertPos.z;
-		if( vertPos.x > bBMax.x ) bBMax.x = vertPos.x;
-		if( vertPos.y > bBMax.y ) bBMax.y = vertPos.y;
-		if( vertPos.z > bBMax.z ) bBMax.z = vertPos.z;
+		bBMin.x = minf(vertPos.x, bBMin.x);
+		bBMin.y = minf(vertPos.y, bBMin.y);
+		bBMin.z = minf(vertPos.z, bBMin.z);
+		bBMax.x = maxf(vertPos.x, bBMax.x);
+		bBMax.y = maxf(vertPos.y, bBMax.y);
+		bBMax.z = maxf(vertPos.z, bBMax.z);
 	}
 
 	// Avoid zero box dimensions for planes

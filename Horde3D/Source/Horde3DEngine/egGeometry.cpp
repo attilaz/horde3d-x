@@ -416,12 +416,12 @@ bool GeometryResource::load( const char *data, int size )
 	for( uint32 i = 0; i < (uint32)_joints.size(); ++i )
 	{
 		Vec3f pos = _joints[i].invBindMat.inverted() * Vec3f( 0.0f, 0.0f, 0.0f );
-		if( pos.x < _skelAABB.min.x ) _skelAABB.min.x = pos.x;
-		if( pos.y < _skelAABB.min.y ) _skelAABB.min.y = pos.y;
-		if( pos.z < _skelAABB.min.z ) _skelAABB.min.z = pos.z;
-		if( pos.x > _skelAABB.max.x ) _skelAABB.max.x = pos.x;
-		if( pos.y > _skelAABB.max.y ) _skelAABB.max.y = pos.y;
-		if( pos.z > _skelAABB.max.z ) _skelAABB.max.z = pos.z;
+		_skelAABB.min.x = minf(pos.x, _skelAABB.min.x);
+		_skelAABB.min.y = minf(pos.y, _skelAABB.min.y);
+		_skelAABB.min.z = minf(pos.z, _skelAABB.min.z);
+		_skelAABB.max.x = maxf(pos.x, _skelAABB.max.x);
+		_skelAABB.max.y = maxf(pos.y, _skelAABB.max.y);
+		_skelAABB.max.z = maxf(pos.z, _skelAABB.max.z);
 	}
 
 	// Add default joint if necessary

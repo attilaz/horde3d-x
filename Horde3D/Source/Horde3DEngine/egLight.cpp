@@ -240,7 +240,7 @@ void LightNode::calcScreenSpaceAABB( const Matrix4f &mat, float &x, float &y, fl
 	float min_x = Math::MaxFloat, min_y = Math::MaxFloat;
 	float max_x = -Math::MaxFloat, max_y = -Math::MaxFloat;
 	
-	if( _fov < 180 )
+	if( _fov < 180.0f )
 	{
 		// Generate frustum for spot light
 		numPoints = 5;
@@ -277,17 +277,17 @@ void LightNode::calcScreenSpaceAABB( const Matrix4f &mat, float &x, float &y, fl
 			pts[i].y = (pts[i].y * invPtsW + 1.0f) * 0.5f;
 		}
 
-		if( pts[i].x < min_x ) min_x = pts[i].x;
-		if( pts[i].y < min_y ) min_y = pts[i].y;
-		if( pts[i].x > max_x ) max_x = pts[i].x;
-		if( pts[i].y > max_y ) max_y = pts[i].y;
+		min_x = minf(pts[i].x, min_x);
+		min_y = minf(pts[i].y, min_y);
+		max_x = maxf(pts[i].x, max_x);
+		max_y = maxf(pts[i].y, max_y);
 	}
 	
 	// Clamp values
-	if( min_x < 0.0f ) min_x = 0.0f; if( min_x > 1.0f ) min_x = 1.0f;
-	if( max_x < 0.0f ) max_x = 0.0f; if( max_x > 1.0f ) max_x = 1.0f;
-	if( min_y < 0.0f ) min_y = 0.0f; if( min_y > 1.0f ) min_y = 1.0f;
-	if( max_y < 0.0f ) max_y = 0.0f; if( max_y > 1.0f ) max_y = 1.0f;
+	clamp(min_x, 0.0f, 1.0f);
+	clamp(max_x, 0.0f, 1.0f);
+	clamp(min_y, 0.0f, 1.0f);
+	clamp(max_y, 0.0f, 1.0f);
 	
 	x = min_x; y = min_y;
 	w = max_x - min_x; h = max_y - min_y;

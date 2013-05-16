@@ -191,12 +191,12 @@ void ModelNode::updateLocalMeshAABBs()
 			{
 				Vec3f &vertPos = _geometryRes->getVertPosData()[j];
 
-				if( vertPos.x < bBMin.x ) bBMin.x = vertPos.x;
-				if( vertPos.y < bBMin.y ) bBMin.y = vertPos.y;
-				if( vertPos.z < bBMin.z ) bBMin.z = vertPos.z;
-				if( vertPos.x > bBMax.x ) bBMax.x = vertPos.x;
-				if( vertPos.y > bBMax.y ) bBMax.y = vertPos.y;
-				if( vertPos.z > bBMax.z ) bBMax.z = vertPos.z;
+				bBMin.x = minf(vertPos.x, bBMin.x);
+				bBMin.y = minf(vertPos.y, bBMin.y);
+				bBMin.z = minf(vertPos.z, bBMin.z);
+				bBMax.x = maxf(vertPos.x, bBMax.x);
+				bBMax.y = maxf(vertPos.y, bBMax.y);
+				bBMax.z = maxf(vertPos.z, bBMax.z);
 			}
 
 			// Avoid zero box dimensions for planes
@@ -502,12 +502,12 @@ void ModelNode::onFinishedUpdate()
 		{
 			Vec3f pos = _jointList[i]->_relModelMat * Vec3f( 0.0f, 0.0f, 0.0f );
 
-			if( pos.x < bmin.x ) bmin.x = pos.x;
-			if( pos.y < bmin.y ) bmin.y = pos.y;
-			if( pos.z < bmin.z ) bmin.z = pos.z;
-			if( pos.x > bmax.x ) bmax.x = pos.x;
-			if( pos.y > bmax.y ) bmax.y = pos.y;
-			if( pos.z > bmax.z ) bmax.z = pos.z;
+			bmin.x = minf(pos.x, bmin.x);
+			bmin.y = minf(pos.y, bmin.y);
+			bmin.z = minf(pos.z, bmin.z);
+			bmax.x = maxf(pos.x, bmax.x);
+			bmax.y = maxf(pos.y, bmax.y);
+			bmax.z = maxf(pos.z, bmax.z);
 		}
 
 		// Resize mesh AABBs according to change of skeleton extents
@@ -519,8 +519,8 @@ void ModelNode::onFinishedUpdate()
 			Vec3f dmax = bmax - _geometryRes->_skelAABB.max;
 			
 			// Clamp so that bounding boxes can only grow and not shrink
-			if( dmin.x > 0.0f ) dmin.x = 0.0f; if( dmin.y > 0.0f ) dmin.y = 0.0f; if( dmin.z > 0.0f ) dmin.z = 0.0f;
-			if( dmax.x < 0.0f ) dmax.x = 0.0f; if( dmax.y < 0.0f ) dmax.y = 0.0f; if( dmax.z < 0.0f ) dmax.z = 0.0f;
+			dmin.x = minf(0.0f, dmin.x); dmin.y = minf(0.0f, dmin.y); dmin.z = minf(0.0f, dmin.z);
+			dmax.x = maxf(0.0f, dmax.x); dmax.y = maxf(0.0f, dmax.y); dmax.z = maxf(0.0f, dmax.z);
 			
 			_meshList[i]->_bBox = _meshList[i]->_localBBox;
 			_meshList[i]->_bBox.min += dmin;

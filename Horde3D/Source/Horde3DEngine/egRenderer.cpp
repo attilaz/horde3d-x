@@ -771,12 +771,12 @@ Matrix4f Renderer::calcCropMatrix( const Frustum &frustSlice, const Vec3f lightP
 			v1.w = 1.0f / fabsf( v1.w );
 			v1.x *= v1.w; v1.y *= v1.w; v1.z *= v1.w;
 			
-			if( v1.x < bbMinX ) bbMinX = v1.x;
-			if( v1.y < bbMinY ) bbMinY = v1.y;
-			if( v1.z < bbMinZ ) bbMinZ = v1.z;
-			if( v1.x > bbMaxX ) bbMaxX = v1.x;
-			if( v1.y > bbMaxY ) bbMaxY = v1.y;
-			if( v1.z > bbMaxZ ) bbMaxZ = v1.z;
+			bbMinX = minf(v1.x, bbMinX);
+			bbMinY = minf(v1.y, bbMinY);
+			bbMinZ = minf(v1.z, bbMinZ);
+			bbMaxX = maxf(v1.x, bbMaxX);
+			bbMaxY = maxf(v1.y, bbMaxY);
+			bbMaxZ = maxf(v1.z, bbMaxZ);
 		}
 	}
 
@@ -791,12 +791,12 @@ Matrix4f Renderer::calcCropMatrix( const Frustum &frustSlice, const Vec3f lightP
 			v1.w = 1.0f / fabsf( v1.w );  // Use absolute value to reduce problems with back projection when v1.w < 0
 			v1.x *= v1.w; v1.y *= v1.w; v1.z *= v1.w;
 
-			if( v1.x < frustMinX ) frustMinX = v1.x;
-			if( v1.y < frustMinY ) frustMinY = v1.y;
-			if( v1.z < frustMinZ ) frustMinZ = v1.z;
-			if( v1.x > frustMaxX ) frustMaxX = v1.x;
-			if( v1.y > frustMaxY ) frustMaxY = v1.y;
-			if( v1.z > frustMaxZ ) frustMaxZ = v1.z;
+			frustMinX = minf(v1.x, frustMinX);
+			frustMinY = minf(v1.y, frustMinY);
+			frustMinZ = minf(v1.z, frustMinZ);
+			frustMaxX = maxf(v1.x, frustMaxX);
+			frustMaxY = maxf(v1.y, frustMaxY);
+			frustMaxZ = maxf(v1.z, frustMaxZ);
 		}
 	}
 	else
@@ -864,8 +864,8 @@ void Renderer::updateShadowMap()
 	for( uint32 i = 0; i < 8; ++i )
 	{
 		float dist = -(_curCamera->getViewMat() * aabb.getCorner( i )).z;
-		if( dist < minDist ) minDist = dist;
-		if( dist > maxDist ) maxDist = dist;
+		minDist = minf(dist, minDist);
+		maxDist = maxf(dist, maxDist);
 	}
 
 	// Don't adjust near plane; this means less precision if scene is far away from viewer but that
