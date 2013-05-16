@@ -1801,7 +1801,7 @@ void Renderer::drawParticles( uint32 firstItem, uint32 lastItem, const string &s
 			bool allDead = true;
 			for( uint32 k = 0; k < count; ++k )
 			{
-				if( emitter->_particles[offset + k].life > 0 )
+				if( emitter->_particles[offset + k].life > 0.0f )
 				{
 					allDead = false;
 					break;
