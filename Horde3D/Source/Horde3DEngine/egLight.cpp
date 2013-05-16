@@ -273,8 +273,8 @@ void LightNode::calcScreenSpaceAABB( const Matrix4f &mat, float &x, float &y, fl
 		if( pts[i].w != 0.0f )
 		{
 			const float invPtsW = 1.0f / pts[i].w;
-			pts[i].x = (pts[i].x * invPtsW) * 0.5f + 0.5f;
-			pts[i].y = (pts[i].y * invPtsW) * 0.5f + 0.5f;
+			pts[i].x = (pts[i].x * invPtsW + 1.0f) * 0.5f;
+			pts[i].y = (pts[i].y * invPtsW + 1.0f) * 0.5f;
 		}
 
 		if( pts[i].x < min_x ) min_x = pts[i].x;
