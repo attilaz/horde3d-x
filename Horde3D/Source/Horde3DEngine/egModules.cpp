@@ -146,14 +146,17 @@ bool Modules::init( void *device )
 	texCubeRes->addRef();
 	resMan().addNonExistingResource( *texCubeRes, false );
 
-	TextureResource *tex3DRes = new TextureResource(
-		"$Tex3D", 16, 16, 4, TextureFormats::BGRA8, ResourceFlags::NoTexMipmaps );
-	image = tex3DRes->mapStream( TextureResData::ImageElem, 0, TextureResData::ImgPixelStream, false, true );
-	ASSERT( image != 0x0 );
-	for( uint32 i = 0; i < 16*16*4; ++i ) ((uint32 *)image)[i] = 0xffffffff;
-	tex3DRes->unmapStream();
-	tex3DRes->addRef();
-	resMan().addNonExistingResource( *tex3DRes, false );
+	if ( gRDI->getCaps().tex3D )
+	{
+		TextureResource *tex3DRes = new TextureResource(
+			"$Tex3D", 16, 16, 4, TextureFormats::BGRA8, ResourceFlags::NoTexMipmaps );
+		image = tex3DRes->mapStream( TextureResData::ImageElem, 0, TextureResData::ImgPixelStream, false, true );
+		ASSERT( image != 0x0 );
+		for( uint32 i = 0; i < 16*16*4; ++i ) ((uint32 *)image)[i] = 0xffffffff;
+		tex3DRes->unmapStream();
+		tex3DRes->addRef();
+		resMan().addNonExistingResource( *tex3DRes, false );
+	}
 	
 	return true;
 }

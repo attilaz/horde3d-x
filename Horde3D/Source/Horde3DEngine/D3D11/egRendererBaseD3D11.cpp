@@ -223,6 +223,7 @@ bool RenderDevice::init()
 	}
 	
 	// Get capabilities
+	_caps.texBGRA8byteOrderIsRGBA8 = true;
 	_caps.texS3TC = true;	//DXT1-3, BC1,3,5 in d3d11
 	_caps.texPVRTCI = false;
 	_caps.texETC1 = false;
@@ -454,9 +455,9 @@ uint32 RenderDevice::createTexture( TextureTypes::List type, int width, int heig
 	tex.hasMips = hasMips;
 	tex.d3dResourceView = 0x0;
 
-	static DXGI_FORMAT formats[] = {DXGI_FORMAT_UNKNOWN, DXGI_FORMAT_B8G8R8A8_UNORM, DXGI_FORMAT_BC1_UNORM, 
+	static DXGI_FORMAT formats[] = {DXGI_FORMAT_UNKNOWN, DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_FORMAT_BC1_UNORM, 
 			DXGI_FORMAT_BC2_UNORM, DXGI_FORMAT_BC3_UNORM, DXGI_FORMAT_R16G16B16A16_FLOAT, DXGI_FORMAT_R32G32B32A32_FLOAT, _depthFormat };
-	static DXGI_FORMAT srgbFormats[] = {DXGI_FORMAT_UNKNOWN, DXGI_FORMAT_B8G8R8A8_UNORM_SRGB, DXGI_FORMAT_BC1_UNORM_SRGB, 
+	static DXGI_FORMAT srgbFormats[] = {DXGI_FORMAT_UNKNOWN, DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, DXGI_FORMAT_BC1_UNORM_SRGB, 
 			DXGI_FORMAT_BC2_UNORM_SRGB, DXGI_FORMAT_BC3_UNORM_SRGB, DXGI_FORMAT_R16G16B16A16_FLOAT, DXGI_FORMAT_R32G32B32A32_FLOAT, _depthFormat };
 
 	ASSERT( format < sizeof(formats)/sizeof(DXGI_FORMAT) );	//static assert??

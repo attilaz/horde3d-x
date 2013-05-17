@@ -8,14 +8,15 @@
 // You may use the following code in projects based on the Horde3D graphics engine.
 //
 // *************************************************************************************************
-// #extension GL_EXT_shadow_samplers : enable
-#extension GL_EXT_shadow_samplers : require
+ #extension GL_EXT_shadow_samplers : enable
 
 uniform mediump	vec3 viewerPos;
 uniform mediump	vec4 lightPos;
 uniform mediump	vec4 lightDir;
 uniform mediump	vec3 lightColor;
+#ifdef GL_EXT_shadow_samplers
 uniform sampler2DShadow shadowMap;
+#endif
 uniform mediump	vec4 shadowSplitDists;
 uniform mediump	mat4 shadowMats[4];
 uniform mediump	float shadowMapSize;
@@ -33,6 +34,7 @@ mediump float PCF( const mediump vec4 projShadow )
 	
 	mediump float offset = 1.0 / shadowMapSize;
 	
+#ifdef GL_EXT_shadow_samplers	
 	mediump float shadow = shadow2DEXT( shadowMap, projShadow.xyz );
 	shadow += shadow2DEXT( shadowMap, projShadow.xyz + mediump vec3( -0.866 * offset,  0.5 * offset, 0.0 ) );
 	shadow += shadow2DEXT( shadowMap, projShadow.xyz + mediump vec3( -0.866 * offset, -0.5 * offset, 0.0 ) );
@@ -40,6 +42,9 @@ mediump float PCF( const mediump vec4 projShadow )
 	shadow += shadow2DEXT( shadowMap, projShadow.xyz + mediump vec3(  0.866 * offset,  0.5 * offset, 0.0 ) );
 	
 	return shadow / 5.0;
+#else	
+	return 1.0;
+#endif	
 }
 
 mediump vec3 calcPhongSpotLight( const mediump vec3 pos, const mediump vec3 normal, const mediump vec3 albedo, const mediump vec3 specColor,

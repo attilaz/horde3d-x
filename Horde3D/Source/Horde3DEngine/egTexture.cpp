@@ -369,20 +369,21 @@ bool TextureResource::loadDDS( const char *data, int size )
 				uint32 pixCount = width * height * depth;
 				if( dstBuf == 0x0 ) dstBuf = new uint32[pixCount * 4];
 				uint32 *p = dstBuf;
+				bool rgba8 = gRDI->getCaps().texBGRA8byteOrderIsRGBA8;
 
-				if( pixFmt == pfBGR )
+				if( ( pixFmt == pfBGR && !rgba8) || ( pixFmt == pfRGB && rgba8) )
 					for( uint32 k = 0; k < pixCount * 3; k += 3 )
 						*p++ = pixels[k+0] | pixels[k+1]<<8 | pixels[k+2]<<16 | 0xFF000000;
-				else if( pixFmt == pfBGRX )
+				else if( ( pixFmt == pfBGRX && !rgba8) || ( pixFmt == pfRGBX && rgba8) )
 					for( uint32 k = 0; k < pixCount * 4; k += 4 )
 						*p++ = pixels[k+0] | pixels[k+1]<<8 | pixels[k+2]<<16 | 0xFF000000;
-				else if( pixFmt == pfRGB )
+				else if( ( pixFmt == pfRGB && !rgba8) || ( pixFmt == pfBGR && rgba8) )
 					for( uint32 k = 0; k < pixCount * 3; k += 3 )
 						*p++ = pixels[k+2] | pixels[k+1]<<8 | pixels[k+0]<<16 | 0xFF000000;
-				else if( pixFmt == pfRGBX )
+				else if( ( pixFmt == pfRGBX && !rgba8) || ( pixFmt == pfBGRX && rgba8) )
 					for( uint32 k = 0; k < pixCount * 4; k += 4 )
 						*p++ = pixels[k+2] | pixels[k+1]<<8 | pixels[k+0]<<16 | 0xFF000000;
-				else if( pixFmt == pfRGBA )
+				else if( ( pixFmt == pfRGBA && !rgba8) || ( pixFmt == pfBGRA && rgba8) )
 					for( uint32 k = 0; k < pixCount * 4; k += 4 )
 						*p++ = pixels[k+2] | pixels[k+1]<<8 | pixels[k+0]<<16 | pixels[k+3]<<24;
 				
@@ -425,11 +426,14 @@ bool TextureResource::loadSTBI( const char *data, int size )
 		return raiseError( "Invalid image format (" + string( stbi_failure_reason() ) + ")" );
 
 	// Swizzle RGBA -> BGRA
-	uint32 *ptr = (uint32 *)pixels;
-	for( uint32 i = 0, si = _width * _height; i < si; ++i )
+	if ( !gRDI->getCaps().texBGRA8byteOrderIsRGBA8 )
 	{
-		uint32 col = *ptr;
-		*ptr++ = (col & 0xFF00FF00) | ((col & 0x000000FF) << 16) | ((col & 0x00FF0000) >> 16);
+		uint32 *ptr = (uint32 *)pixels;
+		for( uint32 i = 0, si = _width * _height; i < si; ++i )
+		{
+			uint32 col = *ptr;
+			*ptr++ = (col & 0xFF00FF00) | ((col & 0x000000FF) << 16) | ((col & 0x00FF0000) >> 16);
+		}
 	}
 	
 	_depth = 1;

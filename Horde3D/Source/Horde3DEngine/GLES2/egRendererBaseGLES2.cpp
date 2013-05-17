@@ -221,6 +221,7 @@ bool RenderDevice::init()
 	glGetIntegerv( GL_FRAMEBUFFER_BINDING, &_defaultFBO );
     
 	// Get capabilities
+	_caps.texBGRA8byteOrderIsRGBA8 = true;
 	_caps.texS3TC = glExt::EXT_texture_compression_s3tc;
 	_caps.texPVRTCI = glExt::EXT_texture_compression_pvrtc;
 	_caps.texETC1 = glExt::EXT_texture_compression_etc1;

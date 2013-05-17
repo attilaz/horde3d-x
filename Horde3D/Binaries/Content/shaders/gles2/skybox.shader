@@ -25,7 +25,7 @@ context AMBIENT
 [[VS_GENERAL]]
 // =================================================================================================
 
-#include "shaders/utilityLib/vertCommon.glsl"
+#include "shaders/gles2/utilityLib/vertCommon.glsl"
 
 uniform mat4 viewProjMat;
 uniform vec3 viewerPos;
@@ -44,7 +44,7 @@ void main(void)
 [[FS_ATTRIBPASS]]
 // =================================================================================================
 
-#include "shaders/utilityLib/fragDeferredWrite.glsl"
+#include "shaders/gles2/utilityLib/fragDeferredWrite.glsl"
 
 uniform samplerCube albedoMap;
 varying vec3 viewVec;

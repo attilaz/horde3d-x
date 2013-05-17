@@ -61,7 +61,7 @@ void main( void )
 [[FS_BRIGHTPASS]]
 // =================================================================================================
 
-#include "shaders/utilityLib/fragPostProcess.glsl"
+#include "shaders/gles2/utilityLib/fragPostProcess.glsl"
 
 uniform sampler2D buf0;
 uniform lowp vec2 frameBufSize;
@@ -96,7 +96,7 @@ void main( void )
 [[FS_BLUR]]
 // =================================================================================================
 
-#include "shaders/utilityLib/fragPostProcess.glsl"
+#include "shaders/gles2/utilityLib/fragPostProcess.glsl"
 
 uniform sampler2D buf0;
 uniform lowp vec2 frameBufSize;

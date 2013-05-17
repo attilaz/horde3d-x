@@ -82,10 +82,10 @@ context AMBIENT
 	#define _F02_NormalMapping
 #endif
 
-#include "shaders/utilityLib/vertCommon.glsl"
+#include "shaders/gles2/utilityLib/vertCommon.glsl"
 
 #ifdef _F01_Skinning
-	#include "shaders/utilityLib/vertSkinning.glsl"
+	#include "shaders/gles2/utilityLib/vertSkinning.glsl"
 #endif
 
 uniform mat4 viewProjMat;
@@ -166,7 +166,7 @@ void main( void )
 	#define _F02_NormalMapping
 #endif
 
-#include "shaders/utilityLib/fragDeferredWrite.glsl" 
+#include "shaders/gles2/utilityLib/fragDeferredWrite.glsl" 
 
 uniform mediump vec3 viewerPos;
 uniform mediump vec4 matDiffuseCol;
@@ -240,8 +240,8 @@ void main( void )
 [[VS_SHADOWMAP]]
 // =================================================================================================
 	
-#include "shaders/utilityLib/vertCommon.glsl"
-#include "shaders/utilityLib/vertSkinning.glsl"
+#include "shaders/gles2/utilityLib/vertCommon.glsl"
+#include "shaders/gles2/utilityLib/vertSkinning.glsl"
 
 uniform mat4 viewProjMat;
 uniform mediump vec4 lightPos;
@@ -306,7 +306,7 @@ void main( void )
 	#define _F02_NormalMapping
 #endif
 
-#include "shaders/utilityLib/fragLighting.glsl" 
+#include "shaders/gles2/utilityLib/fragLighting.glsl" 
 
 uniform mediump vec4 matDiffuseCol;
 uniform mediump vec4 matSpecParams;
@@ -356,8 +356,8 @@ void main( void )
 #endif
 	
 #ifdef _F02_NormalMapping
-	mediump vec3 normalMap = texture2D( normalMap, newCoords.st ).rgb * 2.0 - 1.0;
-	mediump vec3 normal = tsbMat * normalMap;
+	mediump vec3 _normalMap = texture2D( normalMap, newCoords.st ).rgb * 2.0 - 1.0;
+	mediump vec3 normal = tsbMat * _normalMap;
 #else
 	mediump vec3 normal = tsbNormal;
 #endif
@@ -381,7 +381,7 @@ void main( void )
 	#define _F02_NormalMapping
 #endif
 
-#include "shaders/utilityLib/fragLighting.glsl" 
+#include "shaders/gles2/utilityLib/fragLighting.glsl" 
 
 uniform sampler2D albedoMap;
 uniform samplerCube ambientMap;
@@ -408,7 +408,7 @@ varying mediump vec2 texCoords;
 
 void main( void )
 {
-	mediump vec3 newCoords = vec3( texCoords, 0 );
+	highp vec3 newCoords = vec3( texCoords, 0 );
 	
 #ifdef _F03_ParallaxMapping	
 	const mediump float plxScale = 0.03;
@@ -434,8 +434,8 @@ void main( void )
 #endif
 	
 #ifdef _F02_NormalMapping
-	mediump vec3 normalMap = texture2D( normalMap, newCoords.st ).rgb * 2.0 - 1.0;
-	mediump vec3 normal = tsbMat * normalMap;
+	mediump vec3 _normalMap = texture2D( normalMap, texCoords.xy ).rgb * 2.0 - 1.0;
+	mediump vec3 normal = tsbMat * _normalMap;
 #else
 	mediump vec3 normal = tsbNormal;
 #endif

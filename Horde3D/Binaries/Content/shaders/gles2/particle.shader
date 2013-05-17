@@ -27,7 +27,7 @@ context TRANSLUCENT
 [[VS_SHADOWMAP]]
 // =================================================================================================
 
-#include "shaders/utilityLib/vertParticle.glsl"
+#include "shaders/gles2/utilityLib/vertParticle.glsl"
 
 uniform mat4 viewProjMat;
 uniform vec4 lightPos;
@@ -58,7 +58,7 @@ void main( void )
 [[VS_TRANSLUCENT]]
 // =================================================================================================
 
-#include "shaders/utilityLib/vertParticle.glsl"
+#include "shaders/gles2/utilityLib/vertParticle.glsl"
 
 uniform mat4 viewProjMat;
 attribute vec2 texCoords0;

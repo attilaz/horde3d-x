@@ -222,6 +222,7 @@ bool RenderDevice::init()
 	}
 	
 	// Get capabilities
+	_caps.texBGRA8byteOrderIsRGBA8 = false;
 	_caps.texS3TC = glExt::EXT_texture_compression_s3tc;	//DXT1-3, BC1,3,5 in d3d11
 	_caps.texPVRTCI = false;
 	_caps.texETC1 = false;
