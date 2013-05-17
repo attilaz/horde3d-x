@@ -1251,7 +1251,7 @@ void Renderer::drawLightGeometry( const string &shaderContext, const string &the
 					_curLight->getFrustum().calcAABB( bbMin, bbMax );
 					
 					// Check that viewer is outside light bounds
-					if( nearestDistToAABB( _curCamera->getFrustum().getOrigin(), bbMin, bbMax ) > 0.0f )
+					if( nearestDistToAABB( _curCamera->getFrustum().getOrigin(), bbMin, bbMax ) > Math::ZeroEpsilon )
 					{
 						Modules::renderer().pushOccProxy( 1, bbMin, bbMax, _curLight->_occQueries[occSet] );
 
@@ -1289,7 +1289,7 @@ void Renderer::drawLightGeometry( const string &shaderContext, const string &the
 		                                bbx, bby, bbw, bbh );
 
 		// Set scissor rectangle
-		if( bbx != 0.0f || bby != 0.0f || bbw != 1.0f || bbh != 1.0f )
+		if( fabsf(bbx) >= Math::ZeroEpsilon || fabsf(bby) >= Math::ZeroEpsilon || bbw != 1.0f || bbh != 1.0f )
 		{
 			gRDI->setScissorRect( ftoi_r( bbx * gRDI->_fbWidth ), ftoi_r( bby * gRDI->_fbHeight ),
 			                      ftoi_r( bbw * gRDI->_fbWidth ), ftoi_r( bbh * gRDI->_fbHeight ) );
@@ -1362,7 +1362,7 @@ void Renderer::drawLightShapes( const string &shaderContext, bool noShadows, int
 					_curLight->getFrustum().calcAABB( bbMin, bbMax );
 					
 					// Check that viewer is outside light bounds
-					if( nearestDistToAABB( _curCamera->getFrustum().getOrigin(), bbMin, bbMax ) > 0.0f )
+					if( nearestDistToAABB( _curCamera->getFrustum().getOrigin(), bbMin, bbMax ) > Math::ZeroEpsilon )
 					{
 						Modules::renderer().pushOccProxy( 1, bbMin, bbMax, _curLight->_occQueries[occSet] );
 
@@ -1801,7 +1801,7 @@ void Renderer::drawParticles( uint32 firstItem, uint32 lastItem, const string &s
 			bool allDead = true;
 			for( uint32 k = 0; k < count; ++k )
 			{
-				if( emitter->_particles[offset + k].life > 0.0f )
+				if( emitter->_particles[offset + k].life > Math::ZeroEpsilon )
 				{
 					allDead = false;
 					break;

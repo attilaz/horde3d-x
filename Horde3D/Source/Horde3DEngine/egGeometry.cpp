@@ -294,7 +294,7 @@ bool GeometryResource::load( const char *data, int size )
 	// Prepare bitangent data (TODO: Should be done in ColladaConv)
 	for( uint32 i = 0; i < _vertCount; ++i )
 	{
-		_vertTanData[i].handedness = _vertTanData[i].normal.cross( _vertTanData[i].tangent ).dot( bitangents[i] ) < 0.0f ? -1.0f : 1.0f;
+		_vertTanData[i].handedness = _vertTanData[i].normal.cross( _vertTanData[i].tangent ).dot( bitangents[i] ) < Math::ZeroEpsilon ? -1.0f : 1.0f;
 	}
 	delete[] bitangents;
 		

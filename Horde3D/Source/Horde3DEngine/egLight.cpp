@@ -270,7 +270,7 @@ void LightNode::calcScreenSpaceAABB( const Matrix4f &mat, float &x, float &y, fl
 	{
 		pts[i] = mat * Vec4f( points[i].x, points[i].y, points[i].z, 1.0f );
 		
-		if( pts[i].w != 0.0f )
+		if( fabsf(pts[i].w) >= Math::ZeroEpsilon )
 		{
 			const float invPtsW = 1.0f / pts[i].w;
 			pts[i].x = (pts[i].x * invPtsW + 1.0f) * 0.5f;
@@ -293,11 +293,11 @@ void LightNode::calcScreenSpaceAABB( const Matrix4f &mat, float &x, float &y, fl
 	w = max_x - min_x; h = max_y - min_y;
 
 	// Check if viewer is inside bounding box
-	if( pts[0].w < 0.0f || pts[1].w < 0.0f || pts[2].w < 0.0f || pts[3].w < 0.0f || pts[4].w < 0.0f )
+	if( pts[0].w < Math::ZeroEpsilon || pts[1].w < Math::ZeroEpsilon || pts[2].w < Math::ZeroEpsilon || pts[3].w < Math::ZeroEpsilon || pts[4].w < Math::ZeroEpsilon )
 	{
 		x = 0.0f; y = 0.0f; w = 1.0f; h = 1.0f;
 	}
-	else if( numPoints == 8 && (pts[5].w < 0.0f || pts[6].w < 0.0f || pts[7].w < 0.0f) )
+	else if( numPoints == 8 && (pts[5].w < Math::ZeroEpsilon || pts[6].w < Math::ZeroEpsilon || pts[7].w < Math::ZeroEpsilon) )
 	{
 		x = 0.0f; y = 0.0f; w = 1.0f; h = 1.0f;
 	}

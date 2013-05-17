@@ -531,7 +531,7 @@ float randomF( float min, float max )
 
 void EmitterNode::update( float timeDelta )
 {
-	if( timeDelta == 0 || _effectRes == 0x0 ) return;
+	if( timeDelta <= Math::ZeroEpsilon || _effectRes == 0x0 ) return;
 	
 	// Update absolute transformation
 	updateTree();
@@ -542,7 +542,7 @@ void EmitterNode::update( float timeDelta )
 	Vec3f bBMin( Math::MaxFloat, Math::MaxFloat, Math::MaxFloat );
 	Vec3f bBMax( -Math::MaxFloat, -Math::MaxFloat, -Math::MaxFloat );
 	
-	if( _delay <= 0.0f )
+	if( _delay <= Math::ZeroEpsilon )
 		_emissionAccum += _emissionRate * timeDelta;
 	else
 		_delay -= timeDelta;
@@ -554,7 +554,7 @@ void EmitterNode::update( float timeDelta )
 	for( uint32 i = 0; i < _particleCount; ++i )
 	{
 		ParticleData &p = _particles[i];
-		if( p.life <= 0.0f && ((int)p.respawnCounter < _respawnCount || _respawnCount < 0.0f) )
+		if( p.life <= Math::ZeroEpsilon && ((int)p.respawnCounter < _respawnCount || _respawnCount < 0) )
 		{
 			spawnCount += 1.0f;
 			if( spawnCount >= _emissionAccum ) break;
@@ -570,7 +570,7 @@ void EmitterNode::update( float timeDelta )
 		ParticleData &p = _particles[i];
 		
 		// Create particle
-		if( p.life <= 0.0f && ((int)p.respawnCounter < _respawnCount || _respawnCount < 0) )
+		if( p.life <= Math::ZeroEpsilon && ((int)p.respawnCounter < _respawnCount || _respawnCount < 0) )
 		{
 			if( _emissionAccum >= 1.0f )
 			{
@@ -608,14 +608,14 @@ void EmitterNode::update( float timeDelta )
 
 				// Update emitter
 				_emissionAccum -= 1.0f;
-				if( _emissionAccum < 0.0f ) _emissionAccum = 0.0f;
+				if( _emissionAccum < Math::ZeroEpsilon ) _emissionAccum = 0.0f;
 
 				curStep += stepWidth;
 			}
 		}
 		
 		// Update particle
-		if( p.life > 0.0f )
+		if( p.life > Math::ZeroEpsilon )
 		{
 			// Interpolate data
 			float fac = 1.0f - (p.life / p.maxLife);
@@ -640,7 +640,7 @@ void EmitterNode::update( float timeDelta )
 			p.life -= timeDelta;
 			
 			// Check if particle is dying
-			if( p.life <= 0.0f )
+			if( p.life <= Math::ZeroEpsilon )
 			{
 				_parSizesANDRotations[i * 2 + 0] = 0.0f;
 			}
@@ -657,9 +657,9 @@ void EmitterNode::update( float timeDelta )
 	}
 
 	// Avoid zero box dimensions for planes
-	if( bBMax.x - bBMin.x == 0.0f ) bBMax.x += Math::Epsilon;
-	if( bBMax.y - bBMin.y == 0.0f ) bBMax.y += Math::Epsilon;
-	if( bBMax.z - bBMin.z == 0.0f ) bBMax.z += Math::Epsilon;
+	if( bBMax.x <= bBMin.x + Math::ZeroEpsilon ) bBMax.x += Math::Epsilon;
+	if( bBMax.y <= bBMin.y + Math::ZeroEpsilon ) bBMax.y += Math::Epsilon;
+	if( bBMax.z <= bBMin.z + Math::ZeroEpsilon ) bBMax.z += Math::Epsilon;
 	
 	_bBox.min = bBMin;
 	_bBox.max = bBMax;
@@ -676,7 +676,7 @@ bool EmitterNode::hasFinished()
 
 	for( uint32 i = 0; i < _particleCount; ++i )
 	{	
-		if( _particles[i].life > 0.0f || (int)_particles[i].respawnCounter < _respawnCount )
+		if( _particles[i].life > Math::ZeroEpsilon || (int)_particles[i].respawnCounter < _respawnCount )
 		{
 			return false;
 		}

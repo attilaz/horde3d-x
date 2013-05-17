@@ -200,9 +200,9 @@ void ModelNode::updateLocalMeshAABBs()
 			}
 
 			// Avoid zero box dimensions for planes
-			if( bBMax.x - bBMin.x == 0.0f ) bBMax.x += Math::Epsilon;
-			if( bBMax.y - bBMin.y == 0.0f ) bBMax.y += Math::Epsilon;
-			if( bBMax.z - bBMin.z == 0.0f ) bBMax.z += Math::Epsilon;
+			if( bBMax.x <= bBMin.x + Math::ZeroEpsilon ) bBMax.x += Math::Epsilon;
+			if( bBMax.y <= bBMin.y + Math::ZeroEpsilon ) bBMax.y += Math::Epsilon;
+			if( bBMax.z <= bBMin.z + Math::ZeroEpsilon ) bBMax.z += Math::Epsilon;
 		}
 		else
 		{
