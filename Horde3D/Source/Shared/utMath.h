@@ -387,7 +387,7 @@ public:
         float cosTheta = x * q.x + y * q.y + z * q.z + w * q.w;
 
         // Use the shortest path
-        if( cosTheta < 0.0f )
+        if( cosTheta < Math::ZeroEpsilon )
 		{
 			cosTheta = -cosTheta; 
 			q1.x = -q.x; q1.y = -q.y;
@@ -398,7 +398,7 @@ public:
 		float scale0 = 1.0f - t, scale1 = t;
 		
 		// Use spherical interpolation only if the quaternions are not very close
-		if( (1.0f - cosTheta) > 0.001f )
+		if( (1.0f - 0.001f) > cosTheta )
 		{
 			// SLERP
 			const float theta = acosf( cosTheta );
@@ -421,7 +421,7 @@ public:
 		const float cosTheta = x * q.x + y * q.y + z * q.z + w * q.w;
 		
 		// Use the shortest path and interpolate linearly
-		if( cosTheta < 0.0f )
+		if( cosTheta < Math::ZeroEpsilon )
 			qt = Quaternion( x + (-q.x - x) * t, y + (-q.y - y) * t,
 							 z + (-q.z - z) * t, w + (-q.w - w) * t );
 		else
@@ -436,7 +436,7 @@ public:
 	Quaternion inverted() const
 	{
 		const float len = x * x + y * y + z * z + w * w;
-		if( len > 0.0f )
+		if( len > Math::ZeroEpsilon )
         {
             float invLen = 1.0f / len;
             return Quaternion( -x * invLen, -y * invLen, -z * invLen, w * invLen );
@@ -791,7 +791,7 @@ public:
 		Matrix4f m( Math::NO_INIT );
 
 		float d = determinant();
-		if( d == 0 ) return m;
+		if( fabsf(d) <= Math::ZeroEpsilon ) return m;
 		d = 1.0f / d;
 		
 //		m.c[0][0] = d * (c[1][2]*c[2][3]*c[3][1] - c[1][3]*c[2][2]*c[3][1] + c[1][3]*c[2][1]*c[3][2] - c[1][1]*c[2][3]*c[3][2] - c[1][2]*c[2][1]*c[3][3] + c[1][1]*c[2][2]*c[3][3]);
@@ -882,10 +882,10 @@ public:
 		scale.y = sqrtf( c[1][0] * c[1][0] + c[1][1] * c[1][1] + c[1][2] * c[1][2] );
 		scale.z = sqrtf( c[2][0] * c[2][0] + c[2][1] * c[2][1] + c[2][2] * c[2][2] );
 
-		if( scale.x == 0.0f || scale.y == 0.0f || scale.z == 0.0f ) return;
+		if( fabsf(scale.x) <= Math::ZeroEpsilon || fabsf(scale.y) <= Math::ZeroEpsilon || fabsf(scale.z) <= Math::ZeroEpsilon ) return;
 
 		// Detect negative scale with determinant and flip one arbitrary axis
-		if( determinant() < 0.0f ) scale.x = -scale.x;
+		if( determinant() < Math::ZeroEpsilon ) scale.x = -scale.x;
 
 		// Combined rotation matrix YXZ
 		//
@@ -1051,14 +1051,14 @@ inline bool rayTriangleIntersection( const Vec3f &rayOrig, const Vec3f &rayDir,
 
 	// Calculate U parameter and test bounds
 	const float u = tvec.dot( pvec ) * inv_det;
-	if( u < 0.0f || u > 1.0f ) return 0;
+	if( u < Math::ZeroEpsilon || u > 1.0f ) return 0;
 
 	// Prepare to test V parameter
 	const Vec3f qvec = tvec.cross( edge1 );
 
 	// Calculate V parameter and test bounds
 	const float v = rayDir.dot( qvec ) * inv_det;
-	if( v < 0.0f || u + v > 1.0f ) return 0;
+	if( v < Math::ZeroEpsilon || u + v > 1.0f ) return 0;
 
 	// Calculate t, ray intersects triangle
 	const float t = edge2.dot( qvec ) * inv_det;
@@ -1067,7 +1067,7 @@ inline bool rayTriangleIntersection( const Vec3f &rayOrig, const Vec3f &rayDir,
 	// Calculate intersection point and test ray length and direction
 	intsPoint = rayOrig + rayDir * t;
 	const Vec3f vec = intsPoint - rayOrig;
-	if( vec.dot( rayDir ) < 0.0f || vec.length() > rayDir.length() ) return false;
+	if( vec.dot( rayDir ) < Math::ZeroEpsilon || vec.length() > rayDir.length() ) return false;
 
 	return true;
 }
@@ -1098,7 +1098,7 @@ inline bool rayAABBIntersection( const Vec3f &rayOrig, const Vec3f &rayDir,
 	lmin = maxf( minf( l1, l2 ), lmin );
 	lmax = minf( maxf( l1, l2 ), lmax );
 
-	if( (lmax >= 0.0f) & (lmax >= lmin) )
+	if( (lmax >= Math::ZeroEpsilon) & (lmax >= lmin) )
 	{
 		// Consider length
 		const Vec3f rayDest = rayOrig + rayDir;
