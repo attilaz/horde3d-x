@@ -88,11 +88,11 @@ void TextureResource::initializationFunc()
 
 	// Upload default textures
 	defTex2DObject = gRDI->createTexture( TextureTypes::Tex2D, 4, 4, 1,
-	                                      TextureFormats::BGRA8, true, true, false, false );
+	                                      TextureFormats::BGRA8, true, true, false );
 	gRDI->uploadTextureData( defTex2DObject, 0, 0, texData );
 	
 	defTexCubeObject = gRDI->createTexture( TextureTypes::TexCube, 4, 4, 1,
-	                                        TextureFormats::BGRA8, true, true, false, false );
+	                                        TextureFormats::BGRA8, true, true, false );
 	for( uint32 i = 0; i < 6; ++i ) 
 	{
 		gRDI->uploadTextureData( defTexCubeObject, i, 0, texData );
@@ -105,7 +105,7 @@ void TextureResource::initializationFunc()
 		memcpy( texData2 + 128, texData, 64 ); memcpy( texData2 + 192, texData, 64 );
 
 		defTex3DObject = gRDI->createTexture( TextureTypes::Tex3D, 4, 4, 4,
-	                                      TextureFormats::BGRA8, true, true, false, false );
+	                                      TextureFormats::BGRA8, true, true, false );
 		gRDI->uploadTextureData( defTex3DObject, 0, 0, texData2 );
 		delete[] texData2;
 	}
@@ -160,7 +160,7 @@ TextureResource::TextureResource( const string &name, uint32 width, uint32 heigh
 		_sRGB = (_flags & ResourceFlags::TexSRGB) != 0;
 		_hasMipMaps = !(_flags & ResourceFlags::NoTexMipmaps);
 		_texObject = gRDI->createTexture( _texType, _width, _height, _depth, _texFormat,
-		                                  _hasMipMaps, _hasMipMaps, false, _sRGB );
+		                                  _hasMipMaps, _hasMipMaps, _sRGB );
 		if ( _texObject != 0 )
 			gRDI->uploadTextureData( _texObject, 0, 0, pixels );
 		
@@ -341,7 +341,7 @@ bool TextureResource::loadDDS( const char *data, int size )
 
 	// Create texture
 	_texObject = gRDI->createTexture( _texType, _width, _height, _depth, _texFormat,
-	                                  mipCount > 1, false, false, _sRGB );
+	                                  mipCount > 1, false, _sRGB );
 
 	if ( _texObject == 0 )
 		return raiseError( "Unsupported pixel format" );
@@ -444,7 +444,7 @@ bool TextureResource::loadSTBI( const char *data, int size )
 	
 	// Create and upload texture
 	_texObject = gRDI->createTexture( _texType, _width, _height, _depth, _texFormat,
-		_hasMipMaps, _hasMipMaps, !(_flags & ResourceFlags::NoTexCompression), _sRGB );
+		_hasMipMaps, _hasMipMaps, _sRGB );
 	gRDI->uploadTextureData( _texObject, 0, 0, pixels );
 
 	stbi_image_free( pixels );

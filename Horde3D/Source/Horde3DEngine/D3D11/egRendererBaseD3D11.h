@@ -284,7 +284,7 @@ public:
 	// Textures
 	uint32 calcTextureSize( TextureFormats::List format, int width, int height, int depth );
 	uint32 createTexture( TextureTypes::List type, int width, int height, int depth, TextureFormats::List format,
-	                      bool hasMips, bool genMips, bool compress, bool sRGB );
+	                      bool hasMips, bool genMips, bool sRGB );
 	void uploadTextureData( uint32 texObj, int slice, int mipLevel, const void *pixels );
 	void destroyTexture( uint32 texObj );
 	void updateTextureData( uint32 texObj, int slice, int mipLevel, const void *pixels );

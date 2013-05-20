@@ -223,7 +223,7 @@ bool RenderDevice::init()
 	
 	// Get capabilities
 	_caps.texBGRA8byteOrderIsRGBA8 = false;
-	_caps.texS3TC = glExt::EXT_texture_compression_s3tc;	//DXT1-3, BC1,3,5 in d3d11
+	_caps.texDXT = glExt::EXT_texture_compression_s3tc;
 	_caps.texPVRTCI = false;
 	_caps.texETC1 = false;
 
@@ -385,7 +385,7 @@ uint32 RenderDevice::calcTextureSize( TextureFormats::List format, int width, in
 
 uint32 RenderDevice::createTexture( TextureTypes::List type, int width, int height, int depth,
                                     TextureFormats::List format,
-                                    bool hasMips, bool genMips, bool compress, bool sRGB )
+                                    bool hasMips, bool genMips, bool sRGB )
 {
 	ASSERT( depth > 0 );
 
@@ -859,7 +859,7 @@ uint32 RenderDevice::createRenderBuffer( uint32 width, uint32 height, TextureFor
 		{
 			glBindFramebufferEXT( GL_FRAMEBUFFER_EXT, rb.fbo );
 			// Create a color texture
-			uint32 texObj = createTexture( TextureTypes::Tex2D, rb.width, rb.height, 1, format, false, false, false, false );
+			uint32 texObj = createTexture( TextureTypes::Tex2D, rb.width, rb.height, 1, format, false, false, false );
 			ASSERT( texObj != 0 );
 			uploadTextureData( texObj, 0, 0, 0x0 );
 			rb.colTexs[j] = texObj;
@@ -910,7 +910,7 @@ uint32 RenderDevice::createRenderBuffer( uint32 width, uint32 height, TextureFor
 	{
 		glBindFramebufferEXT( GL_FRAMEBUFFER_EXT, rb.fbo );
 		// Create a depth texture
-		uint32 texObj = createTexture( TextureTypes::Tex2D, rb.width, rb.height, 1, TextureFormats::DEPTH, false, false, false, false );
+		uint32 texObj = createTexture( TextureTypes::Tex2D, rb.width, rb.height, 1, TextureFormats::DEPTH, false, false, false );
 		ASSERT( texObj != 0 );
 		glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_NONE );
 		uploadTextureData( texObj, 0, 0, 0x0 );

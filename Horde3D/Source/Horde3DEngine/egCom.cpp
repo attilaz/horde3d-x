@@ -119,20 +119,29 @@ bool EngineConfig::setOption( EngineOptions::List param, float value )
 		if( size == shadowMapSize ) return true;
 		if( size != 128 && size != 256 && size != 512 && size != 1024 && size != 2048 ) return false;
 
-		// Update shadow map
-		Modules::renderer().releaseShadowRB();
-		
-		if( !Modules::renderer().createShadowRB( size, size ) )
+		if ( !gRDI->getCaps().texDepth )
 		{
-			Modules::log().writeWarning( "Failed to create shadow map" );
-			// Restore old buffer
-			Modules::renderer().createShadowRB( shadowMapSize, shadowMapSize );
+			Modules::log().writeWarning( "Failed to create shadow map: depth textures not supported" );
+			shadowMapSize = size;
 			return false;
 		}
 		else
 		{
-			shadowMapSize = size;
-			return true;
+			// Update shadow map
+			Modules::renderer().releaseShadowRB();
+			
+			if( !Modules::renderer().createShadowRB( size, size ) )
+			{
+				Modules::log().writeWarning( "Failed to create shadow map" );
+				// Restore old buffer
+				Modules::renderer().createShadowRB( shadowMapSize, shadowMapSize );
+				return false;
+			}
+			else
+			{
+				shadowMapSize = size;
+				return true;
+			}
 		}
 	case EngineOptions::SampleCount:
 		sampleCount = ftoi_r( value );

@@ -148,9 +148,12 @@ bool Renderer::init()
 	}
 
 	// Create default shadow map
-	float shadowTex[16] = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
-	_defShadowMap = gRDI->createTexture( TextureTypes::Tex2D, 4, 4, 1, TextureFormats::DEPTH, false, false, false, false );
-	gRDI->uploadTextureData( _defShadowMap, 0, 0, shadowTex );
+	if ( gRDI->getCaps().texDepth )
+	{
+		float shadowTex[16] = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
+		_defShadowMap = gRDI->createTexture( TextureTypes::Tex2D, 4, 4, 1, TextureFormats::DEPTH, false, false, false );
+		gRDI->uploadTextureData( _defShadowMap, 0, 0, shadowTex );
+	}
 
 	// Create index buffer used for drawing quads
 	uint16 *quadIndices = new uint16[QuadIndexBufCount];

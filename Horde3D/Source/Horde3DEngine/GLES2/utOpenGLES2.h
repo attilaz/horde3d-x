@@ -59,13 +59,16 @@ namespace glExt
 	extern bool ARB_texture_non_power_of_two;
 	extern bool ARB_timer_query;
 
-	extern bool EXT_occlusion_query_boolean; // supported on sgx 543+ and NaCL
+	extern bool EXT_occlusion_query_boolean; // supported on sgx 543+ and Angle(NaCL,emscripten)
 
 	extern bool OES_texture_3D;
 	extern bool EXT_texture_sRGB;
 	extern bool EXT_texture_compression_s3tc;
-	extern bool EXT_texture_compression_pvrtc;
-	extern bool EXT_texture_compression_etc1;
+	extern bool EXT_texture_compression_dxt1;
+	extern bool ANGLE_texture_compression_dxt3;
+	extern bool ANGLE_texture_compression_dxt5;
+	extern bool IMG_texture_compression_pvrtc;
+	extern bool OES_compressed_ETC1_RGB8_texture;
 
 	extern bool OES_depth_texture;
 	extern bool EXT_shadow_samplers;

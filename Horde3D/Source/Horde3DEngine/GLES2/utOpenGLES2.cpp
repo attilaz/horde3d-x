@@ -40,8 +40,12 @@ namespace glExt
 	bool OES_texture_3D = false;
 	bool EXT_texture_sRGB = false;
 	bool EXT_texture_compression_s3tc = false;
-	bool EXT_texture_compression_pvrtc = false;
-	bool EXT_texture_compression_etc1 = false;
+	bool EXT_texture_compression_dxt1 = false;
+	bool ANGLE_texture_compression_dxt3 = false;
+	bool ANGLE_texture_compression_dxt5 = false;
+
+	bool IMG_texture_compression_pvrtc = false;
+	bool OES_compressed_ETC1_RGB8_texture = false;
 
 	extern bool OES_depth_texture = false;
 	extern bool EXT_shadow_samplers = false;
@@ -249,11 +253,14 @@ bool initOpenGLExtensions()
 		glExt::OES_texture_3D = v;
 	}
 
+	glExt::IMG_texture_compression_pvrtc = isExtensionSupported( "GL_IMG_texture_compression_pvrtc" );
+
 	glExt::EXT_texture_compression_s3tc = isExtensionSupported( "GL_EXT_texture_compression_s3tc" );
+	glExt::EXT_texture_compression_dxt1 = isExtensionSupported( "GL_EXT_texture_compression_dxt1" );
+	glExt::ANGLE_texture_compression_dxt3 = isExtensionSupported( "GL_ANGLE_texture_compression_dxt3" );
+	glExt::ANGLE_texture_compression_dxt5 = isExtensionSupported( "GL_ANGLE_texture_compression_dxt5" );
 
-	glExt::EXT_texture_compression_pvrtc = isExtensionSupported( "GL_IMG_texture_compression_pvrtc" );
-
-	glExt::EXT_texture_compression_etc1 = isExtensionSupported( "GL_OES_compressed_ETC1_RGB8_texture" );
+	glExt::OES_compressed_ETC1_RGB8_texture = isExtensionSupported( "GL_OES_compressed_ETC1_RGB8_texture" );
 
 	glExt::EXT_shadow_samplers = isExtensionSupported( "GL_EXT_shadow_samplers" );
 

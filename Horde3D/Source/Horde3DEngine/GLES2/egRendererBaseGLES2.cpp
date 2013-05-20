@@ -222,9 +222,10 @@ bool RenderDevice::init()
     
 	// Get capabilities
 	_caps.texBGRA8byteOrderIsRGBA8 = true;
-	_caps.texS3TC = glExt::EXT_texture_compression_s3tc;
-	_caps.texPVRTCI = glExt::EXT_texture_compression_pvrtc;
-	_caps.texETC1 = glExt::EXT_texture_compression_etc1;
+	_caps.texDXT = glExt::EXT_texture_compression_s3tc || 
+		(glExt::EXT_texture_compression_dxt1 && glExt::ANGLE_texture_compression_dxt3 && glExt::ANGLE_texture_compression_dxt5);
+	_caps.texPVRTCI = glExt::IMG_texture_compression_pvrtc;
+	_caps.texETC1 = glExt::OES_compressed_ETC1_RGB8_texture;
 
 	_caps.texFloat = glExt::ARB_texture_float;
 	_caps.texDepth = glExt::OES_depth_texture;
@@ -411,7 +412,7 @@ uint32 RenderDevice::calcTextureSize( TextureFormats::List format, int width, in
 
 uint32 RenderDevice::createTexture( TextureTypes::List type, int width, int height, int depth,
                                     TextureFormats::List format,
-                                    bool hasMips, bool genMips, bool compress, bool sRGB )
+                                    bool hasMips, bool genMips, bool sRGB )
 {
 	ASSERT( depth > 0 );
 
@@ -421,7 +422,7 @@ uint32 RenderDevice::createTexture( TextureTypes::List type, int width, int heig
 		return 0;
 	}
 
-	if ( !_caps.texS3TC && (format == TextureFormats::DXT1 || format == TextureFormats::DXT3 || format == TextureFormats::DXT5 ) )
+	if ( !_caps.texDXT && (format == TextureFormats::DXT1 || format == TextureFormats::DXT3 || format == TextureFormats::DXT5 ) )
 	{
 		Modules::log().writeWarning( "Unsupported texture formats: DXT1,3,5" );
 		return 0;
@@ -910,7 +911,7 @@ uint32 RenderDevice::createRenderBuffer( uint32 width, uint32 height, TextureFor
 		{
 			glBindFramebuffer( GL_FRAMEBUFFER, rb.fbo );
 			// Create a color texture
-			uint32 texObj = createTexture( TextureTypes::Tex2D, rb.width, rb.height, 1, format, false, false, false, false );
+			uint32 texObj = createTexture( TextureTypes::Tex2D, rb.width, rb.height, 1, format, false, false, false );
 			ASSERT( texObj != 0 );
 			uploadTextureData( texObj, 0, 0, 0x0 );
 			rb.colTexs[j] = texObj;
@@ -964,7 +965,7 @@ uint32 RenderDevice::createRenderBuffer( uint32 width, uint32 height, TextureFor
 		}
 		else
 		{
-			uint32 texObj = createTexture( TextureTypes::Tex2D, rb.width, rb.height, 1, TextureFormats::DEPTH, false, false, false, false );
+			uint32 texObj = createTexture( TextureTypes::Tex2D, rb.width, rb.height, 1, TextureFormats::DEPTH, false, false, false );
 			ASSERT( texObj != 0 );
 			if (glExt::EXT_shadow_samplers)
 				glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE_EXT, GL_NONE );

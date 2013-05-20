@@ -224,7 +224,7 @@ bool RenderDevice::init()
 	
 	// Get capabilities
 	_caps.texBGRA8byteOrderIsRGBA8 = true;
-	_caps.texS3TC = true;	//DXT1-3, BC1,3,5 in d3d11
+	_caps.texDXT = true;
 	_caps.texPVRTCI = false;
 	_caps.texETC1 = false;
 
@@ -433,7 +433,7 @@ static int getMipLevels(int width, int height, int depth)
 
 uint32 RenderDevice::createTexture( TextureTypes::List type, int width, int height, int depth,
                                     TextureFormats::List format,
-                                    bool hasMips, bool genMips, bool compress, bool sRGB )
+                                    bool hasMips, bool genMips, bool sRGB )
 {
 	ASSERT( depth > 0 );
 
