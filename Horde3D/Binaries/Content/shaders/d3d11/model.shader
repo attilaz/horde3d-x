@@ -380,7 +380,7 @@ float4 main( VS_OUTPUT In ) : SV_Target
 	
 #ifdef _F02_NormalMapping
 	float3 normalMap = texture_normalMap.Sample( sampler_normalMap, newCoords.xy ).rgb * 2.0 - 1.0;
-	float3 normal = mul( In.tsbMat, normalMap);
+	float3 normal = mul( normalMap, In.tsbMat);
 #else
 	float3 normal = In.tsbNormal;
 #endif
