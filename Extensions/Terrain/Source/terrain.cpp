@@ -314,7 +314,7 @@ bool TerrainNode::updateHeightData( TextureResource &hmap )
 {
 	delete[] _heightData; _heightData = 0x0;
 
-	if( hmap.getTexFormat() == TextureFormats::BGRA8 &&
+	if( hmap.getTexFormat() == TextureFormats::RGBA8 &&
 	    hmap.getWidth() == hmap.getHeight() &&
 	    (hmap.getWidth() == 32 || hmap.getWidth() == 64 || hmap.getWidth() == 128 ||
 	    hmap.getWidth() == 256 || hmap.getWidth() == 512 || hmap.getWidth() == 1024 ||
@@ -333,7 +333,7 @@ bool TerrainNode::updateHeightData( TextureResource &hmap )
 			{
 				// Decode 16 bit data from red and green channels
 				_heightData[i*(_hmapSize+1)+j] =
-					pixels[(i*_hmapSize+j)*4+2] * 256 + pixels[(i*_hmapSize+j)*4+1];
+					pixels[(i*_hmapSize+j)*4] * 256 + pixels[(i*_hmapSize+j)*4+1];
 			}
 		}
 		
@@ -342,7 +342,7 @@ bool TerrainNode::updateHeightData( TextureResource &hmap )
 		{
 			// Decode 16 bit data from red and green channels
 			_heightData[i*(_hmapSize+1)+_hmapSize] =
-				pixels[(i*_hmapSize+_hmapSize-1)*4+2] * 256 + pixels[(i*_hmapSize+_hmapSize-1)*4+1];
+				pixels[(i*_hmapSize+_hmapSize-1)*4] * 256 + pixels[(i*_hmapSize+_hmapSize-1)*4+1];
 		}
 
 		for( uint32 i = 0; i < _hmapSize + 1; ++i )

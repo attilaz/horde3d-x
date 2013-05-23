@@ -223,7 +223,6 @@ bool RenderDevice::init()
 	}
 	
 	// Get capabilities
-	_caps.texBGRA8byteOrderIsRGBA8 = true;
 	_caps.texDXT = true;
 	_caps.texPVRTCI = false;
 	_caps.texETC1 = false;
@@ -401,7 +400,7 @@ uint32 RenderDevice::calcTextureSize( TextureFormats::List format, int width, in
 {
 	switch( format )
 	{
-	case TextureFormats::BGRA8:
+	case TextureFormats::RGBA8:
 		return width * height * depth * 4;
 	case TextureFormats::DXT1:
 		return std::max( width / 4, 1 ) * std::max( height / 4, 1 ) * depth * 8;
@@ -586,7 +585,7 @@ bool RenderDevice::getTextureData( uint32 texObj, int slice, int mipLevel, void 
 
 	switch( tex.format )
 	{
-	case TextureFormats::BGRA8:
+	case TextureFormats::RGBA8:
 //*		fmt = GL_BGRA;
 //*		type = GL_UNSIGNED_BYTE;
 		break;

@@ -126,7 +126,7 @@ bool Modules::init( void *device )
 
 	// Create default resources
 	TextureResource *tex2DRes = new TextureResource(
-		"$Tex2D", 32, 32, 1, TextureFormats::BGRA8, ResourceFlags::NoTexMipmaps );
+		"$Tex2D", 32, 32, 1, TextureFormats::RGBA8, ResourceFlags::NoTexMipmaps );
 	void *image = tex2DRes->mapStream( TextureResData::ImageElem, 0, TextureResData::ImgPixelStream, false, true );
 	ASSERT( image != 0x0 );
 	for( uint32 i = 0; i < 32*32; ++i ) ((uint32 *)image)[i] = 0xffffffff;
@@ -135,7 +135,7 @@ bool Modules::init( void *device )
 	resMan().addNonExistingResource( *tex2DRes, false );
 
 	TextureResource *texCubeRes = new TextureResource(
-		"$TexCube", 32, 32, 1, TextureFormats::BGRA8, ResourceFlags::TexCubemap | ResourceFlags::NoTexMipmaps );
+		"$TexCube", 32, 32, 1, TextureFormats::RGBA8, ResourceFlags::TexCubemap | ResourceFlags::NoTexMipmaps );
 	for( uint32 i = 0; i < 6; ++i )
 	{
 		image = texCubeRes->mapStream( TextureResData::ImageElem, i, TextureResData::ImgPixelStream, false, true );
@@ -149,7 +149,7 @@ bool Modules::init( void *device )
 	if ( gRDI->getCaps().tex3D )
 	{
 		TextureResource *tex3DRes = new TextureResource(
-			"$Tex3D", 16, 16, 4, TextureFormats::BGRA8, ResourceFlags::NoTexMipmaps );
+			"$Tex3D", 16, 16, 4, TextureFormats::RGBA8, ResourceFlags::NoTexMipmaps );
 		image = tex3DRes->mapStream( TextureResData::ImageElem, 0, TextureResData::ImgPixelStream, false, true );
 		ASSERT( image != 0x0 );
 		for( uint32 i = 0; i < 16*16*4; ++i ) ((uint32 *)image)[i] = 0xffffffff;

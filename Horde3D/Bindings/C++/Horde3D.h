@@ -206,7 +206,7 @@ struct H3DFormats
 			The available resource stream formats.
 			
 		Unknown      - Unknown format
-		TEX_BGRA8    - 8-bit BGRA texture
+		TEX_RGBA8    - 8-bit RGBA texture
 		TEX_DXT1     - DXT1 compressed texture
 		TEX_DXT3     - DXT3 compressed texture
 		TEX_DXT5     - DXT5 compressed texture
@@ -216,7 +216,7 @@ struct H3DFormats
 	enum List
 	{
 		Unknown = 0,
-		TEX_BGRA8,
+		TEX_RGBA8,
 		TEX_DXT1,
 		TEX_DXT3,
 		TEX_DXT5,

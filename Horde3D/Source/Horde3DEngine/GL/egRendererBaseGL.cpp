@@ -222,7 +222,6 @@ bool RenderDevice::init()
 	}
 	
 	// Get capabilities
-	_caps.texBGRA8byteOrderIsRGBA8 = false;
 	_caps.texDXT = glExt::EXT_texture_compression_s3tc;
 	_caps.texPVRTCI = false;
 	_caps.texETC1 = false;
@@ -244,7 +243,7 @@ bool RenderDevice::init()
 
 	// Find supported depth format (some old ATI cards only support 16 bit depth for FBOs)
 	_depthFormat = GL_DEPTH_COMPONENT24;
-	uint32 testBuf = createRenderBuffer( 32, 32, TextureFormats::BGRA8, true, 1, 0 ); 
+	uint32 testBuf = createRenderBuffer( 32, 32, TextureFormats::RGBA8, true, 1, 0 ); 
 	if( testBuf == 0 )
 	{	
 		_depthFormat = GL_DEPTH_COMPONENT16;
@@ -365,7 +364,7 @@ uint32 RenderDevice::calcTextureSize( TextureFormats::List format, int width, in
 {
 	switch( format )
 	{
-	case TextureFormats::BGRA8:
+	case TextureFormats::RGBA8:
 		return width * height * depth * 4;
 	case TextureFormats::DXT1:
 		return std::max( width / 4, 1 ) * std::max( height / 4, 1 ) * depth * 8;
@@ -408,7 +407,7 @@ uint32 RenderDevice::createTexture( TextureTypes::List type, int width, int heig
 	
 	switch( format )
 	{
-	case TextureFormats::BGRA8:
+	case TextureFormats::RGBA8:
 		tex.glFmt = tex.sRGB ? GL_SRGB8_ALPHA8_EXT : GL_RGBA8;
 		break;
 	case TextureFormats::DXT1:
@@ -466,18 +465,16 @@ void RenderDevice::uploadTextureData( uint32 texObj, int slice, int mipLevel, co
 	glActiveTexture( GL_TEXTURE15 );
 	glBindTexture( tex.type, tex.glObj );
 	
-	int inputFormat = GL_BGRA, inputType = GL_UNSIGNED_BYTE;
+	int inputFormat = GL_RGBA, inputType = GL_UNSIGNED_BYTE;
 	bool compressed = (format == TextureFormats::DXT1) || (format == TextureFormats::DXT3) ||
 	                  (format == TextureFormats::DXT5);
 	
 	switch( format )
 	{
 	case TextureFormats::RGBA16F:
-		inputFormat = GL_RGBA;
 		inputType = GL_FLOAT;
 		break;
 	case TextureFormats::RGBA32F:
-		inputFormat = GL_RGBA;
 		inputType = GL_FLOAT;
 		break;
 	case TextureFormats::DEPTH:
@@ -556,8 +553,8 @@ bool RenderDevice::getTextureData( uint32 texObj, int slice, int mipLevel, void 
 
 	switch( tex.format )
 	{
-	case TextureFormats::BGRA8:
-		fmt = GL_BGRA;
+	case TextureFormats::RGBA8:
+		fmt = GL_RGBA;
 		type = GL_UNSIGNED_BYTE;
 		break;
 	case TextureFormats::DXT1:

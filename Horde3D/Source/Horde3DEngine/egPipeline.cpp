@@ -352,11 +352,11 @@ bool PipelineResource::load( const char *data, int size )
 			if( !node2.getAttribute( "numColBufs" ) ) return raiseError( "Missing RenderTarget attribute 'numColBufs'" );
 			uint32 numBuffers = atoi( node2.getAttribute( "numColBufs" ) );
 			
-			TextureFormats::List format = TextureFormats::BGRA8;
+			TextureFormats::List format = TextureFormats::RGBA8;
 			if( node2.getAttribute( "format" ) != 0x0 )
 			{
 				if( _stricmp( node2.getAttribute( "format" ), "RGBA8" ) == 0 )
-					format = TextureFormats::BGRA8;
+					format = TextureFormats::RGBA8;
 				else if( _stricmp( node2.getAttribute( "format" ), "RGBA16F" ) == 0 )
 					format = TextureFormats::RGBA16F;
 				else if( _stricmp( node2.getAttribute( "format" ), "RGBA32F" ) == 0 )

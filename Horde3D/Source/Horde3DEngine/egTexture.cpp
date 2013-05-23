@@ -88,11 +88,11 @@ void TextureResource::initializationFunc()
 
 	// Upload default textures
 	defTex2DObject = gRDI->createTexture( TextureTypes::Tex2D, 4, 4, 1,
-	                                      TextureFormats::BGRA8, true, true, false );
+	                                      TextureFormats::RGBA8, true, true, false );
 	gRDI->uploadTextureData( defTex2DObject, 0, 0, texData );
 	
 	defTexCubeObject = gRDI->createTexture( TextureTypes::TexCube, 4, 4, 1,
-	                                        TextureFormats::BGRA8, true, true, false );
+	                                        TextureFormats::RGBA8, true, true, false );
 	for( uint32 i = 0; i < 6; ++i ) 
 	{
 		gRDI->uploadTextureData( defTexCubeObject, i, 0, texData );
@@ -105,7 +105,7 @@ void TextureResource::initializationFunc()
 		memcpy( texData2 + 128, texData, 64 ); memcpy( texData2 + 192, texData, 64 );
 
 		defTex3DObject = gRDI->createTexture( TextureTypes::Tex3D, 4, 4, 4,
-	                                      TextureFormats::BGRA8, true, true, false );
+	                                      TextureFormats::RGBA8, true, true, false );
 		gRDI->uploadTextureData( defTex3DObject, 0, 0, texData2 );
 		delete[] texData2;
 	}
@@ -179,7 +179,7 @@ TextureResource::~TextureResource()
 void TextureResource::initDefault()
 {
 	_rbObj = 0;
-	_texFormat = TextureFormats::BGRA8;
+	_texFormat = TextureFormats::RGBA8;
 	_width = 0; _height = 0; _depth = 0;
 	_sRGB = false;
 	_hasMipMaps = true;
@@ -317,19 +317,19 @@ bool TextureResource::loadDDS( const char *data, int size )
 		{
 			if( ddsHeader.pixFormat.dwRGBBitCount == 24 )
 			{
-				_texFormat = TextureFormats::BGRA8;
+				_texFormat = TextureFormats::RGBA8;
 			}
 			else if( ddsHeader.pixFormat.dwRGBBitCount == 32 )
 			{
 				if( !(ddsHeader.pixFormat.dwFlags & DDPF_ALPHAPIXELS) ||
 				    ddsHeader.pixFormat.dwABitMask == 0x00000000 )
 				{
-					_texFormat = TextureFormats::BGRA8;
+					_texFormat = TextureFormats::RGBA8;
 					pixFmt = pixFmt == pfBGR ? pfBGRX : pfRGBX;
 				}
 				else
 				{	
-					_texFormat = TextureFormats::BGRA8;
+					_texFormat = TextureFormats::RGBA8;
 					pixFmt = pixFmt == pfBGR ? pfBGRA : pfRGBA;
 				}
 			}
@@ -363,27 +363,26 @@ bool TextureResource::loadDDS( const char *data, int size )
 			if( pixels + mipSize > (unsigned char *)data + size )
 				return raiseError( "Corrupt DDS" );
 
-			if( _texFormat == TextureFormats::BGRA8 && pixFmt != pfBGRA )
+			if( _texFormat == TextureFormats::RGBA8 && pixFmt != pfRGBA )
 			{
-				// Convert 8 bit DDS formats to BGRA
+				// Convert 8 bit DDS formats to RGBA
 				uint32 pixCount = width * height * depth;
 				if( dstBuf == 0x0 ) dstBuf = new uint32[pixCount * 4];
 				uint32 *p = dstBuf;
-				bool rgba8 = gRDI->getCaps().texBGRA8byteOrderIsRGBA8;
 
-				if( ( pixFmt == pfBGR && !rgba8) || ( pixFmt == pfRGB && rgba8) )
+				if( pixFmt == pfRGB )
 					for( uint32 k = 0; k < pixCount * 3; k += 3 )
 						*p++ = pixels[k+0] | pixels[k+1]<<8 | pixels[k+2]<<16 | 0xFF000000;
-				else if( ( pixFmt == pfBGRX && !rgba8) || ( pixFmt == pfRGBX && rgba8) )
+				else if( pixFmt == pfRGBX )
 					for( uint32 k = 0; k < pixCount * 4; k += 4 )
 						*p++ = pixels[k+0] | pixels[k+1]<<8 | pixels[k+2]<<16 | 0xFF000000;
-				else if( ( pixFmt == pfRGB && !rgba8) || ( pixFmt == pfBGR && rgba8) )
+				else if( pixFmt == pfBGR )
 					for( uint32 k = 0; k < pixCount * 3; k += 3 )
 						*p++ = pixels[k+2] | pixels[k+1]<<8 | pixels[k+0]<<16 | 0xFF000000;
-				else if( ( pixFmt == pfRGBX && !rgba8) || ( pixFmt == pfBGRX && rgba8) )
+				else if( pixFmt == pfBGRX )
 					for( uint32 k = 0; k < pixCount * 4; k += 4 )
 						*p++ = pixels[k+2] | pixels[k+1]<<8 | pixels[k+0]<<16 | 0xFF000000;
-				else if( ( pixFmt == pfRGBA && !rgba8) || ( pixFmt == pfBGRA && rgba8) )
+				else if( pixFmt == pfBGRA )
 					for( uint32 k = 0; k < pixCount * 4; k += 4 )
 						*p++ = pixels[k+2] | pixels[k+1]<<8 | pixels[k+0]<<16 | pixels[k+3]<<24;
 				
@@ -424,21 +423,10 @@ bool TextureResource::loadSTBI( const char *data, int size )
 
 	if( pixels == 0x0 )
 		return raiseError( "Invalid image format (" + string( stbi_failure_reason() ) + ")" );
-
-	// Swizzle RGBA -> BGRA
-	if ( !gRDI->getCaps().texBGRA8byteOrderIsRGBA8 )
-	{
-		uint32 *ptr = (uint32 *)pixels;
-		for( uint32 i = 0, si = _width * _height; i < si; ++i )
-		{
-			uint32 col = *ptr;
-			*ptr++ = (col & 0xFF00FF00) | ((col & 0x000000FF) << 16) | ((col & 0x00FF0000) >> 16);
-		}
-	}
 	
 	_depth = 1;
 	_texType = TextureTypes::Tex2D;
-	_texFormat = hdr ? TextureFormats::RGBA16F : TextureFormats::BGRA8;
+	_texFormat = hdr ? TextureFormats::RGBA16F : TextureFormats::RGBA8;
 	_sRGB = (_flags & ResourceFlags::TexSRGB) != 0;
 	_hasMipMaps = !(_flags & ResourceFlags::NoTexMipmaps);
 	

@@ -221,7 +221,6 @@ bool RenderDevice::init()
 	glGetIntegerv( GL_FRAMEBUFFER_BINDING, &_defaultFBO );
     
 	// Get capabilities
-	_caps.texBGRA8byteOrderIsRGBA8 = true;
 	_caps.texDXT = glExt::EXT_texture_compression_s3tc || 
 		(glExt::EXT_texture_compression_dxt1 && glExt::ANGLE_texture_compression_dxt3 && glExt::ANGLE_texture_compression_dxt5);
 	_caps.texPVRTCI = glExt::IMG_texture_compression_pvrtc;
@@ -384,7 +383,7 @@ uint32 RenderDevice::calcTextureSize( TextureFormats::List format, int width, in
 {
 	switch( format )
 	{
-	case TextureFormats::BGRA8:
+	case TextureFormats::RGBA8:
 		return width * height * depth * 4;
 	case TextureFormats::DXT1:
 		return std::max( width / 4, 1 ) * std::max( height / 4, 1 ) * depth * 8;
@@ -472,7 +471,7 @@ uint32 RenderDevice::createTexture( TextureTypes::List type, int width, int heig
 	
 	switch( format )
 	{
-	case TextureFormats::BGRA8:
+	case TextureFormats::RGBA8:
 		tex.glFmt = GL_RGBA;
 		break;
 	case TextureFormats::DXT1:

@@ -27,7 +27,6 @@ namespace Horde3D {
 struct DeviceCaps
 {
 		//compressed formats
-	bool texBGRA8byteOrderIsRGBA8;	// swapped byte order is used for rgba8 texture
 	bool texDXT;	//dxt 1,3,5 support (bc1-3 in d3d11)
 	bool texPVRTCI;	
 	bool texETC1;
@@ -86,7 +85,7 @@ struct TextureFormats
 	enum List
 	{
 		Unknown,
-		BGRA8,
+		RGBA8,
 		DXT1,
 		DXT3,
 		DXT5,
