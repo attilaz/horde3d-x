@@ -76,7 +76,6 @@ bool Application::init( void* device )
 
 	// Set options
 	h3dSetOption( H3DOptions::LoadTextures, 1 );
-	h3dSetOption( H3DOptions::TexCompression, 0 );
 	h3dSetOption( H3DOptions::FastAnimation, 0 );
 	h3dSetOption( H3DOptions::MaxAnisotropy, 4 );
 	h3dSetOption( H3DOptions::ShadowMapSize, 2048 );

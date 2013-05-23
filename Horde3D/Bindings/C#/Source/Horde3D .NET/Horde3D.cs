@@ -36,8 +36,6 @@ namespace Horde3DNET
         ///   MaxNumMessages      - Defines the maximum number of messages that can be stored in the message queue (Default: 512)
         ///   TrilinearFiltering  - Enables or disables trilinear filtering for textures. (Values: 0, 1; Default: 1)
         ///   MaxAnisotropy       - Sets the maximum quality for anisotropic filtering. (Values: 1, 2, 4, 8; Default: 1)
-        ///   TexCompression      - Enables or disables texture compression; only affects textures that are
-        ///                         loaded after setting the option. (Values: 0, 1; Default: 0)
         ///   SRGBLinearization   - Eanbles or disables gamma-to-linear-space conversion of input textures that are tagged as sRGB (Values: 0, 1; Default: 0)
         ///   LoadTextures        - Enables or disables loading of textures referenced by materials; this can be useful to reduce
         ///                         loading times for testing. (Values: 0, 1; Default: 1)
@@ -58,7 +56,6 @@ namespace Horde3DNET
             MaxNumMessages,
             TrilinearFiltering,
             MaxAnisotropy,
-            TexCompression,
             SRGBLinearization,
             LoadTextures,
             FastAnimation,
@@ -138,7 +135,6 @@ namespace Horde3DNET
         ///        The available flags used when adding a resource.
         			
         /// NoQuery           - Excludes resource from being listed by queryUnloadedResource function.
-        /// NoTexCompression  - Disables texture compression for Texture resource.
         /// NoTexMipmaps      - Disables generation of mipmaps for Texture resource.
         /// TexCubemap        - Sets Texture resource to be a cubemap.
         /// TexDynamic        - Enables more efficient updates of Texture resource streams.
@@ -149,7 +145,6 @@ namespace Horde3DNET
         public enum H3DResFlags
         {
             NoQuery = 1,
-            NoTexCompression = 2,
             NoTexMipmaps = 4,
             TexCubemap = 8,
             TexDynamic = 16,

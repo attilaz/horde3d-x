@@ -140,7 +140,6 @@ TextureResource::TextureResource( const string &name, uint32 width, uint32 heigh
 	{
 		_flags &= ~ResourceFlags::TexCubemap;
 		_flags &= ~ResourceFlags::TexSRGB;
-		_flags |= ResourceFlags::NoTexCompression;
 		_flags |= ResourceFlags::NoTexMipmaps;
 
 		_texType = TextureTypes::Tex2D;

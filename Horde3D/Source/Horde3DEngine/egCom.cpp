@@ -56,8 +56,6 @@ float EngineConfig::getOption( EngineOptions::List param )
 		return trilinearFiltering ? 1.0f : 0.0f;
 	case EngineOptions::MaxAnisotropy:
 		return (float)maxAnisotropy;
-	case EngineOptions::TexCompression:
-		return texCompression ? 1.0f : 0.0f;
 	case EngineOptions::SRGBLinearization:
 		return sRGBLinearization ? 1.0f : 0.0f;
 	case EngineOptions::LoadTextures:
@@ -100,9 +98,6 @@ bool EngineConfig::setOption( EngineOptions::List param, float value )
 		return true;
 	case EngineOptions::MaxAnisotropy:
 		maxAnisotropy = ftoi_r( value );
-		return true;
-	case EngineOptions::TexCompression:
-		texCompression = (value != 0);
 		return true;
 	case EngineOptions::SRGBLinearization:
 		sRGBLinearization = (value != 0);

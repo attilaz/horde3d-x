@@ -149,10 +149,6 @@ bool MaterialResource::load( const char *data, int size )
 		uint32 flags = 0;
 		if( !Modules::config().loadTextures ) flags |= ResourceFlags::NoQuery;
 		
-		if( _stricmp( node1.getAttribute( "allowCompression", "true" ), "false" ) == 0 ||
-			_stricmp( node1.getAttribute( "allowCompression", "1" ), "0" ) == 0 )
-			flags |= ResourceFlags::NoTexCompression;
-
 		if( _stricmp( node1.getAttribute( "mipmaps", "true" ), "false" ) == 0 ||
 			_stricmp( node1.getAttribute( "mipmaps", "1" ), "0" ) == 0 )
 			flags |= ResourceFlags::NoTexMipmaps;

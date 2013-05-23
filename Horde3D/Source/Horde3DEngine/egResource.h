@@ -48,7 +48,6 @@ struct ResourceFlags
 	enum Flags
 	{
 		NoQuery = 1,
-		NoTexCompression = 2,
 		NoTexMipmaps = 4,
 		TexCubemap = 8,
 		TexDynamic = 16,

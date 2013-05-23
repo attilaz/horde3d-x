@@ -85,7 +85,7 @@ SceneNodeTpl *TerrainNode::parsingFunc( map< string, string > &attribs )
 	if( itr != attribs.end() )
 	{
 		uint32 res = Modules::resMan().addResource( ResourceTypes::Texture, itr->second, 
-			ResourceFlags::NoTexCompression | ResourceFlags::NoTexMipmaps, false );
+			ResourceFlags::NoTexMipmaps, false );
 		if( res != 0 )
 			terrainTpl->hmapRes = (TextureResource *)Modules::resMan().resolveResHandle( res );
 	}

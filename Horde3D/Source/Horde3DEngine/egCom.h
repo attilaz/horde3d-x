@@ -36,7 +36,6 @@ struct EngineOptions
 		MaxNumMessages,
 		TrilinearFiltering,
 		MaxAnisotropy,
-		TexCompression,
 		SRGBLinearization,
 		LoadTextures,
 		FastAnimation,
