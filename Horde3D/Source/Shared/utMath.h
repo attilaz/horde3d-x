@@ -165,16 +165,16 @@ public:
 	// -----------
 	bool operator==( const Vec3f &v ) const
 	{
-		return (x > v.x - Math::Epsilon && x < v.x + Math::Epsilon && 
-		        y > v.y - Math::Epsilon && y < v.y + Math::Epsilon &&
-		        z > v.z - Math::Epsilon && z < v.z + Math::Epsilon);
+		return (fabsf(x - v.x) <= Math::ZeroEpsilon &&
+				fabsf(y - v.y) <= Math::ZeroEpsilon &&
+				fabsf(z - v.z) <= Math::ZeroEpsilon);
 	}
 
 	bool operator!=( const Vec3f &v ) const
 	{
-		return (x < v.x - Math::Epsilon || x > v.x + Math::Epsilon || 
-		        y < v.y - Math::Epsilon || y > v.y + Math::Epsilon ||
-		        z < v.z - Math::Epsilon || z > v.z + Math::Epsilon);
+		return (fabsf(x - v.x) <= Math::ZeroEpsilon ||
+				fabsf(y - v.y) <= Math::ZeroEpsilon ||
+				fabsf(z - v.z) <= Math::ZeroEpsilon);
 	}
 	
 	// ---------------------
@@ -273,8 +273,8 @@ public:
 		// Assumes that the unrotated view vector is (0, 0, -1)
 		Vec3f v;
 		
-		if( y != 0.0f ) v.x = atan2f( y, sqrtf( x*x + z*z ) );
-		if( x != 0.0f || z != 0.0f ) v.y = atan2f( -x, -z );
+		if( fabsf(y) >= Math::ZeroEpsilon ) v.x = atan2f( y, sqrtf( x*x + z*z ) );
+		if( fabsf(x) >= Math::ZeroEpsilon || fabsf(z) >= Math::ZeroEpsilon ) v.y = atan2f( -x, -z );
 
 		return v;
 	}
