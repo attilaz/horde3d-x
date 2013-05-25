@@ -55,86 +55,100 @@ GPUTimer::GPUTimer() : _numQueries( 0 ),  _queryFrame( 0 ), _time( 0 ), _activeQ
 
 GPUTimer::~GPUTimer()
 {
-//*	if( !_queryPool.empty() )
-//*		glDeleteQueries( (uint32)_queryPool.size(), &_queryPool[0] );
+	for( uint32 i = 0; i < _queryPool.size(); ++i)
+		SAFE_RELEASE( _queryPool[i] );
 }
 
 
 void GPUTimer::beginQuery( uint32 frameID )
 {
-	return;
-//*	if( !glExt::ARB_timer_query ) return;
-//*	ASSERT( !_activeQuery );
-//*	
-//*	if( _queryFrame != frameID )
-//*	{
-//*		if( !updateResults() ) return;
-//*
-//*		_queryFrame = frameID;
-//*		_numQueries = 0;
-//*	}
-//*	
-//*	// Create new query pair if necessary
-//*	uint32 queryObjs[2];
-//*	if( _numQueries++ * 2 == _queryPool.size() )
-//*	{
-//*		glGenQueries( 2, queryObjs );
-//*		_queryPool.push_back( queryObjs[0] );
-//*		_queryPool.push_back( queryObjs[1] );
-//*	}
-//*	else
-//*	{
-//*		queryObjs[0] = _queryPool[(_numQueries - 1) * 2];
-//*	}
-//*	
-//*	_activeQuery = true;
-//*	 glQueryCounter( queryObjs[0], GL_TIMESTAMP );
+	if ( !gRDI->getCaps().timerQuery ) return;
+	ASSERT( !_activeQuery );
+	
+	if( _queryFrame != frameID )
+	{
+		gRDI->queryTimestampDisjointNewFrame( frameID );
+		if( !updateResults() ) return;
+
+		_queryFrame = frameID;
+		_numQueries = 0;
+	}
+	
+	// Create new query pair if necessary
+	ID3D11Query* queryObjs[2] = {NULL,NULL};
+	if( _numQueries++ * 2 == _queryPool.size() )
+	{
+		D3D11_QUERY_DESC desc;
+		desc.Query = D3D11_QUERY_TIMESTAMP;
+		desc.MiscFlags = 0;
+		gRDI->_d3dDevice->CreateQuery( &desc, &queryObjs[0] );
+		gRDI->_d3dDevice->CreateQuery( &desc, &queryObjs[1] );
+
+		if ( queryObjs[0] == NULL || queryObjs[1] == NULL )
+			return;
+			
+		_queryPool.push_back( queryObjs[0] );
+		_queryPool.push_back( queryObjs[1] );
+	}
+	else
+	{
+		queryObjs[0] = _queryPool[(_numQueries - 1) * 2];
+	}
+	
+	_activeQuery = true;
+	gRDI->_d3dContext->End( queryObjs[0] );
 }
 
 
 void GPUTimer::endQuery()
 {
-//*	if( _activeQuery )
-//*	{	
-//*		glQueryCounter( _queryPool[_numQueries * 2 - 1], GL_TIMESTAMP );
-//*		_activeQuery = false;
-//*	}
+	if( _activeQuery )
+	{	
+		gRDI->_d3dContext->End( _queryPool[_numQueries * 2 - 1] );
+		_activeQuery = false;
+	}
 }
 
 
 bool GPUTimer::updateResults()
 {
-	return false;
-//*	if( !glExt::ARB_timer_query ) return false;
-//*	
-//*	if( _numQueries == 0 )
-//*	{
-//*		_time = 0;
-//*		return true;
-//*	}
-//*	
-//*	// Make sure that last query is available
-//*	GLint available;
-//*	glGetQueryObjectiv( _queryPool[_numQueries * 2 - 1], GL_QUERY_RESULT_AVAILABLE, &available );
-//*	if( !available ) return false;
-//*	
-//*	//  Accumulate time
-//*	GLuint64 timeStart = 0, timeEnd = 0, timeAccum = 0;
-//*	for( uint32 i = 0; i < _numQueries; ++i )
-//*	{
-//*		glGetQueryObjectui64v( _queryPool[i * 2], GL_QUERY_RESULT, &timeStart );
-//*		glGetQueryObjectui64v( _queryPool[i * 2 + 1], GL_QUERY_RESULT, &timeEnd );
-//*		timeAccum += timeEnd - timeStart;
-//*	}
-//*	
-//*	_time = (float)((double)timeAccum / 1000000.0);
-//*	return true;
+	if ( !gRDI->getCaps().timerQuery ) return false;
+	
+	if( _numQueries == 0 )
+	{
+		_time = 0;
+		return true;
+	}
+
+	UINT64 freq;
+	if ( !gRDI->queryTimestampDisjointGetFreq( _queryFrame, &freq ) )
+		return false;
+
+	if ( freq == 0 )
+	{	// no data or disjoint
+		_time = 0;
+		return true;
+	}
+
+	//  Accumulate time
+	UINT64 timeStart = 0, timeEnd = 0, timeAccum = 0;
+	for( uint32 i = 0; i < _numQueries; ++i )
+	{
+		if ( S_FALSE == gRDI->_d3dContext->GetData( _queryPool[i * 2], &timeStart, sizeof(UINT64), 0 ) )
+			return false;
+		if ( S_FALSE == gRDI->_d3dContext->GetData( _queryPool[i * 2 + 1], &timeEnd, sizeof(UINT64), 0 ) )
+			return false;
+		timeAccum += timeEnd - timeStart;
+	}
+	
+	_time = (float)((double)timeAccum / (double)freq) * 1000.0f;
+	return true;
 }
 
 
 void GPUTimer::reset()
 {
-//*	_time = glExt::ARB_timer_query ? 0.f : -1.f;
+	_time = gRDI->getCaps().timerQuery ? 0.f : -1.f;
 }
 
 
@@ -171,6 +185,12 @@ RenderDevice::RenderDevice(void* device)
 		_depthStencilStates[ i ] = 0x0;
 	for(uint32 i = 0; i<RDISamplerNumStates; ++i)
 		_samplerStates[ i ] = 0x0;
+	for(uint32 i = 0; i< RDIQueryTimestampDisjoint::maxLatency; ++i)
+	{
+		_queryTimestampDisjoints[ i ].frame = 0;
+		_queryTimestampDisjoints[ i ].query = 0x0;
+	}
+	_activeQueryTimestampDisjoint = -1;
 
 	_indexFormat = (uint32)IDXFMT_16;
 	_pendingMask = 0;
@@ -187,6 +207,8 @@ RenderDevice::~RenderDevice()
 		SAFE_RELEASE( _depthStencilStates[ i ] );
 	for(uint32 i = 0; i<RDISamplerNumStates; ++i)
 		SAFE_RELEASE( _samplerStates[ i ] );
+	for(uint32 i = 0; i< RDIQueryTimestampDisjoint::maxLatency; ++i)
+		SAFE_RELEASE( _queryTimestampDisjoints[ i ].query );
 	_d3dContext->ClearState();
 	_d3dContext->Flush();
 }
@@ -238,7 +260,7 @@ bool RenderDevice::init()
 	_caps.rtMaxColBufs = _d3dDevice->GetFeatureLevel() >= D3D_FEATURE_LEVEL_9_3 ? 4 : 1;
 
 	_caps.occQuery = _d3dDevice->GetFeatureLevel() >= D3D_FEATURE_LEVEL_9_2; 
-	_caps.timerQuery = false; // TODO
+	_caps.timerQuery = _d3dDevice->GetFeatureLevel() >= D3D_FEATURE_LEVEL_10_0;
 
 	if ( _d3dDevice->GetFeatureLevel() <= D3D_FEATURE_LEVEL_9_3 )
 		_depthFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;	//no shadow sampling, cannot be used as texture
@@ -246,6 +268,15 @@ bool RenderDevice::init()
 		_depthFormat = DXGI_FORMAT_R32_TYPELESS;  // used as d32_float, r32_float  sample_c
 	else
 		_depthFormat = DXGI_FORMAT_R24G8_TYPELESS; // used as R24_UNORM_X8_TYPELESS, D24_UNORM_S8_UINT , sample_c, gather
+
+	if ( _caps.timerQuery )
+	{
+		D3D11_QUERY_DESC desc;
+		desc.Query = D3D11_QUERY_TIMESTAMP_DISJOINT;
+		desc.MiscFlags = 0;
+		for(uint32 i = 0; i< RDIQueryTimestampDisjoint::maxLatency; ++i)
+			gRDI->_d3dDevice->CreateQuery( &desc, &_queryTimestampDisjoints[ i ].query );
+	}
 
 	initStates();
 	resetStates();
@@ -1375,37 +1406,96 @@ bool RenderDevice::getRenderBufferData( uint32 rbObj, int bufIndex, int *width, 
 
 uint32 RenderDevice::createOcclusionQuery()
 {
-	uint32 queryObj = 0;
-//*	glGenQueries( 1, &queryObj );
-	return queryObj;
+	D3D11_QUERY_DESC desc;
+	desc.Query = D3D11_QUERY_OCCLUSION;
+	desc.MiscFlags = 0;
+	ID3D11Query* query;
+	if ( FAILED( _d3dDevice->CreateQuery( &desc, &query ) ) )
+		return 0;
+
+	return _occlusionQueries.add( query );
 }
 
 
 void RenderDevice::destroyQuery( uint32 queryObj )
 {
 	if( queryObj == 0 ) return;
-	
-//*	glDeleteQueries( 1, &queryObj );
+
+	ID3D11Query* query = _occlusionQueries.getRef( queryObj );
+	SAFE_RELEASE(query);
+
+	_occlusionQueries.remove( queryObj );
 }
 
 
 void RenderDevice::beginQuery( uint32 queryObj )
 {
-//*	glBeginQuery( GL_SAMPLES_PASSED, queryObj );
+	if( queryObj == 0 ) return;
+
+	ID3D11Query* query = _occlusionQueries.getRef( queryObj );
+	_d3dContext->Begin(query);
 }
 
 
-void RenderDevice::endQuery( uint32 /*queryObj*/ )
+void RenderDevice::endQuery( uint32 queryObj )
 {
-//*	glEndQuery( GL_SAMPLES_PASSED );
+	if( queryObj == 0 ) return;
+
+	ID3D11Query* query = _occlusionQueries.getRef( queryObj );
+	_d3dContext->End(query);
 }
 
 
 uint32 RenderDevice::getQueryResult( uint32 queryObj )
 {
-	uint32 samples = 0;
-//*	glGetQueryObjectuiv( queryObj, GL_QUERY_RESULT, &samples );
-	return samples;
+	UINT64 samples = 0;
+
+	if( queryObj != 0 )
+	{
+		ID3D11Query* query = _occlusionQueries.getRef( queryObj );
+
+		while( S_OK != _d3dContext->GetData(query, &samples, sizeof(UINT64), 0) )
+		{
+		}
+	}
+
+	return (uint32)samples;
+}
+
+void RenderDevice::queryTimestampDisjointNewFrame( uint32 frameID )
+{
+	if ( !_caps.timerQuery ) return;
+
+	if ( _activeQueryTimestampDisjoint < 0 || frameID != _queryTimestampDisjoints[_activeQueryTimestampDisjoint].frame )
+	{
+		if ( _activeQueryTimestampDisjoint >= 0 )
+			_d3dContext->End( _queryTimestampDisjoints[_activeQueryTimestampDisjoint].query );
+
+		_activeQueryTimestampDisjoint = (_activeQueryTimestampDisjoint + 1) % RDIQueryTimestampDisjoint::maxLatency;
+
+		_queryTimestampDisjoints[_activeQueryTimestampDisjoint].frame = frameID;
+		_d3dContext->Begin( _queryTimestampDisjoints[_activeQueryTimestampDisjoint].query );
+	}
+}
+
+bool RenderDevice::queryTimestampDisjointGetFreq( uint32 frameID, UINT64* freq)
+{
+	if ( !_caps.timerQuery ) return false;
+
+	for (uint32 i=0; i < RDIQueryTimestampDisjoint::maxLatency; ++i)
+		if ( _queryTimestampDisjoints[i].frame == frameID )
+		{
+			ID3D11Query* disjointTimestamp = _queryTimestampDisjoints[i].query;
+
+			D3D11_QUERY_DATA_TIMESTAMP_DISJOINT tsDisjoint;
+			if (_d3dContext->GetData( disjointTimestamp,  &tsDisjoint, sizeof(tsDisjoint), 0) == S_FALSE)
+				return false;
+			*freq = tsDisjoint.Disjoint ? 0 : tsDisjoint.Frequency;
+			return true;
+		}
+
+	*freq = 0;
+	return true;
 }
 
 

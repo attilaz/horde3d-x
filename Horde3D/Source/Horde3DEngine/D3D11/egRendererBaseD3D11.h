@@ -39,7 +39,7 @@ public:
 	float getTimeMS() { return _time; }
 
 private:
-	std::vector < uint32 >  _queryPool;
+	std::vector < ID3D11Query* >  _queryPool;
 	uint32                  _numQueries;
 	uint32                  _queryFrame;
 	float                   _time;
@@ -250,6 +250,14 @@ struct RDIDepthStencilState
 	static const uint32 numStates = stateMask + 1;
 };
 
+struct RDIQueryTimestampDisjoint
+{
+	uint32			frame;
+	ID3D11Query*	query;
+
+	static const int maxLatency = 4;
+};
+
 // =================================================================================================
 
 class RenderDevice
@@ -402,6 +410,7 @@ public:
 	const RDIRenderBuffer &getRenderBuffer( uint32 rbObj ) { return _rendBufs.getRef( rbObj ); }
 
 	friend class Renderer;
+	friend class GPUTimer;
 
 protected:
 
@@ -450,6 +459,13 @@ protected:
 	RDIObjects< RDITexture >       _textures;
 	RDIObjects< RDIShader >        _shaders;
 	RDIObjects< RDIRenderBuffer >  _rendBufs;
+	RDIObjects< ID3D11Query* >	   _occlusionQueries;
+
+
+	void						   queryTimestampDisjointNewFrame( uint32 frameID );
+	bool						   queryTimestampDisjointGetFreq( uint32 frameID, UINT64* freq);	//returns true if data available (*freq==0 if data is invalid)
+	int							   _activeQueryTimestampDisjoint;
+	RDIQueryTimestampDisjoint	   _queryTimestampDisjoints[RDIQueryTimestampDisjoint::maxLatency];
 
 	ID3D11RasterizerState*		_rasterizerStates[RDIRasterState::numStates];
 	ID3D11BlendState*			_blendStates[RDIBlendState::numStates];
