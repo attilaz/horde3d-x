@@ -874,6 +874,9 @@ const char *RenderDevice::getDefaultFSCode()
 uint32 RenderDevice::createRenderBuffer( uint32 width, uint32 height, TextureFormats::List format,
                                          bool depth, uint32 numColBufs, uint32 samples )
 {
+//TODO: check multisample implementation
+//  support renderbuffer without depth texture support
+
 	if( (format == TextureFormats::RGBA16F || format == TextureFormats::RGBA32F) && !_caps.texFloat )
 	{
 		return 0;
@@ -1106,9 +1109,6 @@ void RenderDevice::setRenderBuffer( uint32 rbObj )
 
 		_fbWidth = _vpWidth + _vpX;
 		_fbHeight = _vpHeight + _vpY;
-#ifndef HORDE3D_GLES2
-		glDisable( GL_MULTISAMPLE );
-#endif
 	}
 	else
 	{
@@ -1122,11 +1122,6 @@ void RenderDevice::setRenderBuffer( uint32 rbObj )
 		ASSERT( glCheckFramebufferStatus( GL_FRAMEBUFFER ) == GL_FRAMEBUFFER_COMPLETE );
 		_fbWidth = rb.width;
 		_fbHeight = rb.height;
-
-#ifndef HORDE3D_GLES2
-		if( rb.fboMS != 0 ) glEnable( GL_MULTISAMPLE );
-		else glDisable( GL_MULTISAMPLE );
-#endif
 	}
 }
 

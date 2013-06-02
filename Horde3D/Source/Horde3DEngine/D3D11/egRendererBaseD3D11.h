@@ -90,7 +90,7 @@ struct RDITexture
 	union
 	{
 		ID3D11Resource*		d3dTexture;	
-		ID3D11Texture2D*	d3dTexture2D;	
+		ID3D11Texture2D*	d3dTexture2D;
 		ID3D11Texture3D*	d3dTexture3D;	
 	};
 	ID3D11ShaderResourceView* d3dResourceView;
@@ -180,16 +180,23 @@ struct RDIRenderBuffer
 {
 	static const uint32 MaxColorAttachmentCount = 4;
 
-	uint32  fbo, fboMS;  // fboMS: Multisampled FBO used when samples > 0
 	uint32  width, height;
 	uint32  samples;
+	uint32  numColBufs;
 
 	uint32  depthTex, colTexs[MaxColorAttachmentCount];
-	uint32  depthBuf, colBufs[MaxColorAttachmentCount];  // Used for multisampling
+	uint32  depthTexMS, colTexsMS[MaxColorAttachmentCount];  // Used for multisampling
 
-	RDIRenderBuffer() : fbo( 0 ), fboMS( 0 ), width( 0 ), height( 0 ), depthTex( 0 ), depthBuf( 0 )
+	ID3D11RenderTargetView* rtViews[MaxColorAttachmentCount];
+	ID3D11DepthStencilView* dsView;
+
+	RDIRenderBuffer() : width( 0 ), height( 0 ), depthTex( 0 ), depthTexMS( 0 ), dsView( 0x0 )
 	{
-		for( uint32 i = 0; i < MaxColorAttachmentCount; ++i ) colTexs[i] = colBufs[i] = 0;
+		for( uint32 i = 0; i < MaxColorAttachmentCount; ++i )
+		{
+			colTexs[i] = colTexsMS[i] = 0;
+			rtViews[i] = 0x0;
+		}
 	}
 };
 
@@ -292,7 +299,7 @@ public:
 	// Textures
 	uint32 calcTextureSize( TextureFormats::List format, int width, int height, int depth );
 	uint32 createTexture( TextureTypes::List type, int width, int height, int depth, TextureFormats::List format,
-	                      bool hasMips, bool genMips, bool sRGB );
+	                      bool hasMips, bool genMips, bool sRGB, bool bindFramebuffer = false, int samples = 1 );
 	void uploadTextureData( uint32 texObj, int slice, int mipLevel, const void *pixels );
 	void destroyTexture( uint32 texObj );
 	void updateTextureData( uint32 texObj, int slice, int mipLevel, const void *pixels );

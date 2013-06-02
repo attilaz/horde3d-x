@@ -43,6 +43,13 @@ static const char *defaultShaderFS =
 	"	return color;\n"
 	"}\n";
 
+static DXGI_FORMAT dxgiFormats[] = {DXGI_FORMAT_UNKNOWN, DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_FORMAT_BC1_UNORM, 
+		DXGI_FORMAT_BC2_UNORM, DXGI_FORMAT_BC3_UNORM, DXGI_FORMAT_R16G16B16A16_FLOAT, DXGI_FORMAT_R32G32B32A32_FLOAT, DXGI_FORMAT_D24_UNORM_S8_UINT,
+		DXGI_FORMAT_UNKNOWN,DXGI_FORMAT_UNKNOWN,DXGI_FORMAT_UNKNOWN,DXGI_FORMAT_UNKNOWN,DXGI_FORMAT_UNKNOWN};
+static DXGI_FORMAT dxgiSrgbFormats[] = {DXGI_FORMAT_UNKNOWN, DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, DXGI_FORMAT_BC1_UNORM_SRGB, 
+		DXGI_FORMAT_BC2_UNORM_SRGB, DXGI_FORMAT_BC3_UNORM_SRGB, DXGI_FORMAT_R16G16B16A16_FLOAT, DXGI_FORMAT_R32G32B32A32_FLOAT, DXGI_FORMAT_D24_UNORM_S8_UINT,
+		DXGI_FORMAT_UNKNOWN,DXGI_FORMAT_UNKNOWN,DXGI_FORMAT_UNKNOWN,DXGI_FORMAT_UNKNOWN,DXGI_FORMAT_UNKNOWN };
+
 // =================================================================================================
 // GPUTimer
 // =================================================================================================
@@ -158,6 +165,9 @@ void GPUTimer::reset()
 
 RenderDevice::RenderDevice(void* device)
 {
+	ASSERT_STATIC( TextureFormats::Count == sizeof(dxgiFormats)/sizeof(DXGI_FORMAT) );
+	ASSERT_STATIC( TextureFormats::Count == sizeof(dxgiSrgbFormats)/sizeof(DXGI_FORMAT) );
+
 	_d3dDevice = (ID3D11Device*)device;
 	_d3dDevice->GetImmediateContext(&_d3dContext);
 	_numVertexLayouts = 0;
@@ -268,6 +278,9 @@ bool RenderDevice::init()
 		_depthFormat = DXGI_FORMAT_R32_TYPELESS;  // used as d32_float, r32_float  sample_c
 	else
 		_depthFormat = DXGI_FORMAT_R24G8_TYPELESS; // used as R24_UNORM_X8_TYPELESS, D24_UNORM_S8_UINT , sample_c, gather
+
+	dxgiFormats[TextureFormats::DEPTH] = _depthFormat;
+	dxgiSrgbFormats[TextureFormats::DEPTH] = _depthFormat;
 
 	if ( _caps.timerQuery )
 	{
@@ -463,7 +476,7 @@ static int getMipLevels(int width, int height, int depth)
 
 uint32 RenderDevice::createTexture( TextureTypes::List type, int width, int height, int depth,
                                     TextureFormats::List format,
-                                    bool hasMips, bool genMips, bool sRGB )
+                                    bool hasMips, bool genMips, bool sRGB, bool bindFramebuffer, int samples )
 {
 	ASSERT( depth > 0 );
 
@@ -485,21 +498,17 @@ uint32 RenderDevice::createTexture( TextureTypes::List type, int width, int heig
 	tex.hasMips = hasMips;
 	tex.d3dResourceView = 0x0;
 
-	static DXGI_FORMAT formats[] = {DXGI_FORMAT_UNKNOWN, DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_FORMAT_BC1_UNORM, 
-			DXGI_FORMAT_BC2_UNORM, DXGI_FORMAT_BC3_UNORM, DXGI_FORMAT_R16G16B16A16_FLOAT, DXGI_FORMAT_R32G32B32A32_FLOAT, _depthFormat };
-	static DXGI_FORMAT srgbFormats[] = {DXGI_FORMAT_UNKNOWN, DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, DXGI_FORMAT_BC1_UNORM_SRGB, 
-			DXGI_FORMAT_BC2_UNORM_SRGB, DXGI_FORMAT_BC3_UNORM_SRGB, DXGI_FORMAT_R16G16B16A16_FLOAT, DXGI_FORMAT_R32G32B32A32_FLOAT, _depthFormat };
-
-	ASSERT( format < sizeof(formats)/sizeof(DXGI_FORMAT) );	//static assert??
-
-	tex.d3dFmt = tex.sRGB ? srgbFormats[format] : formats[format];
+	tex.d3dFmt = tex.sRGB ? dxgiSrgbFormats[format] : dxgiFormats[format];
 	uint32 mipCount = tex.genMips ? 0 : (tex.hasMips ? getMipLevels(width,height,depth) : 1);
 
 	if ( type == TextureTypes::Tex2D || type == TextureTypes::TexCube )
 	{
 		tex.d3dTexture2D = 0x0;
-		D3D11_TEXTURE2D_DESC desc = { width, height, mipCount, type == TextureTypes::TexCube?6:1, tex.d3dFmt, {1,0}, D3D11_USAGE_DEFAULT, 
-			D3D11_BIND_SHADER_RESOURCE, 0, type==TextureTypes::TexCube?D3D11_RESOURCE_MISC_TEXTURECUBE : 0};
+		UINT bindFlag = samples <= 1 ? D3D11_BIND_SHADER_RESOURCE : 0;
+		if ( bindFramebuffer )
+			bindFlag |= (format == TextureFormats::DEPTH) ? D3D11_BIND_DEPTH_STENCIL : D3D11_BIND_RENDER_TARGET;
+		D3D11_TEXTURE2D_DESC desc = { width, height, mipCount, type == TextureTypes::TexCube?6:1, tex.d3dFmt, {samples,0}, D3D11_USAGE_DEFAULT, 
+			bindFlag, 0, type==TextureTypes::TexCube?D3D11_RESOURCE_MISC_TEXTURECUBE : 0};
 		HRESULT hr = _d3dDevice->CreateTexture2D(&desc, NULL, &tex.d3dTexture2D);
 		if (SUCCEEDED(hr))
 		{
@@ -509,7 +518,10 @@ uint32 RenderDevice::createTexture( TextureTypes::List type, int width, int heig
 			else if (format == TextureFormats::DEPTH && _depthFormat == DXGI_FORMAT_R24G8_TYPELESS)
 				viewDesc.Format = DXGI_FORMAT_R24_UNORM_X8_TYPELESS;
 			else
+			{
 				viewDesc.Format = tex.d3dFmt;
+				bindFlag &= ~D3D11_BIND_SHADER_RESOURCE;
+			}
 			if ( type == TextureTypes::Tex2D )
 			{
 				viewDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
@@ -579,6 +591,7 @@ void RenderDevice::uploadTextureData( uint32 texObj, int slice, int mipLevel, co
     if( tex.genMips && (tex.type != TextureTypes::TexCube || slice == 5) )
 	{
 		// Note: for cube maps mips are only generated when the side with the highest index is uploaded
+			//Issue #4 on github: According MSDN D3DX11FilterTexture is obsolete and we must use DirectXTex library, GenerateMipMaps and GenerateMipMaps3D.
 		D3DX11FilterTexture( _d3dContext, tex.d3dTexture, 0, D3DX11_DEFAULT );
 	}
 }
@@ -606,44 +619,46 @@ void RenderDevice::updateTextureData( uint32 texObj, int slice, int mipLevel, co
 bool RenderDevice::getTextureData( uint32 texObj, int slice, int mipLevel, void *buffer )
 {
 	const RDITexture &tex = _textures.getRef( texObj );
-	
-//*	int target = tex.type == TextureTypes::TexCube ? GL_TEXTURE_CUBE_MAP : GL_TEXTURE_2D;
-//*	if( target == GL_TEXTURE_CUBE_MAP ) target = GL_TEXTURE_CUBE_MAP_POSITIVE_X + slice;
-	
-//*	int fmt, type, compressed = 0;
-//*	glActiveTexture( GL_TEXTURE15 );
-//*	glBindTexture( tex.type, tex.glObj );
 
-	switch( tex.format )
-	{
-	case TextureFormats::RGBA8:
-//*		fmt = GL_BGRA;
-//*		type = GL_UNSIGNED_BYTE;
-		break;
-	case TextureFormats::DXT1:
-	case TextureFormats::DXT3:
-	case TextureFormats::DXT5:
-//*		compressed = 1;
-		break;
-	case TextureFormats::RGBA16F:
-	case TextureFormats::RGBA32F:
-//*		fmt = GL_RGBA;
-//*		type = GL_FLOAT;
-		break;
-	default:
+	if ( tex.type == TextureTypes::Tex3D ) return false;
+
+	D3D11_TEXTURE2D_DESC desc;
+	tex.d3dTexture2D->GetDesc(&desc);
+
+		//create a stating / cpu-read resource
+	ID3D11Texture2D* stagingTex;
+	D3D11_TEXTURE2D_DESC descStaging = desc;
+	descStaging.Width = std::max( desc.Width >> mipLevel, 1u );
+	descStaging.Height = std::max( desc.Height >> mipLevel, 1u );
+	descStaging.MipLevels = 1;
+	descStaging.ArraySize = 1;
+	descStaging.Usage = D3D11_USAGE_STAGING;
+	descStaging.BindFlags = 0;
+	descStaging.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
+	descStaging.MiscFlags = 0;
+
+	bool retval = false;
+
+	HRESULT hr = _d3dDevice->CreateTexture2D( &desc, NULL, &stagingTex );
+	if (FAILED(hr))
 		return false;
-	};
 
-//*	if( compressed )
-//*		glGetCompressedTexImage( target, mipLevel, buffer );
-//*	else
-//*		glGetTexImage( target, mipLevel, fmt, type, buffer );
+	//copy subresource to staging texture
+	_d3dContext->CopySubresourceRegion( stagingTex, 0, 0,0,0, tex.d3dTexture2D, D3D11CalcSubresource(mipLevel, slice, desc.MipLevels), NULL);
 
-//*	glBindTexture( tex.type, 0 );
-//*	if( _texSlots[15].texObj )
-//*		glBindTexture( _textures.getRef( _texSlots[15].texObj ).type, _textures.getRef( _texSlots[15].texObj ).glObj );
+	//copy data to buffer
+	D3D11_MAPPED_SUBRESOURCE mapped;
+	hr = _d3dContext->Map(stagingTex, 0, D3D11_MAP_READ, 0, &mapped);
+	if ( SUCCEEDED(hr) )
+	{
+		memcpy(buffer, mapped.pData, calcTextureSize( tex.format, tex.width, tex.height, tex.depth ) );		
+		_d3dContext->Unmap(stagingTex, 0);
+		retval = true;
+	}
 
-	return true;
+	stagingTex->Release();
+
+	return retval;
 }
 
 
@@ -1079,124 +1094,93 @@ uint32 RenderDevice::createRenderBuffer( uint32 width, uint32 height, TextureFor
 
 	if( numColBufs > RDIRenderBuffer::MaxColorAttachmentCount ) return 0;
 
-	uint32 maxSamples = 0;
-	if( _caps.rtMultisampling )
+	if( _caps.rtMultisampling && samples > 1)
 	{
-//*		GLint value;
-//*		glGetIntegerv( GL_MAX_SAMPLES_EXT, &value );
-//*		maxSamples = (uint32)value;
-	}
-	if( samples > maxSamples )
-	{
-		samples = maxSamples;
-		Modules::log().writeWarning( "GPU does not support desired multisampling quality for render target" );
+		uint32 maxSamples = 0;
+		do
+		{
+			UINT qualityLevels = 0;
+			HRESULT hres = _d3dDevice->CheckMultisampleQualityLevels( dxgiFormats[format], maxSamples, &qualityLevels);
+			if ( SUCCEEDED(hres) && qualityLevels > 0 )
+				break;
+			--maxSamples;
+		}
+		while( maxSamples > 1 );
+
+		if( samples > maxSamples )
+		{
+			samples = maxSamples;
+			Modules::log().writeWarning( "GPU does not support desired multisampling quality for render target" );
+		}
 	}
 
 	RDIRenderBuffer rb;
 	rb.width = width;
 	rb.height = height;
 	rb.samples = samples;
+	rb.numColBufs = numColBufs;
 
-	// Create framebuffers
-//*	glGenFramebuffersEXT( 1, &rb.fbo );
-//*	if( samples > 0 ) glGenFramebuffersEXT( 1, &rb.fboMS );
-//*
-//*	if( numColBufs > 0 )
-//*	{
-//*		// Attach color buffers
-//*		for( uint32 j = 0; j < numColBufs; ++j )
-//*		{
-//*			glBindFramebufferEXT( GL_FRAMEBUFFER_EXT, rb.fbo );
-//*			// Create a color texture
-//*			uint32 texObj = createTexture( TextureTypes::Tex2D, rb.width, rb.height, 1, format, false, false, false, false );
-//*			ASSERT( texObj != 0 );
-//*			uploadTextureData( texObj, 0, 0, 0x0 );
-//*			rb.colTexs[j] = texObj;
-//*			RDITexture &tex = _textures.getRef( texObj );
-//*			// Attach the texture
-//*			glFramebufferTexture2DEXT( GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT + j, GL_TEXTURE_2D, tex.glObj, 0 );
-//*
-//*			if( samples > 0 )
-//*			{
-//*				glBindFramebufferEXT( GL_FRAMEBUFFER_EXT, rb.fboMS );
-//*				// Create a multisampled renderbuffer
-//*				glGenRenderbuffersEXT( 1, &rb.colBufs[j] );
-//*				glBindRenderbufferEXT( GL_RENDERBUFFER_EXT, rb.colBufs[j] );
-//*				glRenderbufferStorageMultisampleEXT( GL_RENDERBUFFER_EXT, rb.samples, tex.glFmt, rb.width, rb.height );
-//*				// Attach the renderbuffer
-//*				glFramebufferRenderbufferEXT( GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT + j,
-//*				                              GL_RENDERBUFFER_EXT, rb.colBufs[j] );
-//*			}
-//*		}
-//*
-//*		uint32 buffers[] = { GL_COLOR_ATTACHMENT0_EXT, GL_COLOR_ATTACHMENT1_EXT,
-//*		                     GL_COLOR_ATTACHMENT2_EXT, GL_COLOR_ATTACHMENT3_EXT };
-//*		glBindFramebufferEXT( GL_FRAMEBUFFER_EXT, rb.fbo );
-//*		glDrawBuffers( numColBufs, buffers );
-//*		
-//*		if( samples > 0 )
-//*		{
-//*			glBindFramebufferEXT( GL_FRAMEBUFFER_EXT, rb.fboMS );
-//*			glDrawBuffers( numColBufs, buffers );
-//*		}
-//*	}
-//*	else
-//*	{	
-//*		glBindFramebufferEXT( GL_FRAMEBUFFER_EXT, rb.fbo );
-//*		glDrawBuffer( GL_NONE );
-//*		glReadBuffer( GL_NONE );
-//*		
-//*		if( samples > 0 )
-//*		{
-//*			glBindFramebufferEXT( GL_FRAMEBUFFER_EXT, rb.fboMS );
-//*			glDrawBuffer( GL_NONE );
-//*			glReadBuffer( GL_NONE );
-//*		}
-//*	}
+	if( numColBufs > 0 )
+	{
+		// Attach color buffers
+		for( uint32 j = 0; j < numColBufs; ++j )
+		{
+			// Create a color texture
+			uint32 texObj = createTexture( TextureTypes::Tex2D, rb.width, rb.height, 1, format, false, false, false, true );
+			ASSERT( texObj != 0 );
+			rb.colTexs[j] = texObj;
+
+			if( samples > 1 )
+			{
+				// Create a color texture
+				uint32 texObj = createTexture( TextureTypes::Tex2D, rb.width, rb.height, 1, format, false, false, false, true, samples );
+				ASSERT( texObj != 0 );
+				rb.colTexsMS[j] = texObj;
+			}
+
+			RDITexture &tex = _textures.getRef( samples > 1 ? rb.colTexsMS[j] : rb.colTexs[j] );
+			// create rendertarget view
+			_d3dDevice->CreateRenderTargetView( tex.d3dTexture2D, NULL, &rb.rtViews[j] );
+		}
+	}
 
 	// Attach depth buffer
-//*	if( depth )
-//*	{
-//*		glBindFramebufferEXT( GL_FRAMEBUFFER_EXT, rb.fbo );
-//*		// Create a depth texture
-//*		uint32 texObj = createTexture( TextureTypes::Tex2D, rb.width, rb.height, 1, TextureFormats::DEPTH, false, false, false, false );
-//*		ASSERT( texObj != 0 );
-//*		glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_NONE );
-//*		uploadTextureData( texObj, 0, 0, 0x0 );
-//*		rb.depthTex = texObj;
-//*		RDITexture &tex = _textures.getRef( texObj );
-//*		// Attach the texture
-//*		glFramebufferTexture2DEXT( GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT, GL_TEXTURE_2D, tex.glObj, 0 );
-//*
-//*		if( samples > 0 )
-//*		{
-//*			glBindFramebufferEXT( GL_FRAMEBUFFER_EXT, rb.fboMS );
-//*			// Create a multisampled renderbuffer
-//*			glGenRenderbuffersEXT( 1, &rb.depthBuf );
-//*			glBindRenderbufferEXT( GL_RENDERBUFFER_EXT, rb.depthBuf );
-//*			glRenderbufferStorageMultisampleEXT( GL_RENDERBUFFER_EXT, rb.samples, _depthFormat, rb.width, rb.height );
-//*			// Attach the renderbuffer
-//*			glFramebufferRenderbufferEXT( GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT,
-//*			                              GL_RENDERBUFFER_EXT, rb.depthBuf );
-//*		}
-//*	}
+	if( depth )
+	{
+		// Create a color texture
+		uint32 texObj = createTexture( TextureTypes::Tex2D, rb.width, rb.height, 1, TextureFormats::DEPTH, false, false, false, true );
+		ASSERT( texObj != 0 );
+		rb.depthTex = texObj;
+
+		if( samples > 1 )
+		{
+			uint32 texObj = createTexture( TextureTypes::Tex2D, rb.width, rb.height, 1, TextureFormats::DEPTH, false, false, false, true, samples );
+			ASSERT( texObj != 0 );
+			rb.depthTexMS = texObj;
+		}
+
+		RDITexture &tex = _textures.getRef( samples > 1 ? rb.depthTexMS : rb.depthTex );
+		D3D11_DEPTH_STENCIL_VIEW_DESC desc;
+		if ( _d3dDevice->GetFeatureLevel() <= D3D_FEATURE_LEVEL_9_3 )
+			desc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+		else if ( _d3dDevice->GetFeatureLevel() <= D3D_FEATURE_LEVEL_10_1 )
+			desc.Format = DXGI_FORMAT_D32_FLOAT;
+		else
+			desc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+		desc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+		desc.Flags = 0;
+		desc.Texture2D.MipSlice = 0;
+		_d3dDevice->CreateDepthStencilView( tex.d3dTexture2D, &desc, &rb.dsView );
+	}
 
 	uint32 rbObj = _rendBufs.add( rb );
 	
-	// Check if FBO is complete
+	// Check if RenderBuffer is complete
 	bool valid = true;
-//*	glBindFramebufferEXT( GL_FRAMEBUFFER_EXT, rb.fbo );
-//*	uint32 status = glCheckFramebufferStatusEXT( GL_FRAMEBUFFER_EXT );
-//*	glBindFramebufferEXT( GL_FRAMEBUFFER_EXT, _defaultFBO );
-//*	if( status != GL_FRAMEBUFFER_COMPLETE_EXT ) valid = false;
-	
-//*	if( samples > 0 )
-//*	{
-//*		glBindFramebufferEXT( GL_FRAMEBUFFER_EXT, rb.fboMS );
-//*		status = glCheckFramebufferStatusEXT( GL_FRAMEBUFFER_EXT );
-//*		glBindFramebufferEXT( GL_FRAMEBUFFER_EXT, _defaultFBO );
-//*		if( status != GL_FRAMEBUFFER_COMPLETE_EXT ) valid = false;
-//*	}
+	for( uint32 j = 0; j < numColBufs; ++j )
+		valid &= rb.colTexs[j] != NULL && rb.rtViews[j]!=NULL && (samples<=1 || rb.colTexsMS[j]!=NULL);
+	if ( depth )
+		valid &= rb.depthTex != NULL && rb.dsView!=NULL && (samples<=1 || rb.depthTexMS!=NULL);
 
 	if( !valid )
 	{
@@ -1212,22 +1196,18 @@ void RenderDevice::destroyRenderBuffer( uint32 rbObj )
 {
 	RDIRenderBuffer &rb = _rendBufs.getRef( rbObj );
 	
-//*	glBindFramebufferEXT( GL_FRAMEBUFFER_EXT, _defaultFBO );
-	
 	if( rb.depthTex != 0 ) destroyTexture( rb.depthTex );
-//*	if( rb.depthBuf != 0 ) glDeleteRenderbuffersEXT( 1, &rb.depthBuf );
-	rb.depthTex = rb.depthBuf = 0;
+	if( rb.depthTexMS != 0 ) destroyTexture( rb.depthTexMS );
+	rb.depthTex = rb.depthTexMS = 0;
+	SAFE_RELEASE( rb.dsView );
 		
 	for( uint32 i = 0; i < RDIRenderBuffer::MaxColorAttachmentCount; ++i )
 	{
 		if( rb.colTexs[i] != 0 ) destroyTexture( rb.colTexs[i] );
-//*		if( rb.colBufs[i] != 0 ) glDeleteRenderbuffersEXT( 1, &rb.colBufs[i] );
-		rb.colTexs[i] = rb.colBufs[i] = 0;
+		if( rb.colTexsMS[i] != 0 ) destroyTexture( rb.colTexsMS[i] );
+		rb.colTexs[i] = rb.colTexsMS[i] = 0;
+		SAFE_RELEASE( rb.rtViews[i] );
 	}
-
-//*	if( rb.fbo != 0 ) glDeleteFramebuffersEXT( 1, &rb.fbo );
-//*	if( rb.fboMS != 0 ) glDeleteFramebuffersEXT( 1, &rb.fboMS );
-	rb.fbo = rb.fboMS = 0;
 
 	_rendBufs.remove( rbObj );
 }
@@ -1247,39 +1227,30 @@ void RenderDevice::resolveRenderBuffer( uint32 rbObj )
 {
 	RDIRenderBuffer &rb = _rendBufs.getRef( rbObj );
 	
-	if( rb.fboMS == 0 ) return;
+	if( rb.samples <= 1 ) return;
 	
-//*	glBindFramebufferEXT( GL_READ_FRAMEBUFFER_EXT, rb.fboMS );
-//*	glBindFramebufferEXT( GL_DRAW_FRAMEBUFFER_EXT, rb.fbo );
-
-	bool depthResolved = false;
 	for( uint32 i = 0; i < RDIRenderBuffer::MaxColorAttachmentCount; ++i )
 	{
-		if( rb.colBufs[i] != 0 )
+		if( rb.colTexsMS[i] != 0 )
 		{
-//*			glReadBuffer( GL_COLOR_ATTACHMENT0_EXT + i );
-//*			glDrawBuffer( GL_COLOR_ATTACHMENT0_EXT + i );
-			
-//*			int mask = GL_COLOR_BUFFER_BIT;
-			if( !depthResolved && rb.depthBuf != 0 )
-			{
-//*				mask |= GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT;
-				depthResolved = true;
-			}
-//*			glBlitFramebufferEXT( 0, 0, rb.width, rb.height, 0, 0, rb.width, rb.height, mask, GL_NEAREST );
+			RDITexture &colTexMS = _textures.getRef( rb.colTexsMS[i] );
+			RDITexture &colTex = _textures.getRef( rb.colTexs[i] );
+			D3D11_TEXTURE2D_DESC desc;
+			colTex.d3dTexture2D->GetDesc(&desc);
+
+			_d3dContext->ResolveSubresource( colTex.d3dTexture2D, 0, colTexMS.d3dTexture2D, 0, desc.Format);
 		}
 	}
 
-	if( !depthResolved && rb.depthBuf != 0 )
+	if( rb.depthTexMS != 0 )
 	{
-//*		glReadBuffer( GL_NONE );
-//*		glDrawBuffer( GL_NONE );
-//*		glBlitFramebufferEXT( 0, 0, rb.width, rb.height, 0, 0, rb.width, rb.height,
-//*							  GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT, GL_NEAREST );
-	}
+		RDITexture &depthTexMS = _textures.getRef( rb.depthTexMS );
+		RDITexture &depthTex = _textures.getRef( rb.depthTex );
+		D3D11_DEPTH_STENCIL_VIEW_DESC desc;
+		rb.dsView->GetDesc(&desc);
 
-//*	glBindFramebufferEXT( GL_READ_FRAMEBUFFER_EXT, _defaultFBO );
-//*	glBindFramebufferEXT( GL_DRAW_FRAMEBUFFER_EXT, _defaultFBO );
+		_d3dContext->ResolveSubresource( depthTex.d3dTexture2D, 0, depthTexMS.d3dTexture2D, 0, desc.Format);
+	}
 }
 
 
@@ -1306,16 +1277,10 @@ void RenderDevice::setRenderBuffer( uint32 rbObj )
 		
 		RDIRenderBuffer &rb = _rendBufs.getRef( rbObj );
 
-		//* TODO: hack now
-		_d3dContext->OMSetRenderTargets(0,NULL,NULL);
+		_d3dContext->OMSetRenderTargets(rb.numColBufs, rb.rtViews, rb.dsView);
 
-//*		glBindFramebufferEXT( GL_FRAMEBUFFER_EXT, rb.fboMS != 0 ? rb.fboMS : rb.fbo );
-//		ASSERT( glCheckFramebufferStatusEXT( GL_FRAMEBUFFER_EXT ) == GL_FRAMEBUFFER_COMPLETE_EXT );
 		_fbWidth = rb.width;
 		_fbHeight = rb.height;
-
-//*		if( rb.fboMS != 0 ) glEnable( GL_MULTISAMPLE );
-//*		else glDisable( GL_MULTISAMPLE );
 	}
 }
 
@@ -1338,63 +1303,117 @@ void RenderDevice::getRenderBufferSize( uint32 rbObj, int *width, int *height )
 bool RenderDevice::getRenderBufferData( uint32 rbObj, int bufIndex, int *width, int *height,
                                         int *compCount, void *dataBuffer, int bufferSize )
 {
-	int x, y, w, h;
-//*	int format = GL_RGBA;
-//*	int type = GL_FLOAT;
 	beginRendering();
-//*	glPixelStorei( GL_PACK_ALIGNMENT, 4 );
+
+	TextureFormats::List format = TextureFormats::Unknown;
+	ID3D11Texture2D* d3dTex = 0x0;
 	
 	if( rbObj == 0 )
 	{
-		if( bufIndex != 32 && bufIndex != 0 ) return false;
 		if( width != 0x0 ) *width = _vpWidth;
 		if( height != 0x0 ) *height = _vpHeight;
-		
-		x = _vpX; y = _vpY; w = _vpWidth; h = _vpHeight;
 
-//*		glBindFramebufferEXT( GL_FRAMEBUFFER_EXT, _defaultFBO );
-//*		if( bufIndex != 32 ) glReadBuffer( GL_BACK_LEFT );
-		//format = GL_BGRA;
-		//type = GL_UNSIGNED_BYTE;
+		if( (unsigned)bufIndex >= RDIRenderBuffer::MaxColorAttachmentCount && _defaultRenderTargetViews[bufIndex] != 0x0 )
+		{
+			D3D11_RENDER_TARGET_VIEW_DESC desc;
+			_defaultRenderTargetViews[bufIndex]->GetDesc( &desc );
+			if ( desc.ViewDimension == D3D11_RTV_DIMENSION_TEXTURE2D )
+			{
+				ID3D11Resource* res = 0x0;
+				_defaultRenderTargetViews[bufIndex]->GetResource( &res );
+				d3dTex = (ID3D11Texture2D*)res;
+				switch ( desc.Format )
+				{
+				case DXGI_FORMAT_R8G8B8A8_UNORM:
+					format = TextureFormats::RGBA8;
+				break;
+				case DXGI_FORMAT_R16G16B16A16_FLOAT:
+					format = TextureFormats::RGBA16F;
+				break;
+				case DXGI_FORMAT_R32G32B32A32_FLOAT:
+					format = TextureFormats::RGBA32F;
+				break;
+				}
+			}
+		}
+		else if ( bufIndex == RDIRenderBuffer::MaxColorAttachmentCount && _defaultDepthStencilView != 0x0 )
+		{
+			D3D11_DEPTH_STENCIL_VIEW_DESC desc;
+			_defaultDepthStencilView->GetDesc( &desc );
+			if ( desc.ViewDimension == D3D11_RTV_DIMENSION_TEXTURE2D )
+			{
+				ID3D11Resource* res = 0x0;
+				_defaultDepthStencilView->GetResource( &res );
+				d3dTex = (ID3D11Texture2D*)res;
+				format = TextureFormats::DEPTH;
+			}
+		}
 	}
 	else
 	{
 		resolveRenderBuffer( rbObj );
 		RDIRenderBuffer &rb = _rendBufs.getRef( rbObj );
+		uint32 texObj = 0;
 		
-		if( bufIndex == 32 && rb.depthTex == 0 ) return false;
+		if( bufIndex == 32 ) texObj = rb.depthTex;
 		if( bufIndex != 32 )
 		{
-			if( (unsigned)bufIndex >= RDIRenderBuffer::MaxColorAttachmentCount || rb.colTexs[bufIndex] == 0 )
-				return false;
+			if( (unsigned)bufIndex >= RDIRenderBuffer::MaxColorAttachmentCount )
+				texObj = rb.colTexs[bufIndex];
 		}
 		if( width != 0x0 ) *width = rb.width;
 		if( height != 0x0 ) *height = rb.height;
 
-		x = 0; y = 0; w = rb.width; h = rb.height;
-		
-//*		glBindFramebufferEXT( GL_FRAMEBUFFER_EXT, rb.fbo );
-//*		if( bufIndex != 32 ) glReadBuffer( GL_COLOR_ATTACHMENT0_EXT + bufIndex );
+		if (texObj != 0)
+		{
+			RDITexture &tex = _textures.getRef( texObj );
+			d3dTex = tex.d3dTexture2D;
+			format = tex.format;
+		}
 	}
 
-	if( bufIndex == 32 )
-	{	
-//*		format = GL_DEPTH_COMPONENT;
-//*		type = GL_FLOAT;
-	}
-	
 	int comps = (bufIndex == 32 ? 1 : 4);
 	if( compCount != 0x0 ) *compCount = comps;
 	
 	bool retVal = false;
-//*	if( dataBuffer != 0x0 &&
-//*	    bufferSize >= w * h * comps * (type == GL_FLOAT ? 4 : 1) ) 
-//*	{
-//*		glFinish();
-//*		glReadPixels( x, y, w, h, format, type, dataBuffer );
-//*		retVal = true;
-//*	}
-//*	glBindFramebufferEXT( GL_FRAMEBUFFER_EXT, _defaultFBO );
+
+	if ( d3dTex != 0x0 && format != TextureFormats::Unknown )
+	{
+		D3D11_TEXTURE2D_DESC desc;
+		d3dTex->GetDesc(&desc);
+
+		uint32 texSize = calcTextureSize( format, desc.Width, desc.Height, 1 );
+
+		if( dataBuffer != 0x0 && bufferSize >= (int)texSize ) 
+		{
+			//create a stating / cpu-read resource
+			ID3D11Texture2D* stagingTex;
+			D3D11_TEXTURE2D_DESC descStaging = desc;
+			descStaging.Usage = D3D11_USAGE_STAGING;
+			descStaging.BindFlags = 0;
+			descStaging.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
+			descStaging.MiscFlags = 0;
+
+			HRESULT hr = _d3dDevice->CreateTexture2D( &desc, NULL, &stagingTex );
+			if (FAILED(hr))
+				return false;
+
+			//copy subresource to staging texture
+			_d3dContext->CopyResource( stagingTex, d3dTex );
+
+			//copy data to buffer
+			D3D11_MAPPED_SUBRESOURCE mapped;
+			hr = _d3dContext->Map(stagingTex, 0, D3D11_MAP_READ, 0, &mapped);
+			if ( SUCCEEDED(hr) )
+			{
+				memcpy(dataBuffer, mapped.pData, texSize );
+				_d3dContext->Unmap(stagingTex, 0);
+				retVal = true;
+			}
+
+			stagingTex->Release();
+		}
+	}
 
 	return retVal;
 }

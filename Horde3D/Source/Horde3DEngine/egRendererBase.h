@@ -98,6 +98,8 @@ struct TextureFormats
 		PVRTCI_4BPP,
 		PVRTCI_A4BPP,
 		ETC1,
+
+		Count,
 	};
 };
 
