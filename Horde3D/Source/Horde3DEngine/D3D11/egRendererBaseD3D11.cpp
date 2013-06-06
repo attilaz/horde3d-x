@@ -476,7 +476,7 @@ static int getMipLevels(int width, int height, int depth)
 
 uint32 RenderDevice::createTexture( TextureTypes::List type, int width, int height, int depth,
                                     TextureFormats::List format,
-                                    bool hasMips, bool genMips, bool sRGB, bool bindFramebuffer, int samples )
+                                    bool hasMips, bool genMips, bool sRGB, bool bindRenderbuffer, int samples )
 {
 	ASSERT( depth > 0 );
 
@@ -504,8 +504,8 @@ uint32 RenderDevice::createTexture( TextureTypes::List type, int width, int heig
 	if ( type == TextureTypes::Tex2D || type == TextureTypes::TexCube )
 	{
 		tex.d3dTexture2D = 0x0;
-		UINT bindFlag = samples <= 1 ? D3D11_BIND_SHADER_RESOURCE : 0;
-		if ( bindFramebuffer )
+		UINT bindFlag = (samples <= 1 && tex.d3dFmt != DXGI_FORMAT_D24_UNORM_S8_UINT) ? D3D11_BIND_SHADER_RESOURCE : 0;
+		if ( bindRenderbuffer )
 			bindFlag |= (format == TextureFormats::DEPTH) ? D3D11_BIND_DEPTH_STENCIL : D3D11_BIND_RENDER_TARGET;
 		D3D11_TEXTURE2D_DESC desc = { width, height, mipCount, type == TextureTypes::TexCube?6:1, tex.d3dFmt, {samples,0}, D3D11_USAGE_DEFAULT, 
 			bindFlag, 0, type==TextureTypes::TexCube?D3D11_RESOURCE_MISC_TEXTURECUBE : 0};
@@ -518,10 +518,8 @@ uint32 RenderDevice::createTexture( TextureTypes::List type, int width, int heig
 			else if (format == TextureFormats::DEPTH && _depthFormat == DXGI_FORMAT_R24G8_TYPELESS)
 				viewDesc.Format = DXGI_FORMAT_R24_UNORM_X8_TYPELESS;
 			else
-			{
 				viewDesc.Format = tex.d3dFmt;
-				bindFlag &= ~D3D11_BIND_SHADER_RESOURCE;
-			}
+
 			if ( type == TextureTypes::Tex2D )
 			{
 				viewDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
@@ -1178,9 +1176,9 @@ uint32 RenderDevice::createRenderBuffer( uint32 width, uint32 height, TextureFor
 	// Check if RenderBuffer is complete
 	bool valid = true;
 	for( uint32 j = 0; j < numColBufs; ++j )
-		valid &= rb.colTexs[j] != NULL && rb.rtViews[j]!=NULL && (samples<=1 || rb.colTexsMS[j]!=NULL);
+		valid &= rb.colTexs[j] != 0 && rb.rtViews[j]!=NULL && (samples<=1 || rb.colTexsMS[j]!=0);
 	if ( depth )
-		valid &= rb.depthTex != NULL && rb.dsView!=NULL && (samples<=1 || rb.depthTexMS!=NULL);
+		valid &= rb.depthTex != 0 && rb.dsView!=NULL && (samples<=1 || rb.depthTexMS!=0);
 
 	if( !valid )
 	{
