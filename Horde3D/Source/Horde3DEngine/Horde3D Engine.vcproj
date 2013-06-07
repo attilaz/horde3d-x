@@ -17,7 +17,7 @@
 	</ToolFiles>
 	<Configurations>
 		<Configuration
-			Name="Debug|Win32"
+			Name="Debug_gl|Win32"
 			OutputDirectory="$(ProjectDir)../../Build/$(ProjectName)/$(ConfigurationName)"
 			IntermediateDirectory="$(ProjectDir)../../Build/$(ProjectName)/$(ConfigurationName)"
 			ConfigurationType="2"
@@ -98,7 +98,7 @@
 			/>
 		</Configuration>
 		<Configuration
-			Name="Release|Win32"
+			Name="Release_gl|Win32"
 			OutputDirectory="$(ProjectDir)../../Build/$(ProjectName)/$(ConfigurationName)"
 			IntermediateDirectory="$(ProjectDir)../../Build/$(ProjectName)/$(ConfigurationName)"
 			ConfigurationType="2"
@@ -434,7 +434,7 @@
 				RelativePath=".\utImage.cpp"
 				>
 				<FileConfiguration
-					Name="Debug|Win32"
+					Name="Debug_gl|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -442,7 +442,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release|Win32"
+					Name="Release_gl|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -473,7 +473,7 @@
 					RelativePath=".\D3D11\egRendererBaseD3D11.cpp"
 					>
 					<FileConfiguration
-						Name="Debug|Win32"
+						Name="Debug_gl|Win32"
 						ExcludedFromBuild="true"
 						>
 						<Tool
@@ -541,7 +541,7 @@
 					RelativePath=".\GLES2\egRendererBaseGLES2.cpp"
 					>
 					<FileConfiguration
-						Name="Debug|Win32"
+						Name="Debug_gl|Win32"
 						ExcludedFromBuild="true"
 						>
 						<Tool
@@ -561,7 +561,7 @@
 					RelativePath=".\GLES2\utOpenGLES2.cpp"
 					>
 					<FileConfiguration
-						Name="Debug|Win32"
+						Name="Debug_gl|Win32"
 						ExcludedFromBuild="true"
 						>
 						<Tool

@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="Horde3D Utils"
-	ProjectGUID="{AE8EB9B3-D2C2-4372-AB4B-FC980EE69D2D}"
-	RootNamespace="Horde3DUtils"
+	Name="Sample ChicagoX"
+	ProjectGUID="{9425A6D2-70FB-406A-BF0C-26330389E46D}"
+	RootNamespace="Sample_ChicagoX"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="131072"
 	>
@@ -18,9 +18,9 @@
 	<Configurations>
 		<Configuration
 			Name="Debug_gl|Win32"
-			OutputDirectory="$(ProjectDir)../../Build/$(ProjectName)/$(ConfigurationName)"
-			IntermediateDirectory="$(ProjectDir)../../Build/$(ProjectName)/$(ConfigurationName)"
-			ConfigurationType="2"
+			OutputDirectory="$(ProjectDir)../../../Build/$(ProjectName)/$(ConfigurationName)"
+			IntermediateDirectory="$(ProjectDir)../../../Build/$(ProjectName)/$(ConfigurationName)"
+			ConfigurationType="1"
 			CharacterSet="2"
 			>
 			<Tool
@@ -41,8 +41,8 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(ProjectDir)../Shared&quot;;&quot;$(ProjectDir)../../Bindings/C++&quot;"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;HORDE3DUTILS_EXPORTS;HORDE3D_GL"
+				AdditionalIncludeDirectories="&quot;$(ProjectDir)../../../Bindings/C++&quot;"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;HORDE3D_GL"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
@@ -62,15 +62,15 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="opengl32.lib Horde3D_vc8.lib"
-				OutputFile="$(OutDir)\$(RootNamespace).dll"
+				AdditionalDependencies="OpenGL32.lib Horde3D_vc8.lib Horde3DUtils_vc8.lib"
+				OutputFile="$(OutDir)\$(RootNamespace).exe"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;$(ProjectDir)../../Bindings/C++&quot;"
+				AdditionalLibraryDirectories="&quot;$(ProjectDir)../../../Bindings/C++&quot;"
+				IgnoreDefaultLibraryNames=""
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
-				ImportLibrary="$(TargetDir)$(RootNamespace)_vc8.lib"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -93,14 +93,14 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="xcopy &quot;$(TargetPath)&quot; &quot;$(ProjectDir)../../Binaries/Win32&quot; /y&#x0D;&#x0A;xcopy &quot;$(TargetDir)$(RootNamespace)_vc8.lib&quot; &quot;$(ProjectDir)../../Bindings/C++&quot; /y&#x0D;&#x0A;"
+				CommandLine="xcopy &quot;$(TargetPath)&quot; &quot;$(ProjectDir)../../../Binaries/Win32&quot; /y"
 			/>
 		</Configuration>
 		<Configuration
 			Name="Release_gl|Win32"
 			OutputDirectory="$(ProjectDir)../../Build/$(ProjectName)/$(ConfigurationName)"
 			IntermediateDirectory="$(ProjectDir)../../Build/$(ProjectName)/$(ConfigurationName)"
-			ConfigurationType="2"
+			ConfigurationType="1"
 			CharacterSet="2"
 			WholeProgramOptimization="1"
 			>
@@ -121,8 +121,8 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="&quot;$(ProjectDir)../Shared&quot;;&quot;$(ProjectDir)../../Bindings/C++&quot;"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;HORDE3DUTILS_EXPORTS"
+				AdditionalIncludeDirectories="&quot;$(ProjectDir)../../Bindings/C++&quot;;&quot;$(ProjectDir)../glfw&quot;"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;HORDE3D_GL"
 				RuntimeLibrary="0"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
@@ -140,17 +140,18 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="opengl32.lib Horde3D_vc8.lib"
-				OutputFile="$(OutDir)\$(RootNamespace).dll"
+				AdditionalOptions="/ENTRY:mainCRTStartup"
+				AdditionalDependencies="GLFW.lib OpenGL32.lib Horde3D_vc8.lib Horde3DUtils_vc8.lib"
+				OutputFile="$(OutDir)\$(RootNamespace).exe"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="&quot;$(ProjectDir)../../Bindings/C++&quot;"
+				AdditionalLibraryDirectories="&quot;$(ProjectDir)../../Bindings/C++&quot;;&quot;$(ProjectDir)../glfw&quot;"
+				IgnoreDefaultLibraryNames=""
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
-				ImportLibrary="$(TargetDir)$(RootNamespace)_vc8.lib"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -173,15 +174,15 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="xcopy &quot;$(TargetPath)&quot; &quot;$(ProjectDir)../../Binaries/Win32&quot; /y&#x0D;&#x0A;xcopy &quot;$(TargetDir)$(RootNamespace)_vc8.lib&quot; &quot;$(ProjectDir)../../Bindings/C++&quot; /y&#x0D;&#x0A;"
+				CommandLine="xcopy &quot;$(TargetPath)&quot; &quot;$(ProjectDir)../../Binaries/Win32&quot; /y"
 			/>
 		</Configuration>
 		<Configuration
 			Name="Debug_d3d11|Win32"
-			OutputDirectory="$(ProjectDir)../../Build/$(ProjectName)/$(ConfigurationName)"
-			IntermediateDirectory="$(ProjectDir)../../Build/$(ProjectName)/$(ConfigurationName)"
-			ConfigurationType="2"
-			CharacterSet="2"
+			OutputDirectory="$(ProjectDir)../../../Build/$(ProjectName)/$(ConfigurationName)"
+			IntermediateDirectory="$(ProjectDir)../../../Build/$(ProjectName)/$(ConfigurationName)"
+			ConfigurationType="1"
+			CharacterSet="0"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -201,8 +202,8 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(ProjectDir)../Shared&quot;;&quot;$(ProjectDir)../../Bindings/C++&quot;"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;HORDE3DUTILS_EXPORTS;HORDE3D_D3D11"
+				AdditionalIncludeDirectories="&quot;$(ProjectDir)../../../Bindings/C++&quot;"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;HORDE3D_D3D11"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
@@ -222,15 +223,15 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="d3d11.lib Horde3D_vc8.lib"
-				OutputFile="$(OutDir)\$(RootNamespace).dll"
+				AdditionalDependencies="d3d11.lib Horde3D_vc8.lib Horde3DUtils_vc8.lib"
+				OutputFile="$(OutDir)\$(RootNamespace).exe"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;$(ProjectDir)../../Bindings/C++&quot;"
+				AdditionalLibraryDirectories="&quot;$(ProjectDir)../../../Bindings/C++&quot;"
+				IgnoreDefaultLibraryNames=""
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
-				ImportLibrary="$(TargetDir)$(RootNamespace)_vc8.lib"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -253,14 +254,14 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="xcopy &quot;$(TargetPath)&quot; &quot;$(ProjectDir)../../Binaries/Win32_d3d11&quot; /y&#x0D;&#x0A;xcopy &quot;$(TargetDir)$(RootNamespace)_vc8.lib&quot; &quot;$(ProjectDir)../../Bindings/C++&quot; /y&#x0D;&#x0A;"
+				CommandLine="xcopy &quot;$(TargetPath)&quot; &quot;$(ProjectDir)../../../Binaries/Win32_d3d11&quot; /y"
 			/>
 		</Configuration>
 		<Configuration
 			Name="Debug_gles2|Win32"
-			OutputDirectory="$(ProjectDir)../../Build/$(ProjectName)/$(ConfigurationName)"
-			IntermediateDirectory="$(ProjectDir)../../Build/$(ProjectName)/$(ConfigurationName)"
-			ConfigurationType="2"
+			OutputDirectory="$(ProjectDir)../../../Build/$(ProjectName)/$(ConfigurationName)"
+			IntermediateDirectory="$(ProjectDir)../../../Build/$(ProjectName)/$(ConfigurationName)"
+			ConfigurationType="1"
 			CharacterSet="2"
 			>
 			<Tool
@@ -281,8 +282,8 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(ProjectDir)../Shared&quot;;&quot;$(ProjectDir)../../Bindings/C++&quot;"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;HORDE3DUTILS_EXPORTS;HORDE3D_GLES2"
+				AdditionalIncludeDirectories="&quot;$(ProjectDir)../../../Bindings/C++&quot;;&quot;$(ProjectDir)../../../Source/Win32-GLES2&quot;"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;HORDE3D_GLES2"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
@@ -302,15 +303,15 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="opengl32.lib Horde3D_vc8.lib"
-				OutputFile="$(OutDir)\$(RootNamespace).dll"
+				AdditionalDependencies="Horde3D_vc8.lib Horde3DUtils_vc8.lib libEGL.lib"
+				OutputFile="$(OutDir)\$(RootNamespace).exe"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;$(ProjectDir)../../Bindings/C++&quot;"
+				AdditionalLibraryDirectories="&quot;$(ProjectDir)../../../Bindings/C++&quot;;&quot;$(ProjectDir)../../../Source/Win32-GLES2/EGL&quot;"
+				IgnoreDefaultLibraryNames=""
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
-				ImportLibrary="$(TargetDir)$(RootNamespace)_vc8.lib"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -333,7 +334,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="xcopy &quot;$(TargetPath)&quot; &quot;$(ProjectDir)../../Binaries/Win32_gles2&quot; /y&#x0D;&#x0A;xcopy &quot;$(TargetDir)$(RootNamespace)_vc8.lib&quot; &quot;$(ProjectDir)../../Bindings/C++&quot; /y&#x0D;&#x0A;"
+				CommandLine="xcopy &quot;$(TargetPath)&quot; &quot;$(ProjectDir)../../../Binaries/Win32_gles2&quot; /y"
 			/>
 		</Configuration>
 	</Configurations>
@@ -341,35 +342,41 @@
 	</References>
 	<Files>
 		<Filter
-			Name="Source Files"
-			Filter="cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx"
-			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
+			Name="sfw"
 			>
 			<File
-				RelativePath=".\main.cpp"
-				>
-			</File>
-		</Filter>
-		<Filter
-			Name="Header Files"
-			Filter="h;hpp;hxx;hm;inl;inc;xsd"
-			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
-			>
-			<File
-				RelativePath="..\Shared\utMath.h"
+				RelativePath="..\..\sfw\sfw.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\Shared\utPlatform.h"
+				RelativePath="..\..\sfw\sfw.h"
 				>
 			</File>
+			<Filter
+				Name="win32"
+				>
+				<File
+					RelativePath="..\..\sfw\win32\main.cpp"
+					>
+				</File>
+			</Filter>
 		</Filter>
-		<Filter
-			Name="Resource Files"
-			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav"
-			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
+		<File
+			RelativePath="..\app.cpp"
 			>
-		</Filter>
+		</File>
+		<File
+			RelativePath="..\app.h"
+			>
+		</File>
+		<File
+			RelativePath="..\crowd.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\crowd.h"
+			>
+		</File>
 	</Files>
 	<Globals>
 	</Globals>

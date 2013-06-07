@@ -181,135 +181,175 @@ VS_OUTPUT main( VS_INPUT In )
 	#define _F02_NormalMapping
 #endif
 
-//*#include "shaders/d3d11/utilityLib/fragDeferredWrite.hlsl" 
+#include "shaders/d3d11/utilityLib/fragDeferredWrite.hlsl" 
 
-uniform float3 viewerPos;
-uniform float4 matDiffuseCol;
-uniform float4 matSpecParams;
-uniform sampler2D sampler_albedoMap;
+float3 viewerPos;
+float4 matDiffuseCol;
+float4 matSpecParams;
+
+Texture2D texture_albedoMap;
+SamplerState sampler_albedoMap;
 
 #ifdef _F02_NormalMapping
-	uniform sampler2D sampler_normalMap;
+	SamplerState sampler_normalMap;
+	Texture2D texture_normalMap;
 #endif
 
-varying float4 pos;
-varying float2 texCoords;
+struct VS_OUTPUT
+{
+	float4 position : SV_POSITION;
+
+	float2 texCoords : TEXCOORD0;
+	float4 pos : TEXCOORD1;
 
 #ifdef _F02_NormalMapping
-	varying mat3 tsbMat;
+	float3x3 tsbMat:TEXCOORD3;
 #else
-	varying float3 tsbNormal;
+	float3 tsbNormal:TEXCOORD3;
 #endif
 #ifdef _F03_ParallaxMapping
-	varying float3 eyeTS;
+	float3 eyeTS:TEXCOORD6;
 #endif
+};
 
-void main( void )
+fragDefferedBuffer main( VS_OUTPUT In )
 {
-	float3 newCoords = float3( texCoords, 0 );
+	fragDefferedBuffer Out = (fragDefferedBuffer)0;
+	float3 newCoords = float3( In.texCoords, 0 );
 	
 #ifdef _F03_ParallaxMapping	
 	const float plxScale = 0.03;
 	const float plxBias = -0.015;
 	
 	// Iterative parallax mapping
-	float3 eye = normalize( eyeTS );
+	float3 eye = normalize( In.eyeTS );
 	for( int i = 0; i < 4; ++i )
 	{
-		float4 nmap = texture2D( normalMap, newCoords.st * float2( 1, -1 ) );
+		float4 nmap = texture_normalMap.Sample(sampler_normalMap, newCoords.xy * float2( 1, -1 ) );
 		float height = nmap.a * plxScale + plxBias;
-		newCoords += (height - newCoords.p) * nmap.z * eye;
+		newCoords += (height - newCoords.z) * nmap.z * eye;
 	}
 #endif
 
 	// Flip texture vertically to match the GL coordinate system
 	newCoords.y *= -1.0;
 
-	float4 albedo = texture2D( albedoMap, newCoords.st ) * matDiffuseCol;
+	float4 albedo = texture_albedoMap.Sample( sampler_albedoMap, newCoords.xy ) * matDiffuseCol;
 	
 #ifdef _F05_AlphaTest
 	if( albedo.a < 0.01 ) discard;
 #endif
 	
 #ifdef _F02_NormalMapping
-	float3 normalMap = texture2D( normalMap, newCoords.st ).rgb * 2.0 - 1.0;
-	float3 normal = tsbMat * normalMap;
+	float3 normalMap = texture_normalMap.Sample( sampler_normalMap, newCoords.xy ).rgb * 2.0 - 1.0;
+	float3 normal = mul( normalMap, In.tsbMat);
 #else
-	float3 normal = tsbNormal;
+	float3 normal = In.tsbNormal;
 #endif
 
-	float3 newPos = pos.xyz;
+	float3 newPos = In.pos.xyz;
 
 #ifdef _F03_ParallaxMapping
-	newPos += float3( 0.0, newCoords.p, 0.0 );
+	newPos += float3( 0.0, newCoords.z, 0.0 );
 #endif
 	
-	setMatID( 1.0 );
-	setPos( newPos - viewerPos );
-	setNormal( normalize( normal ) );
-	setAlbedo( albedo.rgb );
-	setSpecParams( matSpecParams.rgb, matSpecParams.a );
+	setMatID( Out, 1.0 );
+	setPos( Out, newPos - viewerPos );
+	setNormal( Out, normalize( normal ) );
+	setAlbedo( Out, albedo.rgb );
+	setSpecParams( Out, matSpecParams.rgb, matSpecParams.a );
+	
+	return Out;
 }
 
 	
 [[VS_SHADOWMAP]]
 // =================================================================================================
 	
-//*#include "shaders/d3d11/utilityLib/vertCommon.hlsl"
-//*#include "shaders/d3d11/utilityLib/vertSkinning.hlsl"
+#include "shaders/d3d11/utilityLib/vertCommon.hlsl"
+#include "shaders/d3d11/utilityLib/vertSkinning.hlsl"
 
-uniform matrix viewProjMat;
-uniform float4 lightPos;
-attribute float3 vertPos;
-varying float3 lightVec;
+float4x4 viewProjMat;
+float4 lightPos;
 
-#ifdef _F05_AlphaTest
-	attribute float2 texCoords0;
-	varying float2 texCoords;
-#endif
-
-void main( void )
+struct VS_INPUT
 {
+	float3 vertPos	  : POSITION;
+#ifdef _F05_AlphaTest
+	float2 texCoords0 : TEXCOORD0;
+#endif
+#ifdef _F01_Skinning
+	float4 joints : BLENDINDICES;
+	float4 weights : BLENDWEIGHTS;
+#endif
+};
+
+struct VS_OUTPUT
+{
+	float4 position : SV_POSITION;
+
+#ifdef _F05_AlphaTest
+	float2 texCoords : TEXCOORD0;
+#endif
+	float3 lightVec : TEXCOORD1;
+};
+
+VS_OUTPUT main( VS_INPUT In )
+{
+	VS_OUTPUT Out = (VS_OUTPUT)0;
 #ifdef _F01_Skinning	
-	float4 pos = calcWorldPos( skinPos( float4( vertPos, 1.0 ), In.weights, In.joints ) );
+	float4 pos = calcWorldPos( skinPos( float4( In.vertPos, 1.0 ), In.weights, In.joints ) );
 #else
-	float4 pos = calcWorldPos( float4( vertPos, 1.0 ) );
+	float4 pos = calcWorldPos( float4( In.vertPos, 1.0 ) );
 #endif
 
 #ifdef _F05_AlphaTest
-	texCoords = texCoords0;
+	Out.texCoords = In.texCoords0;
 #endif
 
-	lightVec = lightPos.xyz - pos.xyz;
-	gl_Position = viewProjMat * pos;
+	Out.lightVec = lightPos.xyz - pos.xyz;
+	Out.position = mul(viewProjMat, pos);
+	
+	return Out;
 }
 	
 	
 [[FS_SHADOWMAP]]
 // =================================================================================================
 
-uniform float4 lightPos;
-uniform float shadowBias;
-varying float3 lightVec;
+struct VS_OUTPUT
+{
+	float4 position : SV_POSITION;
 
 #ifdef _F05_AlphaTest
-	uniform float4 matDiffuseCol;
-	uniform sampler2D albedoMap;
-	varying float2 texCoords;
+	float2 texCoords : TEXCOORD0;
+#endif
+	float3 lightVec : TEXCOORD1;
+};
+
+float4 lightPos;
+float shadowBias;
+
+#ifdef _F05_AlphaTest
+	float4 matDiffuseCol;
+	Texture2D texture_albedoMap;
+	SamplerState sampler_albedoMap;
 #endif
 
-void main( void )
+float main( VS_OUTPUT In ) : SV_Depth
 {
 #ifdef _F05_AlphaTest
-	float4 albedo = texture2D( albedoMap, texCoords * float2( 1, -1 ) ) * matDiffuseCol;
+	float4 albedo = texture_albedoMap.Sample( sampler_albedoMap, texCoords * float2( 1, -1 ) ) * matDiffuseCol;
 	if( albedo.a < 0.01 ) discard;
 #endif
 	
-	float dist = length( lightVec ) / lightPos.w;
-	gl_FragDepth = dist + shadowBias;
+	float dist = length( In.lightVec ) / lightPos.w;
+	float depth = dist + shadowBias;
 	
 	// Clearly better bias but requires SM 3.0
-	//gl_FragDepth = dist + abs( dFdx( dist ) ) + abs( dFdy( dist ) ) + shadowBias;
+	//float depth = dist + abs( dFdx( dist ) ) + abs( dFdy( dist ) ) + shadowBias;
+	
+	return depth;
 }
 
 

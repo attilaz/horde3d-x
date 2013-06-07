@@ -17,7 +17,7 @@
 	</ToolFiles>
 	<Configurations>
 		<Configuration
-			Name="Debug|Win32"
+			Name="Debug_gl|Win32"
 			OutputDirectory="$(ProjectDir)../../../Horde3D/Build/$(ProjectName)/$(ConfigurationName)"
 			IntermediateDirectory="$(ProjectDir)../../../Horde3D/Build/$(ProjectName)/$(ConfigurationName)"
 			ConfigurationType="4"
@@ -82,7 +82,7 @@
 			/>
 		</Configuration>
 		<Configuration
-			Name="Release|Win32"
+			Name="Release_gl|Win32"
 			OutputDirectory="$(ProjectDir)../../../Horde3D/Build/$(ProjectName)/$(ConfigurationName)"
 			IntermediateDirectory="$(ProjectDir)../../../Horde3D/Build/$(ProjectName)/$(ConfigurationName)"
 			ConfigurationType="4"
