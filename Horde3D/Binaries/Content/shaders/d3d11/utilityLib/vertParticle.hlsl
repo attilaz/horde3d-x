@@ -10,7 +10,7 @@
 //
 // *************************************************************************************************
 
-float4x4 viewMatInv;
+float4x4 viewMat;
 float3 parPosArray[64];
 float2 parSizeAndRotArray[64];
 float4 parColorArray[64];
@@ -24,8 +24,8 @@ float4 getParticleColor(float parIdx)
 float3 calcParticlePos( float parIdx, const float2 texCoords )
 {
 	int index = int( parIdx );
-	float3 camAxisX = viewMatInv[0].xyz;
-	float3 camAxisY = viewMatInv[1].xyz;
+	float3 camAxisX = viewMat[0].xyz;
+	float3 camAxisY = viewMat[1].xyz;
 	
 	float2 cornerPos = texCoords - float2( 0.5, 0.5 );
 	
