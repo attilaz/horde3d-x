@@ -81,8 +81,8 @@ public:
 
 protected:
 	bool raiseError( const std::string &msg );
-	bool checkDDS( const char *data, int size );
-	bool loadDDS( const char *data, int size );
+	bool checkUTEX( const char *data, int size );
+	bool loadUTEX( const char *data, int size );
 	bool loadSTBI( const char *data, int size );
 	int getMipCount();
 	

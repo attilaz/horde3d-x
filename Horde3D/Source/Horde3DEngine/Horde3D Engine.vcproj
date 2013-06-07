@@ -466,6 +466,10 @@
 					/>
 				</FileConfiguration>
 			</File>
+			<File
+				RelativePath=".\utTexture.cpp"
+				>
+			</File>
 			<Filter
 				Name="D3D11"
 				>
@@ -686,6 +690,10 @@
 			</File>
 			<File
 				RelativePath="..\Shared\utPlatform.h"
+				>
+			</File>
+			<File
+				RelativePath=".\utTexture.h"
 				>
 			</File>
 			<File
