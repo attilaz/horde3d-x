@@ -456,6 +456,14 @@ uint32 RenderDevice::calcTextureSize( TextureFormats::List format, int width, in
 		return width * height * depth * 8;
 	case TextureFormats::RGBA32F:
 		return width * height * depth * 16;
+	case TextureFormats::PVRTCI_2BPP:
+	case TextureFormats::PVRTCI_A2BPP:
+		return (std::max( width, 16 ) * std::max( height, 8 ) * 2 + 7) / 8;
+	case TextureFormats::PVRTCI_4BPP:
+	case TextureFormats::PVRTCI_A4BPP:
+		return (std::max( width, 8 ) * std::max( height, 8 ) * 4 + 7) / 8;
+	case TextureFormats::ETC1:
+		return std::max( width / 4, 1 ) * std::max( height / 4, 1 ) * depth * 8;
 	default:
 		return 0;
 	}

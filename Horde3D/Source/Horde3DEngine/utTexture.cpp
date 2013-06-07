@@ -76,7 +76,6 @@ bool utexLoadDDS( const char* data, uint32 size, TextureInfo* info)
 	info->_depth = 1;
 	info->_format = TextureFormats::Unknown;
 	info->_mipCount = ddsHeader.dwFlags & DDSD_MIPMAPCOUNT ? ddsHeader.dwMipMapCount : 1;
-	bool hasMipMaps = info->_mipCount > 1 ? true : false;
 
 	// Get texture type
 	if( ddsHeader.caps.dwCaps2 == 0 )
@@ -239,15 +238,164 @@ bool utexLoadDDS( const char* data, uint32 size, TextureInfo* info)
 	return true;
 }
 
-bool utexCheck( const char* buffer, uint32 len )
+	// pvr
+struct PVRHeader
 {
-	return utexCheckDDS( buffer, len );
+        uint32 dwVersion;
+        uint32 dwFlags;
+        uint32 dwPixelFormatLow;
+		uint32 dwPixelFormatHigh;
+        uint32 dwColourSpace;
+        uint32 dwChannelType;
+        uint32 dwHeight;
+        uint32 dwWidth;
+        uint32 dwDepth;
+        uint32 dwNumSurfaces;
+        uint32 dwNumFaces;
+        uint32 dwMipMapCount;
+        uint32 dwMetaDataSize;
+} pvrHeader;
+
+enum EPVRTPixelFormat
+{
+	ePVRTPF_PVRTCI_2bpp_RGB,
+	ePVRTPF_PVRTCI_2bpp_RGBA,
+	ePVRTPF_PVRTCI_4bpp_RGB,
+	ePVRTPF_PVRTCI_4bpp_RGBA,
+	ePVRTPF_PVRTCII_2bpp,
+	ePVRTPF_PVRTCII_4bpp,
+	ePVRTPF_ETC1,
+	ePVRTPF_DXT1,
+	ePVRTPF_DXT2,
+	ePVRTPF_DXT3,
+	ePVRTPF_DXT4,
+	ePVRTPF_DXT5,
+
+	//These formats are identical to some DXT formats.
+	ePVRTPF_BC1 = ePVRTPF_DXT1,
+	ePVRTPF_BC2 = ePVRTPF_DXT3,
+	ePVRTPF_BC3 = ePVRTPF_DXT5,
+};
+
+
+bool utexCheckPVR( const char* data, uint32 size )
+{
+	return size > 52 && *((uint32 *)data) == FOURCC( 'P', 'V', 'R', 0x03 );
 }
 
-bool utexLoad( const char* buffer, uint32 len, TextureInfo* info)
+bool utexLoadPVR( const char* data, uint32 size, TextureInfo* info)
 {
-	if ( utexCheckDDS( buffer, len ) )
-		return utexLoadDDS( buffer, len, info );
+	// Load pvr
+    ASSERT_STATIC( sizeof( PVRHeader ) == 52 );
+
+    memcpy( &pvrHeader, data, 52 );
+
+    // Store properties
+    info->_width = pvrHeader.dwWidth;
+    info->_height = pvrHeader.dwHeight;
+	info->_depth = 1;
+    info->_format = TextureFormats::Unknown;
+	info->_mipCount = pvrHeader.dwMipMapCount;
+
+    // Get texture type
+    if( pvrHeader.dwNumFaces == 6 )
+    {
+		info->_type = TextureTypes::TexCube;
+    }
+    else
+    {
+		info->_type = TextureTypes::Tex2D;
+    }
+
+    // Get pixel format
+	if (pvrHeader.dwPixelFormatHigh == 0 )
+	{
+		switch(pvrHeader.dwPixelFormatLow)
+		{
+		case ePVRTPF_PVRTCI_2bpp_RGBA:
+			info->_format = TextureFormats::PVRTCI_A2BPP;
+			break;
+		case ePVRTPF_PVRTCI_4bpp_RGBA:
+			info->_format = TextureFormats::PVRTCI_A4BPP;
+			break;
+		case ePVRTPF_DXT1:
+			info->_format = TextureFormats::DXT1;
+			break;
+		case ePVRTPF_DXT3:
+			info->_format = TextureFormats::DXT3;
+			break;
+		case ePVRTPF_DXT5:
+			info->_format = TextureFormats::DXT5;
+			break;
+		case ePVRTPF_PVRTCI_2bpp_RGB:
+			info->_format = TextureFormats::PVRTCI_2BPP;
+			break;
+		case ePVRTPF_PVRTCI_4bpp_RGB:
+			info->_format = TextureFormats::PVRTCI_4BPP;
+			break;
+		case ePVRTPF_ETC1:
+			info->_format = TextureFormats::ETC1;
+			break;
+		}
+	}
+
+	if( info->_format == TextureFormats::Unknown )
+	{
+		Modules().log().writeError( "Unsupported PVR pixel format" );
+		return false;
+	}
+
+    // Upload texture subresources
+    int numSlices = info->_type == TextureTypes::TexCube ? 6 : 1;
+    unsigned char *pixels = (unsigned char *)(data + 52);
+
+	uint32 surfaceIndex = 0;
+	info->_surfaceCount = info->_sliceCount * info->_mipCount;
+	info->_surfaces = new SurfaceInfo[info->_surfaceCount];
+
+    for( int i = 0; i < numSlices; ++i )
+    {
+        int width = pvrHeader.dwWidth, height = pvrHeader.dwHeight;
+
+        for( uint32 j = 0; j < info->_mipCount; ++j )
+        {
+			size_t mipSize =  gRDI->calcTextureSize( info->_format, width, height, 1 );
+            if( pixels + mipSize > (unsigned char *)data + size )
+ 			{
+				Modules::log().writeError( "Corrupt PVR" );
+				return false;
+			}
+
+			SurfaceInfo& surface = info->_surfaces[surfaceIndex++];
+			surface._mip = j;
+			surface._slice = i;
+			surface._data = pixels;
+			surface._deleteData = false;
+			surface._size = (uint32)mipSize;
+
+            pixels += mipSize;
+            if( width > 1 ) width >>= 1;
+            if( height > 1 ) height >>= 1;
+        }
+    }
+
+    ASSERT( pixels == (unsigned char *)data + size);
+	return false;
+}
+
+
+
+bool utexCheck( const char* data, uint32 size )
+{
+	return utexCheckDDS( data, size ) || utexCheckPVR( data, size );
+}
+
+bool utexLoad( const char* data, uint32 size, TextureInfo* info)
+{
+	if ( utexCheckDDS( data, size ) )
+		return utexLoadDDS( data, size, info );
+	else if ( utexCheckPVR( data, size ) )
+		return utexLoadPVR( data, size, info );
 	
 	return false;
 }
