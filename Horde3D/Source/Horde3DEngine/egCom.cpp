@@ -404,4 +404,38 @@ GPUTimer *StatManager::getGPUTimer( int param )
 	}
 }
 
+int CapsManager::getCap( int param )
+{
+	switch ( param ) 
+	{
+	case EngineCaps::TexDXT:
+		return gRDI->getCaps().texDXT ? 1 : 0;
+	case EngineCaps::TexPVRTCI:
+		return gRDI->getCaps().texPVRTCI ? 1 : 0;
+	case EngineCaps::TexETC1:
+		return gRDI->getCaps().texETC1 ? 1 : 0;
+	case EngineCaps::TexFloat:
+		return gRDI->getCaps().texFloat ? 1 : 0;
+	case EngineCaps::TexDepth:
+		return gRDI->getCaps().texDepth ? 1 : 0;
+	case EngineCaps::TexShadowCompare:
+		return gRDI->getCaps().texShadowCompare ? 1 : 0;
+	case EngineCaps::Tex3D:
+		return gRDI->getCaps().tex3D ? 1 : 0;
+	case EngineCaps::TexNPOT:
+		return gRDI->getCaps().texNPOT ? 1 : 0;
+	case EngineCaps::RtMultisampling:
+		return gRDI->getCaps().rtMultisampling ? 1 : 0;
+	case EngineCaps::RtMaxColBufs:
+		return gRDI->getCaps().rtMaxColBufs;
+	case EngineCaps::OccQuery:
+		return gRDI->getCaps().occQuery ? 1 : 0;
+	case EngineCaps::TimerQuery:
+		return gRDI->getCaps().timerQuery ? 1 : 0;
+	default:
+		return 0;
+	}
+}
+
+
 }  // namespace

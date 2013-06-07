@@ -266,10 +266,10 @@ bool RenderDevice::init()
 	_caps.tex3D = true; // always true but depends on format
 	_caps.texNPOT = _d3dDevice->GetFeatureLevel() >= D3D_FEATURE_LEVEL_9_3;
 
-	_caps.rtMultisampling = _d3dDevice->GetFeatureLevel() >= D3D_FEATURE_LEVEL_9_1;	//depends on format (B8G8R8A8_UNORM 9.1+, R8G8B8A8_UNORM 9.3+)
+	_caps.rtMultisampling = true;	//depends on format (B8G8R8A8_UNORM 9.1+, R8G8B8A8_UNORM 9.3+), on WP8 this is false
 	_caps.rtMaxColBufs = _d3dDevice->GetFeatureLevel() >= D3D_FEATURE_LEVEL_9_3 ? 4 : 1;
 
-	_caps.occQuery = _d3dDevice->GetFeatureLevel() >= D3D_FEATURE_LEVEL_9_2; 
+	_caps.occQuery = true; // available on >= D3D_FEATURE_LEVEL_9_2; 
 	_caps.timerQuery = _d3dDevice->GetFeatureLevel() >= D3D_FEATURE_LEVEL_10_0;
 
 	if ( _d3dDevice->GetFeatureLevel() <= D3D_FEATURE_LEVEL_9_3 )

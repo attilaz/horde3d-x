@@ -164,6 +164,10 @@ DLLEXP float h3dGetStat( EngineStats::List param, bool reset )
 	return Modules::stats().getStat( param, reset );
 }
 
+DLLEXP int h3dGetCaps( EngineCaps::List param )
+{
+	return CapsManager::getCap( param );
+}
 
 DLLEXP void h3dShowOverlays( const float *verts, int vertCount, float colR, float colG,
                              float colB, float colA, uint32 materialRes, int flags )

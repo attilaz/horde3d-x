@@ -102,6 +102,42 @@ struct H3DOptions
 	};
 };
 
+struct H3DCaps
+{
+	/* Enum: H3DCaps
+			The available engine/gpu capabilites.
+		
+		TexDXT				- DXT1,3,5 (BC1-3 in d3d11) texture format support	(Values: 0,1)
+		TexPVRTCI			- PVRTCI texture format support	(Values: 0,1)
+		TexETC1				- ETC1 texture format support (Values: 0,1)
+		TexFloat			- TEX_RGBA16F and TEX_RGBA32F format support (Values: 0,1)
+		TexDepth			- Depth Texture format support (for shadowing) (Values: 0,1)
+		TexShadowCompare	- Shadow Comparison is available in shader for shadow computation (Values: 0,1)
+		Tex3D				- 3D texture support (Values: 0,1)
+		TexNPOT				- non power of two textures (Values: 0,1)
+		RtMultisampling		- Multisampled rendertarget support (Values: 0,1)
+		RtMaxColBufs		- Max Number of rendertarget colorbuffers (Values: 1,4)
+		OccQuery			- Occlusion Query is supported	(Values: 0,1)
+		TimerQuery			- Timer Query is supported (Values: 0,1)
+	*/
+	enum List
+	{
+		TexDXT	= 1,
+		TexPVRTCI,
+		TexETC1,
+		TexFloat,
+		TexDepth,
+		TexShadowCompare,
+		Tex3D,
+		TexNPOT,
+		RtMultisampling,
+		RtMaxColBufs,
+		OccQuery,
+		TimerQuery
+	};
+};
+
+
 struct H3DStats
 {
 	/* Enum: H3DStats
@@ -200,13 +236,18 @@ struct H3DFormats
 	/* Enum: H3DFormats
 			The available resource stream formats.
 			
-		Unknown      - Unknown format
-		TEX_RGBA8    - 8-bit RGBA texture
-		TEX_DXT1     - DXT1 compressed texture
-		TEX_DXT3     - DXT3 compressed texture
-		TEX_DXT5     - DXT5 compressed texture
-		TEX_RGBA16F  - Half float RGBA texture
-		TEX_RGBA32F  - Float RGBA texture
+		Unknown				- Unknown format
+		TEX_RGBA8			- 8-bit RGBA texture
+		TEX_DXT1			- DXT1 compressed texture
+		TEX_DXT3			- DXT3 compressed texture
+		TEX_DXT5			- DXT5 compressed texture
+		TEX_RGBA16F			- Half float RGBA texture
+		TEX_RGBA32F			- Float RGBA texture
+		TEX_PVRTCI_2BPP		- PVRTCI 2bits/pixel rgb compressed texture
+		TEX_PVRTCI_A2BPP	- PVRTCI 2bits/pixel rgba compressed texture
+		TEX_PVRTCI_4BPP		- PVRTCI 4bits/pixel rgba compressed texture
+		TEX_PVRTCI_A4BPP	- PVRTCI 4bits/pixel rgba compressed texture
+		TEX_ETC1			- ETC1 rgb compressed texture
 	*/
 	enum List
 	{
@@ -216,7 +257,13 @@ struct H3DFormats
 		TEX_DXT3,
 		TEX_DXT5,
 		TEX_RGBA16F,
-		TEX_RGBA32F
+		TEX_RGBA32F,
+
+		TEX_PVRTCI_2BPP	= TEX_RGBA32F + 2,
+		TEX_PVRTCI_A2BPP,
+		TEX_PVRTCI_4BPP,
+		TEX_PVRTCI_A4BPP,
+		TEX_ETC1,
 	};
 };
 
@@ -832,6 +879,21 @@ DLL float h3dGetOption( H3DOptions::List param );
 		true if the option could be set to the specified value, otherwise false
 */
 DLL bool h3dSetOption( H3DOptions::List param, float value );
+
+/* Function: h3dGetCaps
+		Gets engine/gpu capabilites info.
+	
+	Details:
+		This function gets a specified caps parameter and returns its value.
+	
+	Parameters:
+		param  - caps parameter
+		
+	Returns:
+		info about the specified caps parameter
+*/
+DLL int h3dGetCaps( H3DCaps::List param );
+
 
 /* Function: h3dGetStat
 		Gets a statistic value of the engine.

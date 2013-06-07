@@ -236,7 +236,7 @@ bool RenderDevice::init()
 	_caps.rtMultisampling = glExt::EXT_framebuffer_multisample;
 	GLint maxColorAttachments;
 	glGetIntegerv( GL_MAX_COLOR_ATTACHMENTS_EXT, &maxColorAttachments );
-	_caps.rtMaxColBufs = maxColorAttachments;
+	_caps.rtMaxColBufs = std::min(4,maxColorAttachments);
 
 	_caps.occQuery = true;
 	_caps.timerQuery = glExt::ARB_timer_query;

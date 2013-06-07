@@ -180,5 +180,35 @@ protected:
 	friend class ProfSample;
 };
 
+// =================================================================================================
+// Engine caps
+// =================================================================================================
+
+struct EngineCaps
+{
+	enum List
+	{
+		TexDXT	= 1,
+		TexPVRTCI,
+		TexETC1,
+		TexFloat,
+		TexDepth,
+		TexShadowCompare,
+		Tex3D,
+		TexNPOT,
+		RtMultisampling,
+		RtMaxColBufs,
+		OccQuery,
+		TimerQuery
+	};
+};
+
+class CapsManager
+{
+public:
+	static int getCap( int param );
+};
+
+
 }
 #endif // _egCom_H_
