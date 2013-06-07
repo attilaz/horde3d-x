@@ -88,3 +88,9 @@
 /Horde3D/Samples/KnightX/win32/Sample KnightX.vcproj.Attila-PC.Attila.user
 /Horde3D/Source/Horde3DEngine/Horde3D Engine.vcproj.Attila-PC.Attila.user
 /Horde3D/Source/Horde3DUtils/Horde3D Utils.vcproj.Attila-PC.Attila.user
+
+/Horde3D/Build/Sample ChicagoX/Debug
+
+/Horde3D/Build/Sample ChicagoX/Debug_d3d11
+
+/Horde3D/Build/Sample ChicagoX/Debug_gles2

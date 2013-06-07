@@ -4,6 +4,7 @@
 //		- Particle functions -
 //
 // Copyright (C) 2006-2011 Nicolas Schulz
+//	D3D11 version 2012-2013 Attila Kocsis
 //
 // You may use the following code in projects based on the Horde3D graphics engine.
 //

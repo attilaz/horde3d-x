@@ -664,6 +664,41 @@ bool RenderDevice::getTextureData( uint32 texObj, int slice, int mipLevel, void 
 // Shaders
 // =================================================================================================
 
+static std::string getErrorLine(const char* shaderSrc, const char* error)
+{
+	int line = 0;
+	if ( sscanf(error, "(%d", &line) != 1 )
+		return "";
+
+	
+	// find start of line
+	const char* lineStart = shaderSrc;
+	while ( *lineStart  && line>1 )
+	{
+		while ( *lineStart )
+		{
+			if ( *lineStart==13 || *lineStart==10 ) 
+			{
+				++lineStart;
+				if ( *(lineStart-1)==13 && *lineStart==10 )
+					++lineStart;
+				break;
+			}
+
+			++lineStart;
+		}
+
+		--line;
+	}
+
+	// find end of line
+	const char* lineEnd = lineStart;
+	while ( *lineEnd && *lineEnd!=10 && *lineEnd!=13 )
+		++lineEnd;
+
+	return std::string(lineStart, 0, lineEnd - lineStart);
+}
+
 //#define VS_TARGET	"vs_4_0_level_9_3"
 //#define PS_TARGET	"ps_4_0_level_9_3"
 #define VS_TARGET	"vs_4_0"
@@ -684,7 +719,7 @@ uint32 RenderDevice::createShader( const char *vertexShaderSrc, const char *frag
 	{	
         if( errorBlob )
 		{
-			_shaderLog = _shaderLog + "[Vertex Shader]\n" + (char*)errorBlob->GetBufferPointer();
+			_shaderLog = _shaderLog + "[Vertex Shader]\n" + (char*)errorBlob->GetBufferPointer() + getErrorLine(vertexShaderSrc,(const char*)errorBlob->GetBufferPointer()).c_str();
 			errorBlob->Release();
 		}
 		return 0;
@@ -709,7 +744,7 @@ uint32 RenderDevice::createShader( const char *vertexShaderSrc, const char *frag
         vsShaderBlob->Release();
         if( errorBlob )
 		{
-			_shaderLog = _shaderLog + "[Pixel Shader]\n" + (char*)errorBlob->GetBufferPointer();
+			_shaderLog = _shaderLog + "[Pixel Shader]\n" + (char*)errorBlob->GetBufferPointer() + getErrorLine(fragmentShaderSrc,(const char*)errorBlob->GetBufferPointer()).c_str();
 			errorBlob->Release();
 		}
 		return 0;
