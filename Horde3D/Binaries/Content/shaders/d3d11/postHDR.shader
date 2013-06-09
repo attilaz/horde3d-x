@@ -63,8 +63,9 @@ struct VS_OUTPUT
 VS_OUTPUT main( VS_INPUT In )
 {
 	VS_OUTPUT Out = (VS_OUTPUT)0;
-	Out.texCoords = In.vertPos.xy; 
+	Out.texCoords = float2(In.vertPos.x, 1-In.vertPos.y); 
 	Out.position = mul( projMat, float4( In.vertPos, 1 ) );
+	Out.position.z = Out.position.z * 0.5 + 0.5;
 	
 	return Out;
 }

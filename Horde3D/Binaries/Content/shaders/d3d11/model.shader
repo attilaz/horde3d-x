@@ -201,6 +201,7 @@ struct VS_OUTPUT
 
 	float2 texCoords : TEXCOORD0;
 	float4 pos : TEXCOORD1;
+	float4 vsPos : TEXCOORD2;	//not used but d3d11 needs this for mapping
 
 #ifdef _F02_NormalMapping
 	float3x3 tsbMat:TEXCOORD3;

@@ -78,7 +78,7 @@ VS_OUTPUT main( VS_INPUT In )
 {
 	VS_OUTPUT Out = (VS_OUTPUT)0;
 
-	Out.texCoords = In.vertPos.xy; 
+	Out.texCoords = float2(In.vertPos.x, 1-In.vertPos.y); 
 	Out.position = mul( projMat, float4( In.vertPos, 1 ) );
 	
 	return Out;
@@ -124,6 +124,7 @@ struct VS_OUTPUT
 	float2 texCoords : TEXCOORD0;
 };
 
+
 float3 main( VS_OUTPUT In ) : SV_Target
 {
 	if( getMatID( In.texCoords ) == 0.0 )	// Background
@@ -157,6 +158,7 @@ struct VS_OUTPUT
 float3 main( VS_OUTPUT In ) : SV_Target
 {
 	float2 fragCoord = (In.vpos.xy / In.vpos.w) * 0.5 + 0.5;
+	fragCoord.y = 1.0 - fragCoord.y;
 	
 	if( getMatID( fragCoord ) == 1.0 )	// Standard phong material
 	{
@@ -178,7 +180,13 @@ float3 main( VS_OUTPUT In ) : SV_Target
 Texture2D texture_depthBuf;
 SamplerState sampler_depthBuf;
 
-float main( float2 texCoords : TEXCOORD0 ) : SV_Depth
+struct VS_OUTPUT
 {
-	return texture_depthBuf.Sample( sampler_depthBuf, texCoords ).r;
+	float4 position : SV_POSITION;
+	float2 texCoords : TEXCOORD0;
+};
+
+float main( VS_OUTPUT In ) : SV_Depth
+{
+	return texture_depthBuf.Sample( sampler_depthBuf, In.texCoords ).r;
 }

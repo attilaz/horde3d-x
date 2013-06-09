@@ -1314,7 +1314,10 @@ void RenderDevice::setRenderBuffer( uint32 rbObj )
 	{
 		// Unbind all textures to make sure that no FBO attachment is bound any more
 		for( uint32 i = 0; i < 16; ++i ) setTexture( i, 0, 0 );
-		commitStates( PM_TEXTURES );
+		commitStates( PM_TEXTURES );	
+		ID3D11ShaderResourceView* rv = NULL;	//TODO: better implementation
+		for( uint32 i = 0; i < 16; ++i )
+			_d3dContext->PSSetShaderResources(i,1, &rv);
 		
 		RDIRenderBuffer &rb = _rendBufs.getRef( rbObj );
 
