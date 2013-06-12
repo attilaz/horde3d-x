@@ -24,9 +24,7 @@ float shadowMapSize;
 float PCF( const float4 projShadow )
 {
 	// 5-tap PCF with a 30° rotated grid
-	return 1.0f;
-	
-/*	float offset = 1.0 / shadowMapSize;
+	float offset = 1.0 / shadowMapSize;
 	
 	float shadow = texture_shadowMap.SampleCmpLevelZero( sampler_shadowMap, projShadow.xy, projShadow.z );
 	shadow += texture_shadowMap.SampleCmpLevelZero( sampler_shadowMap, projShadow.xy + float2( -0.866 * offset,  0.5 * offset ), projShadow.z );
@@ -34,7 +32,7 @@ float PCF( const float4 projShadow )
 	shadow += texture_shadowMap.SampleCmpLevelZero( sampler_shadowMap, projShadow.xy + float2(  0.866 * offset, -0.5 * offset ), projShadow.z );
 	shadow += texture_shadowMap.SampleCmpLevelZero( sampler_shadowMap, projShadow.xy + float2(  0.866 * offset,  0.5 * offset ), projShadow.z );
 	
-	return shadow / 5.0;*/
+	return shadow / 5.0;
 }
 
 

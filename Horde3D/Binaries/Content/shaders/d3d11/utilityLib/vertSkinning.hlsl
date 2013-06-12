@@ -37,10 +37,10 @@ float3x3 getSkinningMatVec( const float4x4 skinningMat )
 
 float4 skinPos( const float4 pos, float4 weights, float4 joints )
 {
-	return mul(pos, getJointMat( int( joints.x ) ) ) * weights.x +
-		   mul(pos, getJointMat( int( joints.y ) ) ) * weights.y +
-		   mul(pos, getJointMat( int( joints.z ) ) ) * weights.z +
-		   mul(pos, getJointMat( int( joints.w ) ) ) * weights.w;
+	return mul( getJointMat( int( joints.x ) ), pos ) * weights.x +
+		   mul( getJointMat( int( joints.y ) ), pos ) * weights.y +
+		   mul( getJointMat( int( joints.z ) ), pos ) * weights.z +
+		   mul( getJointMat( int( joints.w ) ), pos ) * weights.w;
 }
 
 float4 skinPos( const float4 pos, const float4x4 skinningMat )
