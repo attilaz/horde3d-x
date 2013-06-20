@@ -47,8 +47,8 @@ class Device
 public:
 	Device(HWND hWnd);
 	~Device();
-	virtual void SwapBuffers();
-	virtual void* GetNativeHandle() { return _d3dDevice; }
+	void SwapBuffers();
+	void* GetNativeHandle() { return _d3dDevice; }
 protected:
 	ID3D11Device*            _d3dDevice;
 	IDXGISwapChain*          _swapChain;

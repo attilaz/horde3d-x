@@ -675,7 +675,7 @@ bool RenderDevice::getTextureData( uint32 texObj, int slice, int mipLevel, void 
 static std::string getErrorLine(const char* shaderSrc, const char* error)
 {
 	int line = 0;
-	if ( sscanf(error, "(%d", &line) != 1 )
+	if ( sscanf_s(error, "(%d", &line) != 1 )
 		return "";
 
 	
