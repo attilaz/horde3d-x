@@ -13,35 +13,71 @@
 #ifndef _utTexture_H_
 #define _utTexture_H_
 
-#include "egRendererBase.h"
-
 namespace Horde3D {
 
-struct SurfaceInfo
+struct utTextureTypes
 {
-	uint32	_mip;
-	uint32	_slice;	// cubemap slice
-	void*	_data;
-	uint32	_size;	// in bytes
-	bool	_deleteData;
+	enum List
+	{
+		Tex2D,
+		Tex3D,
+		TexCube,
+	};
 };
 
-struct TextureInfo
+struct utTextureFormats
 {
-	uint32 _width,_height,_depth;
-	uint32 _mipCount;
-	uint32 _sliceCount;
+	enum List
+	{
+		Unknown,
+		RGBA8,
+		RGB8,
+		RGBX8,
+		BGRA8,
+		BGR8,
+		BGRX8,
 
-	TextureTypes::List		_type;
-	TextureFormats::List	_format;
+		DXT1,
+		DXT3,
+		DXT5,
+		RGBA16F,
+		RGBA32F,
+		DEPTH,
 
-	SurfaceInfo*	_surfaces;	
-	uint32			_surfaceCount;
+		PVRTCI_2BPP,
+		PVRTCI_A2BPP,
+		PVRTCI_4BPP,
+		PVRTCI_A4BPP,
+		ETC1,
+
+		Count,
+	};
 };
 
-bool utexCheck( const char* data, uint32 size );	//returns true if format is supported
-bool utexLoad( const char* data, uint32 size, TextureInfo* info );
-void utexFree( TextureInfo* info );
+struct utTextureSurfaceInfo
+{
+	unsigned int	_mip;
+	unsigned int	_slice;	// cubemap slice
+	void*			_data;
+	unsigned int	_size;	// in bytes
+};
+
+struct utTextureInfo
+{
+	unsigned int _width,_height,_depth;
+	unsigned int _mipCount;
+	unsigned int _sliceCount;
+
+	utTextureTypes::List	_type;
+	utTextureFormats::List	_format;
+
+	utTextureSurfaceInfo*	_surfaces;	
+	unsigned int			_surfaceCount;
+};
+
+bool utTextureCheck( const char* data, unsigned int	size );	//returns true if fileformat is supported
+bool utTextureLoad( const char* data, unsigned int size, utTextureInfo* info );
+void utTextureFree( utTextureInfo* info );
 
 }
 

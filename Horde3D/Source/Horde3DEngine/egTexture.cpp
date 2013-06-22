@@ -108,7 +108,7 @@ TextureResource::TextureResource( const string &name, uint32 width, uint32 heigh
 	}
 	else
 	{
-		uint32 size = gRDI->calcTextureSize( _texFormat, width, height, depth );
+		uint32 size = calcTextureSize( _texFormat, width, height, depth );
 		unsigned char *pixels = new unsigned char[size];
 		memset( pixels, 0, size );
 		
@@ -180,30 +180,83 @@ bool TextureResource::raiseError( const string &msg )
 
 bool TextureResource::checkUTEX( const char *data, int size )
 {
-	return utexCheck( data, size );
+	return utTextureCheck( data, size );
 }
 
 
 bool TextureResource::loadUTEX( const char *data, int size )
 {
-	TextureInfo info;
-	if ( ! utexLoad( data, size, &info ) )
+	utTextureInfo info;
+	if ( ! utTextureLoad( data, size, &info ) )
 		return raiseError( "DDS/PVR/KTX file" );
+
+	switch( info._format )
+	{
+	case utTextureFormats::RGBA8:
+	case utTextureFormats::RGBX8:
+	case utTextureFormats::BGRA8:
+	case utTextureFormats::BGRX8:
+	case utTextureFormats::RGB8:
+	case utTextureFormats::BGR8:
+		_texFormat = TextureFormats::RGBA8;
+		break;
+	case utTextureFormats::DXT1:
+		_texFormat = TextureFormats::DXT1;
+		break;
+	case utTextureFormats::DXT3:
+		_texFormat = TextureFormats::DXT3;
+		break;
+	case utTextureFormats::DXT5:
+		_texFormat = TextureFormats::DXT5;
+		break;
+	case utTextureFormats::RGBA16F:
+		_texFormat = TextureFormats::RGBA16F;
+		break;
+	case utTextureFormats::RGBA32F:
+		_texFormat = TextureFormats::RGBA32F;
+		break;
+	case utTextureFormats::PVRTCI_2BPP:
+		_texFormat = TextureFormats::PVRTCI_2BPP;
+		break;
+	case utTextureFormats::PVRTCI_A2BPP:
+		_texFormat = TextureFormats::PVRTCI_A2BPP;
+		break;
+	case utTextureFormats::PVRTCI_4BPP:
+		_texFormat = TextureFormats::PVRTCI_4BPP;
+		break;
+	case utTextureFormats::PVRTCI_A4BPP:
+		_texFormat = TextureFormats::PVRTCI_A4BPP;
+		break;
+	case utTextureFormats::ETC1:
+		_texFormat = TextureFormats::ETC1;
+		break;
+	default:
+		return raiseError( "Unsupported file pixel format" );
+	}
+
+	switch( info._type )
+	{
+	case utTextureTypes::Tex2D:
+		_texType = TextureTypes::Tex2D;
+		break;
+	case utTextureTypes::Tex3D:
+		_texType = TextureTypes::Tex3D;
+		break;
+	case utTextureTypes::TexCube:
+		_texType = TextureTypes::TexCube;
+		break;
+	default:
+		return raiseError( "Unsupported texture type" );
+	}
 
 	// Store properties
 	_width = info._width;
 	_height = info._height;
 	_depth = info._depth;
-	_texFormat = info._format;
 	_texObject = 0;
 	_sRGB = (_flags & ResourceFlags::TexSRGB) != 0;
 	int mipCount = info._mipCount;
 	_hasMipMaps = mipCount > 1 ? true : false;
-	_texType = info._type;
-	
-	// Get pixel format
-	if( _texFormat == TextureFormats::Unknown )
-		return raiseError( "Unsupported DDS pixel format" );
 
 	// Create texture
 	_texObject = gRDI->createTexture( _texType, _width, _height, _depth, _texFormat,
@@ -211,19 +264,53 @@ bool TextureResource::loadUTEX( const char *data, int size )
 
 	if ( _texObject == 0 )
 		return raiseError( "Unsupported pixel format" );
-	
+
+	uint32 *dstBuf = 0x0;
+
+	if( _texFormat == TextureFormats::RGBA8 && info._format != utTextureFormats::RGBA8 )
+		dstBuf = new uint32[_width * _height * _depth];
+
 	// Upload texture subresources
 	for( uint32 i = 0; i < info._surfaceCount; ++i )
 	{
-		const SurfaceInfo& surface = info._surfaces[i];
+		const utTextureSurfaceInfo& surface = info._surfaces[i];
 		int width	= std::max( _width >> surface._mip, 1);
 		int height	= std::max( _height >> surface._mip, 1);
 		int depth	= std::max( _depth >> surface._mip, 1);
 
-		gRDI->uploadTextureData( _texObject, surface._slice, surface._mip, surface._data );
+		if( _texFormat == TextureFormats::RGBA8 && info._format != utTextureFormats::RGBA8 )
+		{
+			// Convert 8 bit formats to RGBA8
+			uint32 pixCount = width * height * depth;
+			uint32 *p = dstBuf;
+			unsigned char *pixels = (unsigned char *)surface._data;
+
+			if( info._format == utTextureFormats::BGR8 )
+				for( uint32 k = 0; k < pixCount * 3; k += 3 )
+					*p++ = pixels[k+0] | pixels[k+1]<<8 | pixels[k+2]<<16 | 0xFF000000;
+			else if( info._format == utTextureFormats::BGRX8 )
+				for( uint32 k = 0; k < pixCount * 4; k += 4 )
+					*p++ = pixels[k+0] | pixels[k+1]<<8 | pixels[k+2]<<16 | 0xFF000000;
+			else if( info._format == utTextureFormats::RGB8 )
+				for( uint32 k = 0; k < pixCount * 3; k += 3 )
+					*p++ = pixels[k+2] | pixels[k+1]<<8 | pixels[k+0]<<16 | 0xFF000000;
+			else if( info._format == utTextureFormats::RGBX8 )
+				for( uint32 k = 0; k < pixCount * 4; k += 4 )
+					*p++ = pixels[k+2] | pixels[k+1]<<8 | pixels[k+0]<<16 | 0xFF000000;
+			else if( info._format == utTextureFormats::RGBA8 )
+				for( uint32 k = 0; k < pixCount * 4; k += 4 )
+					*p++ = pixels[k+2] | pixels[k+1]<<8 | pixels[k+0]<<16 | pixels[k+3]<<24;
+			
+			gRDI->uploadTextureData( _texObject, surface._slice, surface._mip, dstBuf );
+		}
+		else
+		{	// Upload data directly
+			gRDI->uploadTextureData( _texObject, surface._slice, surface._mip, surface._data );
+		}
 	}
 
-	utexFree( &info );
+	delete[] dstBuf;
+	utTextureFree( &info );
 
 	return true;
 }
@@ -341,7 +428,7 @@ void *TextureResource::mapStream( int elem, int elemIdx, int stream, bool read, 
 		    elemIdx < getElemCount( elem ) )
 		{
 			mappedData = Modules::renderer().useScratchBuf(
-				gRDI->calcTextureSize( _texFormat, _width, _height, _depth ) );
+				calcTextureSize( _texFormat, _width, _height, _depth ) );
 			
 			if( read )
 			{	

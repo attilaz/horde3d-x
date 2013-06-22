@@ -103,6 +103,8 @@ struct TextureFormats
 	};
 };
 
+uint32 calcTextureSize( TextureFormats::List format, int width, int height, int depth );
+
 enum RDIShaderConstType
 {
 	CONST_FLOAT,

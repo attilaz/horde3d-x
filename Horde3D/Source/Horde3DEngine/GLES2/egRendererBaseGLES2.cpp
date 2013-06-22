@@ -379,36 +379,6 @@ void RenderDevice::updateBufferData( uint32 bufObj, uint32 offset, uint32 size, 
 // Textures
 // =================================================================================================
 
-uint32 RenderDevice::calcTextureSize( TextureFormats::List format, int width, int height, int depth )
-{
-	switch( format )
-	{
-	case TextureFormats::RGBA8:
-		return width * height * depth * 4;
-	case TextureFormats::DXT1:
-		return std::max( width / 4, 1 ) * std::max( height / 4, 1 ) * depth * 8;
-	case TextureFormats::DXT3:
-		return std::max( width / 4, 1 ) * std::max( height / 4, 1 ) * depth * 16;
-	case TextureFormats::DXT5:
-		return std::max( width / 4, 1 ) * std::max( height / 4, 1 ) * depth * 16;
-	case TextureFormats::RGBA16F:
-		return width * height * depth * 8;
-	case TextureFormats::RGBA32F:
-		return width * height * depth * 16;
-    case TextureFormats::PVRTCI_2BPP:
-	case TextureFormats::PVRTCI_A2BPP:
-		return (std::max( width, 16 ) * std::max( height, 8 ) * 2 + 7) / 8;
-	case TextureFormats::PVRTCI_4BPP:
-	case TextureFormats::PVRTCI_A4BPP:
-		return (std::max( width, 8 ) * std::max( height, 8 ) * 4 + 7) / 8;
-	case TextureFormats::ETC1:
-		return std::max( width / 4, 1 ) * std::max( height / 4, 1 ) * depth * 8;
-	default:
-		return 0;
-	}
-}
-
-
 uint32 RenderDevice::createTexture( TextureTypes::List type, int width, int height, int depth,
                                     TextureFormats::List format,
                                     bool hasMips, bool genMips, bool sRGB )
