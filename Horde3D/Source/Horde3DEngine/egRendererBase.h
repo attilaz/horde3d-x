@@ -5,15 +5,15 @@
 #include "utMath.h"
 #include <vector>
 
-#ifdef HORDE3D_D3D11
+#if defined(HORDE3D_D3D11)
 #define WIN32_LEAN_AND_MEAN 1
 #ifndef NOMINMAX
 #	define NOMINMAX
 #endif
 #include <d3d11.h>
-#elif HORDE3D_GLES2
+#elif defined(HORDE3D_GLES2)
 #include "GLES2/utOpenGLES2.h"
-#elif HORDE3D_GL
+#elif defined(HORDE3D_GL)
 #include "GL/utOpenGL.h"
 #endif
 
@@ -294,11 +294,11 @@ private:
 }
 
 
-#ifdef HORDE3D_D3D11
+#if defined(HORDE3D_D3D11)
 #include "D3D11/egRendererBaseD3D11.h"
-#elif HORDE3D_GLES2
+#elif defined(HORDE3D_GLES2)
 #include "GLES2/egRendererBaseGLES2.h"
-#elif HORDE3D_GL
+#elif defined(HORDE3D_GL)
 #include "GL/egRendererBaseGL.h"
 #endif
 

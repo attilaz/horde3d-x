@@ -194,7 +194,6 @@ bool Renderer::init()
 
 	// Reset states
 	gRDI->resetStates();
-//	finishRendering();
 
 	// Start frame timer
 	Timer *timer = Modules::stats().getTimer( EngineStats::FrameTime );
