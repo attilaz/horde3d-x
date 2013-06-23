@@ -26,11 +26,13 @@ float PCF( const float4 projShadow )
 	// 5-tap PCF with a 30° rotated grid
 	float offset = 1.0 / shadowMapSize;
 	
-	float shadow = texture_shadowMap.SampleCmpLevelZero( sampler_shadowMap, projShadow.xy, projShadow.z );
-	shadow += texture_shadowMap.SampleCmpLevelZero( sampler_shadowMap, projShadow.xy + float2( -0.866 * offset,  0.5 * offset ), projShadow.z );
-	shadow += texture_shadowMap.SampleCmpLevelZero( sampler_shadowMap, projShadow.xy + float2( -0.866 * offset, -0.5 * offset ), projShadow.z );
-	shadow += texture_shadowMap.SampleCmpLevelZero( sampler_shadowMap, projShadow.xy + float2(  0.866 * offset, -0.5 * offset ), projShadow.z );
-	shadow += texture_shadowMap.SampleCmpLevelZero( sampler_shadowMap, projShadow.xy + float2(  0.866 * offset,  0.5 * offset ), projShadow.z );
+	float2 shadowCoord = float2(projShadow.x, 1.0-projShadow.y);
+	
+	float shadow = texture_shadowMap.SampleCmpLevelZero( sampler_shadowMap, shadowCoord.xy, projShadow.z );
+	shadow += texture_shadowMap.SampleCmpLevelZero( sampler_shadowMap, shadowCoord.xy + float2( -0.866 * offset,  0.5 * offset ), projShadow.z );
+	shadow += texture_shadowMap.SampleCmpLevelZero( sampler_shadowMap, shadowCoord.xy + float2( -0.866 * offset, -0.5 * offset ), projShadow.z );
+	shadow += texture_shadowMap.SampleCmpLevelZero( sampler_shadowMap, shadowCoord.xy + float2(  0.866 * offset, -0.5 * offset ), projShadow.z );
+	shadow += texture_shadowMap.SampleCmpLevelZero( sampler_shadowMap, shadowCoord.xy + float2(  0.866 * offset,  0.5 * offset ), projShadow.z );
 	
 	return shadow / 5.0;
 }
