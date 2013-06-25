@@ -16,7 +16,7 @@
 #include <cstring>
 #include <string>
 
-#if defined(PLATFORM_WIN) && defined(HORDE3D_GLES2)
+#if defined(PLATFORM_WIN)
 #include "EGL/egl.h"
 #endif
 
@@ -29,16 +29,17 @@
 
 namespace glExt
 {
-	bool EXT_framebuffer_multisample = false;
-	bool IMG_multisampled_render_to_texture = false;
+	bool EXT_multisampled_render_to_texture = false;
+	bool ANGLE_framebuffer_blit = false;
+	bool ANGLE_framebuffer_multisample = false;
+	bool OES_rgb8_rgba8 = false;
+
 	bool EXT_texture_filter_anisotropic = false;
-	bool ARB_texture_float = false;
-	bool ARB_texture_non_power_of_two = false;
 	bool ARB_timer_query = false;
 	bool EXT_occlusion_query_boolean = false;
 
 	bool OES_texture_3D = false;
-	bool EXT_texture_sRGB = false;
+
 	bool EXT_texture_compression_s3tc = false;
 	bool EXT_texture_compression_dxt1 = false;
 	bool ANGLE_texture_compression_dxt3 = false;
@@ -48,6 +49,8 @@ namespace glExt
 	bool OES_compressed_ETC1_RGB8_texture = false;
 
 	extern bool OES_depth_texture = false;
+	extern bool ANGLE_depth_texture = false;
+
 	extern bool EXT_shadow_samplers = false;
 
 	int	majorVersion = 1, minorVersion = 0;
@@ -63,16 +66,15 @@ PFNGLCOPYTEXSUBIMAGE3DOESPROC glCopyTexSubImage3DOES = 0x0;
 PFNGLCOMPRESSEDTEXIMAGE3DOESPROC glCompressedTexImage3DOES = 0x0;
 PFNGLCOMPRESSEDTEXSUBIMAGE3DOESPROC glCompressedTexSubImage3DOES = 0x0;
 
-// GL_EXT_framebuffer_blit
-PFNGLBLITFRAMEBUFFEREXTPROC glBlitFramebufferEXT = 0x0;
-
-// GL_EXT_framebuffer_multisample
+// GL_EXT_multisampled_render_to_texture
 PFNGLRENDERBUFFERSTORAGEMULTISAMPLEEXTPROC glRenderbufferStorageMultisampleEXT = 0x0;
+PFNGLFRAMEBUFFERTEXTURE2DMULTISAMPLEEXTPROC glFramebufferTexture2DMultisampleEXT = 0x0;
 
-// IMG_multisampled_render_to_texture
-PFNGLFRAMEBUFFERTEXTURE2DMULTISAMPLEIMGPROC glFramebufferTexture2DMultisampleIMG = 0x0;
-PFNGLRENDERBUFFERSTORAGEMULTISAMPLEIMGPROC glRenderbufferStorageMultisampleIMG = 0x0;
+// GL_ANGLE_framebuffer_blit 
+PFNGLBLITFRAMEBUFFERANGLEPROC glBlitFramebufferANGLE = 0x0;
 
+// GL_ANGLE_framebuffer_multisample
+PFNGLRENDERBUFFERSTORAGEMULTISAMPLEANGLEPROC glRenderbufferStorageMultisampleANGLE = 0x0;
 
 // GL_ARB_timer_query
 PFNGLQUERYCOUNTERPROC glQueryCounter = 0x0;
@@ -97,17 +99,14 @@ PFNGLGETQUERYOBJECTUIVEXTPROC glGetQueryObjectuivEXT = 0x0;
 
 bool isExtensionSupported( const char *extName )
 {
-	if( glExt::majorVersion < 3 )
+	const char *extensions = (char *)glGetString( GL_EXTENSIONS );
+	size_t nameLen = strlen( extName );
+	const char *pos;
+	while( ( pos = strstr( extensions, extName ) ) != 0x0 )
 	{
-		const char *extensions = (char *)glGetString( GL_EXTENSIONS );
-		size_t nameLen = strlen( extName );
-		const char *pos;
-		while( ( pos = strstr( extensions, extName ) ) != 0x0 )
-		{
-			char c = pos[nameLen];
-			if( c == ' ' || c == '\0' ) return true;
-			extensions = pos + nameLen;
-		}
+		char c = pos[nameLen];
+		if( c == ' ' || c == '\0' ) return true;
+		extensions = pos + nameLen;
 	}
 
 	return false;
@@ -135,11 +134,7 @@ void getOpenGLVersion()
 void *platGetProcAddressFn( const char *funcName )
 {
 #if defined( PLATFORM_WIN )
-	#ifdef HORDE3D_GLES2
-		return (void *)eglGetProcAddress( funcName );
-	#else
-		return (void *)wglGetProcAddress( funcName );
-	#endif
+	return (void *)eglGetProcAddress( funcName );
 #elif defined( PLATFORM_WIN_CE )
 	return (void *)eglGetProcAddress( funcName );
 #elif defined( PLATFORM_ANDROID )
@@ -185,37 +180,34 @@ bool initOpenGLExtensions()
 	getOpenGLVersion();
 
 	// Extensions
-	glExt::EXT_texture_filter_anisotropic = isExtensionSupported( "GL_EXT_texture_filter_anisotropic" );
-
-	glExt::EXT_texture_sRGB = isExtensionSupported( "GL_EXT_texture_sRGB" );
-
-	glExt::ARB_texture_float = isExtensionSupported( "GL_ARB_texture_float" ) ||
-	                           isExtensionSupported( "GL_ATI_texture_float" );
-
-	glExt::ARB_texture_non_power_of_two = isExtensionSupported( "GL_ARB_texture_non_power_of_two" );
-
-	glExt::EXT_framebuffer_multisample = isExtensionSupported( "GL_EXT_framebuffer_multisample" ) &&
-	                                     isExtensionSupported( "GL_EXT_framebuffer_blit" );
-	if( glExt::EXT_framebuffer_multisample )
+	glExt::EXT_multisampled_render_to_texture = isExtensionSupported( "GL_EXT_multisampled_render_to_texture" );
+	if ( glExt::EXT_multisampled_render_to_texture )
 	{
 		bool v = true;
-
-		// From GL_EXT_framebuffer_blit
-		v &= (glBlitFramebufferEXT = (PFNGLBLITFRAMEBUFFEREXTPROC) platGetProcAddress( glBlitFramebufferEXT )) != 0x0;
-		// From GL_EXT_framebuffer_multisample
+		v &= (glFramebufferTexture2DMultisampleEXT = (PFNGLFRAMEBUFFERTEXTURE2DMULTISAMPLEEXTPROC) platGetProcAddress( glFramebufferTexture2DMultisampleEXT )) != 0x0;
 		v &= (glRenderbufferStorageMultisampleEXT = (PFNGLRENDERBUFFERSTORAGEMULTISAMPLEEXTPROC) platGetProcAddress( glRenderbufferStorageMultisampleEXT )) != 0x0;
-
-		glExt::EXT_framebuffer_multisample = v;
+		glExt::EXT_multisampled_render_to_texture = v;
 	}
 
-	glExt::IMG_multisampled_render_to_texture = isExtensionSupported( "GL_IMG_multisampled_render_to_texture" );
-	if ( glExt::IMG_multisampled_render_to_texture )
+		// ANGLE_framebuffer_blit and ANGLE_framebuffer_multisample
+	glExt::ANGLE_framebuffer_blit = glExt::ANGLE_framebuffer_multisample = 
+		isExtensionSupported( "GL_ANGLE_framebuffer_multisample" ) && isExtensionSupported( "GL_ANGLE_framebuffer_blit" );
+
+	if( glExt::ANGLE_framebuffer_multisample )
 	{
 		bool v = true;
-		v &= (glFramebufferTexture2DMultisampleIMG = (PFNGLFRAMEBUFFERTEXTURE2DMULTISAMPLEIMGPROC) platGetProcAddress( glFramebufferTexture2DMultisampleIMG )) != 0x0;
-		v &= (glRenderbufferStorageMultisampleIMG = (PFNGLRENDERBUFFERSTORAGEMULTISAMPLEIMGPROC) platGetProcAddress( glRenderbufferStorageMultisampleIMG )) != 0x0;
-		glExt::IMG_multisampled_render_to_texture = v;
+
+		// From GL_ANGLE_framebuffer_blit
+		v &= (glBlitFramebufferANGLE = (PFNGLBLITFRAMEBUFFERANGLEPROC) platGetProcAddress( glBlitFramebufferANGLE )) != 0x0;
+		// From GL_ANGLE_framebuffer_multisample
+		v &= (glRenderbufferStorageMultisampleANGLE = (PFNGLRENDERBUFFERSTORAGEMULTISAMPLEANGLEPROC) platGetProcAddress( glRenderbufferStorageMultisampleANGLE )) != 0x0;
+
+		glExt::ANGLE_framebuffer_multisample = v;
 	}
+
+	glExt::OES_rgb8_rgba8 = isExtensionSupported( "GL_OES_rgb8_rgba8" );
+
+	glExt::EXT_texture_filter_anisotropic = isExtensionSupported( "GL_EXT_texture_filter_anisotropic" );
 
 	glExt::ARB_timer_query = isExtensionSupported( "GL_ARB_timer_query" );
 	if( glExt::ARB_timer_query )
@@ -264,7 +256,8 @@ bool initOpenGLExtensions()
 
 	glExt::EXT_shadow_samplers = isExtensionSupported( "GL_EXT_shadow_samplers" );
 
-    glExt::OES_depth_texture = isExtensionSupported( "GL_OES_depth_texture" ) || isExtensionSupported("GL_ARB_depth_texture");
+    glExt::OES_depth_texture = isExtensionSupported( "GL_OES_depth_texture" );
+    glExt::ANGLE_depth_texture = isExtensionSupported("GL_ANGLE_depth_texture");
 
 	return r;
 }

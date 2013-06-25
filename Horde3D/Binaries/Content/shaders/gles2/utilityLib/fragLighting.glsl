@@ -18,8 +18,7 @@ uniform mediump	vec3 lightColor;
 uniform sampler2DShadow shadowMap;
 #else
 uniform sampler2D shadowMap;
-//#define SHADOW2DPROJ(tex,coord)  clamp((coord.w * texture2DProj(tex, coord).x - coord.z) * 1000000.0 + 1.0, 0.0, 1.0);
-#define SHADOW2DPROJ(tex,coord)  clamp((coord.w * texture2D(tex, coord).x - coord.z) * 1000000.0 + 1.0, 0.0, 1.0);
+#define SHADOW2DPROJ(tex,coord)  clamp((texture2D(tex, coord.xy).x - coord.z) * 1000000.0 + 1.0, 0.0, 1.0);
 #endif
 uniform mediump	vec4 shadowSplitDists;
 uniform mediump	mat4 shadowMats[4];
@@ -40,13 +39,11 @@ mediump float PCF( const mediump vec4 projShadow )
 	
 	return shadow / 5.0;
 #else	
-	mediump float sh = projShadow.z - texture2D(shadowMap, projShadow.xy).r;
-	if (sh<0.0) return 1.0;
-	else return 0.0;
-
-	//return SHADOW2DPROJ( shadowMap, projShadow );
+	return SHADOW2DPROJ( shadowMap, projShadow );
 #endif	
 }
+
+uniform mediump float shadowBias;
 
 mediump vec3 calcPhongSpotLight( const mediump vec3 pos, const mediump vec3 normal, const mediump vec3 albedo, const mediump vec3 specColor,
 						 const mediump float gloss, const mediump float viewDist, const mediump float ambientIntensity )
@@ -84,8 +81,9 @@ mediump vec3 calcPhongSpotLight( const mediump vec3 pos, const mediump vec3 norm
 		else if( viewDist < shadowSplitDists.y ) projShadow = shadowMats[1] * vec4( pos, 1.0 );
 		else if( viewDist < shadowSplitDists.z ) projShadow = shadowMats[2] * vec4( pos, 1.0 );
 		
-		projShadow.z = lightDepth;
-		projShadow.xy /= projShadow.w;
+		//projShadow.z = lightDepth;
+		projShadow.xyz /= projShadow.w;
+		projShadow.z = projShadow.z * 0.5 + 0.5 - shadowBias;
 		
 		shadowTerm = max( PCF( projShadow ), ambientIntensity );
 	}

@@ -242,12 +242,6 @@ bool RenderDevice::init()
 		failed = true;
 	}
 	
-//*	if( !glExt::EXT_texture_sRGB )
-//*	{
-//*		Modules::log().writeError( "Extension EXT_texture_sRGB not supported" );
-//*		failed = true;
-//*	}
-	
 	if( failed )
 	{
 		Modules::log().writeError( "Failed to init renderer backend" );
@@ -265,6 +259,7 @@ bool RenderDevice::init()
 
 	_caps.tex3D = true; // always true but depends on format
 	_caps.texNPOT = _d3dDevice->GetFeatureLevel() >= D3D_FEATURE_LEVEL_9_3;
+	_caps.texSRGB = false;	//todo
 
 	_caps.rtMultisampling = true;	//depends on format (B8G8R8A8_UNORM 9.1+, R8G8B8A8_UNORM 9.3+), on WP8 this is false
 	_caps.rtMaxColBufs = _d3dDevice->GetFeatureLevel() >= D3D_FEATURE_LEVEL_9_3 ? 4 : 1;

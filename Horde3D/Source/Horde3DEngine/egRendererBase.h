@@ -37,6 +37,7 @@ struct DeviceCaps
 	bool texShadowCompare;
 	bool tex3D;
 	bool texNPOT;	// non power of two textures
+	bool texSRGB;
 
 		//rendertarget caps
 	bool rtMultisampling;

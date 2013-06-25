@@ -274,7 +274,6 @@ void main( void )
 // =================================================================================================
 
 uniform mediump vec4 lightPos;
-uniform mediump float shadowBias;
 varying mediump vec3 lightVec;
 
 #ifdef _F05_AlphaTest
@@ -290,12 +289,10 @@ void main( void )
 	if( albedo.a < 0.01 ) discard;
 #endif
 	
-	mediump float dist = length( lightVec ) / lightPos.w;
-    mediump float shadow = dist + shadowBias;
-	gl_FragColor = vec4( shadow, shadow, shadow, shadow );
+	gl_FragColor = vec4( 1.0, 1.0, 1.0, 1.0 );
 	
 	// Clearly better bias but requires SM 3.0
-	//gl_FragDepth = dist + abs( dFdx( dist ) ) + abs( dFdy( dist ) ) + shadowBias;
+	// gl_FragDepth = dist + abs( dFdx( dist ) ) + abs( dFdy( dist ) ) + shadowBias;
 }
 
 

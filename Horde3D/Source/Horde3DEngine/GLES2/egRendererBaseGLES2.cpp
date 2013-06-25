@@ -226,16 +226,17 @@ bool RenderDevice::init()
 	_caps.texPVRTCI = glExt::IMG_texture_compression_pvrtc;
 	_caps.texETC1 = glExt::OES_compressed_ETC1_RGB8_texture;
 
-	_caps.texFloat = glExt::ARB_texture_float;
-	_caps.texDepth = glExt::OES_depth_texture;
+	_caps.texFloat = false;
+	_caps.texDepth = glExt::OES_depth_texture || glExt::ANGLE_depth_texture;
 	_caps.texShadowCompare = glExt::EXT_shadow_samplers;
 
 	_caps.tex3D = glExt::OES_texture_3D;
-	_caps.texNPOT = glExt::ARB_texture_non_power_of_two;
+	_caps.texNPOT = false;
+	_caps.texSRGB = false;
 
-	_caps.rtMultisampling = glExt::EXT_framebuffer_multisample || glExt::IMG_multisampled_render_to_texture ? 1 : 0;
-		//prefer IMG_multisampled_render_to_texture, disable other method
-	if( glExt::IMG_multisampled_render_to_texture )	glExt::EXT_framebuffer_multisample = false;
+	_caps.rtMultisampling = glExt::ANGLE_framebuffer_blit || glExt::EXT_multisampled_render_to_texture ? 1 : 0;
+		//prefer EXT_multisampled_render_to_texture, disable other method
+	if( glExt::EXT_multisampled_render_to_texture )	glExt::ANGLE_framebuffer_blit = false;
 	_caps.rtMaxColBufs = 1;
 
 	_caps.occQuery = glExt::EXT_occlusion_query_boolean;
@@ -448,13 +449,13 @@ uint32 RenderDevice::createTexture( TextureTypes::List type, int width, int heig
 		tex.glFmt = GL_RGBA;
 		break;
 	case TextureFormats::DXT1:
-		tex.glFmt = tex.sRGB ? GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT1_EXT : GL_COMPRESSED_RGBA_S3TC_DXT1_EXT;
+		tex.glFmt = GL_COMPRESSED_RGBA_S3TC_DXT1_EXT;
 		break;
 	case TextureFormats::DXT3:
-		tex.glFmt = tex.sRGB ? GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT3_EXT : GL_COMPRESSED_RGBA_S3TC_DXT3_EXT;
+		tex.glFmt = GL_COMPRESSED_RGBA_S3TC_DXT3_EXT;
 		break;
 	case TextureFormats::DXT5:
-		tex.glFmt = tex.sRGB ? GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT5_EXT : GL_COMPRESSED_RGBA_S3TC_DXT5_EXT;
+		tex.glFmt = GL_COMPRESSED_RGBA_S3TC_DXT5_EXT;
 		break;
 	case TextureFormats::RGBA16F:
 		tex.glFmt = GL_RGBA;
@@ -546,6 +547,9 @@ void RenderDevice::uploadTextureData( uint32 texObj, int slice, int mipLevel, co
 		int target = (tex.type == TextureTypes::Tex2D) ?
 			GL_TEXTURE_2D : (GL_TEXTURE_CUBE_MAP_POSITIVE_X + slice);
 		
+		if ( glExt::ANGLE_depth_texture && format == TextureFormats::DEPTH )
+			pixels = NULL;
+
 		if( compressed )
 			glCompressedTexImage2D( target, mipLevel, tex.glFmt, width, height, 0,
 			                        calcTextureSize( format, width, height, 1 ), pixels );
@@ -855,10 +859,10 @@ uint32 RenderDevice::createRenderBuffer( uint32 width, uint32 height, TextureFor
 	if( numColBufs > _caps.rtMaxColBufs ) return 0;
 
 	uint32 maxSamples = 0;
-	if( glExt::IMG_multisampled_render_to_texture || glExt::EXT_framebuffer_multisample )
+	if( glExt::EXT_multisampled_render_to_texture || glExt::ANGLE_framebuffer_multisample )
 	{
 		GLint value;
-		glGetIntegerv( glExt::IMG_multisampled_render_to_texture ? GL_MAX_SAMPLES_IMG : GL_MAX_SAMPLES_EXT, &value );
+		glGetIntegerv( glExt::EXT_multisampled_render_to_texture ? GL_MAX_SAMPLES_EXT : GL_MAX_SAMPLES_ANGLE, &value );
 		maxSamples = (uint32)value;
 	}
 	if( samples > maxSamples )
@@ -874,7 +878,7 @@ uint32 RenderDevice::createRenderBuffer( uint32 width, uint32 height, TextureFor
 
 	// Create framebuffers
 	glGenFramebuffers( 1, &rb.fbo );
-	if( samples > 0 && glExt::EXT_framebuffer_multisample ) glGenFramebuffers( 1, &rb.fboMS );
+	if( samples > 0 && glExt::ANGLE_framebuffer_multisample ) glGenFramebuffers( 1, &rb.fboMS );
 
 	if( numColBufs > 0 )
 	{
@@ -889,21 +893,30 @@ uint32 RenderDevice::createRenderBuffer( uint32 width, uint32 height, TextureFor
 			rb.colTexs[j] = texObj;
 			RDITexture &tex = _textures.getRef( texObj );
 			// Attach the texture
-			if (samples > 0 && glExt::IMG_multisampled_render_to_texture )
-				glFramebufferTexture2DMultisampleIMG( GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex.glObj, 0, samples);
+			if (samples > 0 && glExt::EXT_multisampled_render_to_texture )
+				glFramebufferTexture2DMultisampleEXT( GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0+j, GL_TEXTURE_2D, tex.glObj, 0, samples);
 			else
 				glFramebufferTexture2D( GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + j, GL_TEXTURE_2D, tex.glObj, 0 );
 
-			if( samples > 0 && glExt::EXT_framebuffer_multisample)
+			if( (samples > 0 && glExt::ANGLE_framebuffer_multisample) )
 			{
-				glBindFramebuffer( GL_FRAMEBUFFER, rb.fboMS );
-				// Create a multisampled renderbuffer
-				glGenRenderbuffers( 1, &rb.colBufs[j] );
-				glBindRenderbuffer( GL_RENDERBUFFER, rb.colBufs[j] );
-				glRenderbufferStorageMultisampleEXT( GL_RENDERBUFFER, rb.samples, tex.glFmt, rb.width, rb.height );
-				// Attach the renderbuffer
-				glFramebufferRenderbuffer( GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + j,
-				                              GL_RENDERBUFFER, rb.colBufs[j] );
+				uint32 glFmt = 0;
+				if ( format == TextureFormats::RGBA8 && glExt::OES_rgb8_rgba8 )
+					glFmt = GL_RGBA8_OES;
+
+				if (glFmt != 0 )
+				{
+					glBindFramebuffer( GL_FRAMEBUFFER, rb.fboMS );
+					// Create a multisampled renderbuffer
+					glGenRenderbuffers( 1, &rb.colBufs[j] );
+					glBindRenderbuffer( GL_RENDERBUFFER, rb.colBufs[j] );
+					glRenderbufferStorageMultisampleANGLE( GL_RENDERBUFFER, rb.samples, glFmt, rb.width, rb.height );
+					// Attach the renderbuffer
+					glFramebufferRenderbuffer( GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + j,
+												  GL_RENDERBUFFER, rb.colBufs[j] );
+				}
+				else
+					Modules::log().writeError( "GPU does not support multisampling for this format" );
 			}
 		}
 	}
@@ -914,12 +927,12 @@ uint32 RenderDevice::createRenderBuffer( uint32 width, uint32 height, TextureFor
 		glBindFramebuffer( GL_FRAMEBUFFER, rb.fbo );
 
 		// Create a depth texture
-		if ( (samples > 0 && glExt::IMG_multisampled_render_to_texture) || !glExt::OES_depth_texture )
+		if ( (samples > 0 && glExt::EXT_multisampled_render_to_texture) || (!glExt::OES_depth_texture && !glExt::ANGLE_depth_texture) )
 		{
 			glGenRenderbuffers(1, &rb.depthBuf);
 			glBindRenderbuffer(GL_RENDERBUFFER, rb.depthBuf);
-			if ( samples > 0 && glExt::IMG_multisampled_render_to_texture )
-				glRenderbufferStorageMultisampleIMG(GL_RENDERBUFFER, samples, _depthFormat, rb.width, rb.height);
+			if ( samples > 0 && glExt::EXT_multisampled_render_to_texture )
+				glRenderbufferStorageMultisampleEXT(GL_RENDERBUFFER, samples, _depthFormat, rb.width, rb.height);
 			else
 				glRenderbufferStorage(GL_RENDERBUFFER, _depthFormat, rb.width, rb.height);
 
@@ -938,13 +951,13 @@ uint32 RenderDevice::createRenderBuffer( uint32 width, uint32 height, TextureFor
 			glFramebufferTexture2D( GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, tex.glObj, 0 );
 		}
 
-		if( samples > 0 && glExt::EXT_framebuffer_multisample)
+		if( samples > 0 && glExt::ANGLE_framebuffer_multisample)
 		{
 			glBindFramebuffer( GL_FRAMEBUFFER, rb.fboMS );
 			// Create a multisampled renderbuffer
 			glGenRenderbuffers( 1, &rb.depthBufMS );
 			glBindRenderbuffer( GL_RENDERBUFFER, rb.depthBufMS );
-			glRenderbufferStorageMultisampleEXT( GL_RENDERBUFFER, rb.samples, _depthFormat, rb.width, rb.height );
+			glRenderbufferStorageMultisampleANGLE( GL_RENDERBUFFER, rb.samples, _depthFormat, rb.width, rb.height );
 			// Attach the renderbuffer
 			glFramebufferRenderbuffer( GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
 			                              GL_RENDERBUFFER, rb.depthBufMS );
@@ -960,7 +973,7 @@ uint32 RenderDevice::createRenderBuffer( uint32 width, uint32 height, TextureFor
 	glBindFramebuffer( GL_FRAMEBUFFER, 0 );
 	if( status != GL_FRAMEBUFFER_COMPLETE ) valid = false;
 	
-	if(  samples > 0 && glExt::EXT_framebuffer_multisample )
+	if(  samples > 0 && glExt::ANGLE_framebuffer_multisample )
 	{
 		glBindFramebuffer( GL_FRAMEBUFFER, rb.fboMS );
 		status = glCheckFramebufferStatus( GL_FRAMEBUFFER );
@@ -1021,9 +1034,9 @@ void RenderDevice::resolveRenderBuffer( uint32 rbObj )
 	RDIRenderBuffer &rb = _rendBufs.getRef( rbObj );
 	
 	if( rb.fboMS == 0 ) return;
-	
-	glBindFramebuffer( GL_READ_FRAMEBUFFER_EXT, rb.fboMS );
-	glBindFramebuffer( GL_DRAW_FRAMEBUFFER_EXT, rb.fbo );
+
+	glBindFramebuffer( GL_READ_FRAMEBUFFER_ANGLE, rb.fboMS );
+	glBindFramebuffer( GL_DRAW_FRAMEBUFFER_ANGLE, rb.fbo );
 
 	bool depthResolved = false;
 	for( uint32 i = 0; i < RDIRenderBuffer::MaxColorAttachmentCount; ++i )
@@ -1031,23 +1044,23 @@ void RenderDevice::resolveRenderBuffer( uint32 rbObj )
 		if( rb.colBufs[i] != 0 )
 		{
 			int mask = GL_COLOR_BUFFER_BIT;
-			if( !depthResolved && rb.depthBufMS != 0 && rb.depthTex != 0)
-			{
+			if( !depthResolved && rb.depthBufMS != 0 && rb.depthTex != 0 && !glExt::ANGLE_depth_texture)
+			{  //hack: cannot resolve depth texture created with angle_depth_texture 
 				mask |= GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT;
 				depthResolved = true;
 			}
-			glBlitFramebufferEXT( 0, 0, rb.width, rb.height, 0, 0, rb.width, rb.height, mask, GL_NEAREST );
+			glBlitFramebufferANGLE( 0, 0, rb.width, rb.height, 0, 0, rb.width, rb.height, mask, GL_NEAREST );
 		}
 	}
 
-	if( !depthResolved && rb.depthBufMS != 0 && rb.depthTex != 0 )
-	{
-		glBlitFramebufferEXT( 0, 0, rb.width, rb.height, 0, 0, rb.width, rb.height,
+	if( !depthResolved && rb.depthBufMS != 0 && rb.depthTex != 0  && !glExt::ANGLE_depth_texture )
+	{	//hack: cannot resolve depth texture created with angle_depth_texture 
+		glBlitFramebufferANGLE( 0, 0, rb.width, rb.height, 0, 0, rb.width, rb.height,
 							  GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT, GL_NEAREST );
 	}
 
-	glBindFramebuffer( GL_READ_FRAMEBUFFER_EXT, _defaultFBO );
-	glBindFramebuffer( GL_DRAW_FRAMEBUFFER_EXT, _defaultFBO );
+	glBindFramebuffer( GL_READ_FRAMEBUFFER_ANGLE, _defaultFBO );
+	glBindFramebuffer( GL_DRAW_FRAMEBUFFER_ANGLE, _defaultFBO );
 }
 
 

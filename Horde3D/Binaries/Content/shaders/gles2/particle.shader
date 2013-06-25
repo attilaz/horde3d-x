@@ -46,12 +46,12 @@ void main(void)
 [[FS_SHADOWMAP]]
 // =================================================================================================
 
-uniform mediump float shadowBias;
+//uniform mediump float shadowBias;
 varying mediump float dist;
 
 void main( void )
 {
-	gl_FragDepth = dist + shadowBias;
+	//gl_FragDepth = dist + shadowBias;
 }
 
 

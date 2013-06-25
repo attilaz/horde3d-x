@@ -712,7 +712,10 @@ bool Renderer::setMaterial( MaterialResource *materialRes, const string &shaderC
 
 bool Renderer::createShadowRB( uint32 width, uint32 height )
 {
-	_shadowRB = gRDI->createRenderBuffer( width, height, TextureFormats::RGBA8, true, 0, 0 );
+	if ( gRDI->getCaps().texDepth )
+	{
+		_shadowRB = gRDI->createRenderBuffer( width, height, TextureFormats::RGBA8, true, 0, 0 );
+	}
 	
 	return _shadowRB != 0;
 }

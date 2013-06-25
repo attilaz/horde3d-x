@@ -52,25 +52,33 @@ extern "C" void (*glXGetProcAddressARB( const unsigned char *procName ))( void )
 
 namespace glExt
 {
-	extern bool EXT_framebuffer_multisample;
-	extern bool IMG_multisampled_render_to_texture;
+	extern bool EXT_multisampled_render_to_texture;
+		//
+	extern bool ANGLE_framebuffer_blit;			// only true if ANGLE_framebuffer_multisample also supported
+	extern bool ANGLE_framebuffer_multisample;	// only true if ANGLE_framebuffer_blit also supported
+	extern bool OES_rgb8_rgba8;
+	//todo: add support APPLE_framebuffer_multisample
+
 	extern bool EXT_texture_filter_anisotropic;
-	extern bool ARB_texture_float;
-	extern bool ARB_texture_non_power_of_two;
+	//ARB_texture_float is not an ES2 extension: use OES_texture_float_linear, OES_texture_half_float_linear, OES_texture_float, OES_texture_half_float
+	//						EXT_color_buffer_half_float, EXT_color_buffer_float
+
+	//extern bool ARB_texture_non_power_of_two; todo: GL_OES_texture_npot
 	extern bool ARB_timer_query;
 
 	extern bool EXT_occlusion_query_boolean; // supported on sgx 543+ and Angle(NaCL,emscripten)
 
 	extern bool OES_texture_3D;
-	extern bool EXT_texture_sRGB;
+	//extern bool EXT_texture_sRGB;	//todo use EXT_sRGB
+	extern bool IMG_texture_compression_pvrtc;
 	extern bool EXT_texture_compression_s3tc;
 	extern bool EXT_texture_compression_dxt1;
 	extern bool ANGLE_texture_compression_dxt3;
 	extern bool ANGLE_texture_compression_dxt5;
-	extern bool IMG_texture_compression_pvrtc;
 	extern bool OES_compressed_ETC1_RGB8_texture;
 
 	extern bool OES_depth_texture;
+	extern bool ANGLE_depth_texture;
 	extern bool EXT_shadow_samplers;
 
 	extern int  majorVersion, minorVersion;
@@ -191,113 +199,55 @@ extern PFNGLGETQUERYOBJECTUIVEXTPROC glGetQueryObjectuivEXT;
 #define GL_ETC1_RGB8_OES                                        0x8D64
 #endif 
 
-// EXT_texture_sRGB
-#ifndef GL_EXT_texture_sRGB
-#define GL_EXT_texture_sRGB 1
+// GL_EXT_multisampled_render_to_texture
+#ifndef GL_EXT_multisampled_render_to_texture
+#define GL_EXT_multisampled_render_to_texture 1
 
-#define GL_SRGB_EXT                            0x8C40
-#define GL_SRGB8_EXT                           0x8C41
-#define GL_SRGB_ALPHA_EXT                      0x8C42
-#define GL_SRGB8_ALPHA8_EXT                    0x8C43
-#define GL_SLUMINANCE_ALPHA_EXT                 0x8C44
-#define GL_SLUMINANCE8_ALPHA8_EXT               0x8C45
-#define GL_SLUMINANCE_EXT                       0x8C46
-#define GL_SLUMINANCE8_EXT                      0x8C47
-#define GL_COMPRESSED_SRGB_EXT                  0x8C48
-#define GL_COMPRESSED_SRGB_ALPHA_EXT            0x8C49
-#define GL_COMPRESSED_SLUMINANCE_EXT            0x8C4A
-#define GL_COMPRESSED_SLUMINANCE_ALPHA_EXT      0x8C4B
-#define GL_COMPRESSED_SRGB_S3TC_DXT1_EXT        0x8C4C
-#define GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT1_EXT  0x8C4D
-#define GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT3_EXT  0x8C4E
-#define GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT5_EXT  0x8C4F
-
-#endif
-
-
-// ARB_texture_float
-#ifndef GL_ARB_texture_float
-#define GL_ARB_texture_float 1
-
-#define GL_TEXTURE_RED_TYPE_ARB             0x8C10
-#define GL_TEXTURE_GREEN_TYPE_ARB           0x8C11
-#define GL_TEXTURE_BLUE_TYPE_ARB            0x8C12
-#define GL_TEXTURE_ALPHA_TYPE_ARB           0x8C13
-#define GL_TEXTURE_LUMINANCE_TYPE_ARB       0x8C14
-#define GL_TEXTURE_INTENSITY_TYPE_ARB       0x8C15
-#define GL_TEXTURE_DEPTH_TYPE_ARB           0x8C16
-#define GL_UNSIGNED_NORMALIZED_ARB          0x8C17
-#define GL_RGBA32F_ARB                      0x8814
-#define GL_RGB32F_ARB                       0x8815
-#define GL_ALPHA32F_ARB                     0x8816
-#define GL_INTENSITY32F_ARB                 0x8817
-#define GL_LUMINANCE32F_ARB                 0x8818
-#define GL_LUMINANCE_ALPHA32F_ARB           0x8819
-#define GL_RGBA16F_ARB                      0x881A
-#define GL_RGB16F_ARB                       0x881B
-#define GL_ALPHA16F_ARB                     0x881C
-#define GL_INTENSITY16F_ARB                 0x881D
-#define GL_LUMINANCE16F_ARB                 0x881E
-#define GL_LUMINANCE_ALPHA16F_ARB           0x881F
-
-#endif
-
-
-// EXT_framebuffer_blit
-#ifndef GL_EXT_framebuffer_blit
-#define GL_EXT_framebuffer_blit 1
-
-#define GL_READ_FRAMEBUFFER_EXT             0x8CA8
-#define GL_DRAW_FRAMEBUFFER_EXT             0x8CA9
-#define GL_READ_FRAMEBUFFER_BINDING_EXT     GL_FRAMEBUFFER_BINDING_EXT
-#define GL_DRAW_FRAMEBUFFER_BINDING_EXT     0x8CAA
-
-typedef void (GLAPIENTRYP PFNGLBLITFRAMEBUFFEREXTPROC) (GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1, GLint dstX0, GLint dstY0, GLint dstX1, GLint dstY1, GLbitfield mask, GLenum filter);
-extern PFNGLBLITFRAMEBUFFEREXTPROC glBlitFramebufferEXT;
-
-#endif
-
-
-// EXT_framebuffer_multisample
-#ifndef GL_EXT_framebuffer_multisample
-#define GL_EXT_framebuffer_multisample 1
-
-#define GL_RENDERBUFFER_SAMPLES_EXT                0x8CAB
-#define GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE_EXT  0x8D56
-#define GL_MAX_SAMPLES_EXT                         0x8D57
+#define GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_SAMPLES_EXT           0x8D6C
+#define GL_RENDERBUFFER_SAMPLES_EXT                             0x9133
+#define GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE_EXT               0x9134
+#define GL_MAX_SAMPLES_EXT                                      0x9135
 
 typedef void (GLAPIENTRYP PFNGLRENDERBUFFERSTORAGEMULTISAMPLEEXTPROC) (GLenum target, GLsizei samples, GLenum internalformat, GLsizei width, GLsizei height);
+typedef void (GLAPIENTRYP PFNGLFRAMEBUFFERTEXTURE2DMULTISAMPLEEXTPROC) (GLenum target, GLenum attachment, GLenum textarget, GLuint texture, GLint level, GLsizei samples);
+
 extern PFNGLRENDERBUFFERSTORAGEMULTISAMPLEEXTPROC glRenderbufferStorageMultisampleEXT;
+extern PFNGLFRAMEBUFFERTEXTURE2DMULTISAMPLEEXTPROC glFramebufferTexture2DMultisampleEXT;
 
 #endif
 
+// GL_ANGLE_framebuffer_blit
+#ifndef GL_ANGLE_framebuffer_blit
+#define GL_ANGLE_framebuffer_blit 1
+#define GL_READ_FRAMEBUFFER_ANGLE                               0x8CA8
+#define GL_DRAW_FRAMEBUFFER_ANGLE                               0x8CA9
+#define GL_DRAW_FRAMEBUFFER_BINDING_ANGLE                       0x8CA6
+#define GL_READ_FRAMEBUFFER_BINDING_ANGLE                       0x8CAA
 
-// IMG_multisampled_render_to_texture
-#ifndef GL_IMG_multisampled_render_to_texture
-#define GL_IMG_multisampled_render_to_texture 1
+typedef void (GLAPIENTRYP PFNGLBLITFRAMEBUFFERANGLEPROC) (GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1, GLint dstX0, GLint dstY0, GLint dstX1, GLint dstY1, GLbitfield mask, GLenum filter);
 
-#define GL_RENDERBUFFER_SAMPLES_IMG                0x9133
-#define GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE_IMG  0x9134
-#define GL_MAX_SAMPLES_IMG                         0x9135
-
-typedef void (GLAPIENTRYP PFNGLFRAMEBUFFERTEXTURE2DMULTISAMPLEIMGPROC) (GLenum target, GLenum attachment, GLenum textarget, GLuint texture, GLint level, GLsizei samples);
-typedef void (GLAPIENTRYP PFNGLRENDERBUFFERSTORAGEMULTISAMPLEIMGPROC) (GLenum target, GLsizei samples, GLenum internalformat, GLsizei width, GLsizei height);
-
-extern PFNGLFRAMEBUFFERTEXTURE2DMULTISAMPLEIMGPROC glFramebufferTexture2DMultisampleIMG;
-extern PFNGLRENDERBUFFERSTORAGEMULTISAMPLEIMGPROC glRenderbufferStorageMultisampleIMG;
+extern PFNGLBLITFRAMEBUFFERANGLEPROC glBlitFramebufferANGLE;
 
 #endif
 
-#if defined(PLATFORM_ANDROID) || defined(PLATFORM_NACL)
-#define PFNGLFRAMEBUFFERTEXTURE2DMULTISAMPLEIMGPROC PFNGLFRAMEBUFFERTEXTURE2DMULTISAMPLEIMG
-#define PFNGLRENDERBUFFERSTORAGEMULTISAMPLEIMGPROC PFNGLRENDERBUFFERSTORAGEMULTISAMPLEIMG
-extern PFNGLFRAMEBUFFERTEXTURE2DMULTISAMPLEIMG glFramebufferTexture2DMultisampleIMG;
-extern PFNGLRENDERBUFFERSTORAGEMULTISAMPLEIMG glRenderbufferStorageMultisampleIMG;
-#elif defined(PLATFORM_QNX)
-extern PFNGLFRAMEBUFFERTEXTURE2DMULTISAMPLEIMGPROC glFramebufferTexture2DMultisampleIMG;
-extern PFNGLRENDERBUFFERSTORAGEMULTISAMPLEIMGPROC glRenderbufferStorageMultisampleIMG;
+// GL_ANGLE_framebuffer_multisample
+#ifndef GL_ANGLE_framebuffer_multisample
+#define GL_ANGLE_framebuffer_multisample 1
+#define GL_RENDERBUFFER_SAMPLES_ANGLE                           0x8CAB
+#define GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE_ANGLE             0x8D56
+#define GL_MAX_SAMPLES_ANGLE                                    0x8D57
+
+typedef void (GLAPIENTRYP PFNGLRENDERBUFFERSTORAGEMULTISAMPLEANGLEPROC) (GLenum target, GLsizei samples, GLenum internalformat, GLsizei width, GLsizei height);
+extern PFNGLRENDERBUFFERSTORAGEMULTISAMPLEANGLEPROC glRenderbufferStorageMultisampleANGLE;
+
 #endif
 
+/* GL_OES_rgb8_rgba8 */
+#ifndef GL_OES_rgb8_rgba8
+#define GL_OES_rgb8_rgba8
+#define GL_RGB8_OES                                             0x8051
+#define GL_RGBA8_OES                                            0x8058
+#endif
 
 
 // ARB_timer_query

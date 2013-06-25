@@ -213,6 +213,8 @@ bool isExtensionSupported( const char *extName )
 }
 
 
+#pragma warning( disable : 4996 )
+
 void getOpenGLVersion()
 {
 	char version[8];

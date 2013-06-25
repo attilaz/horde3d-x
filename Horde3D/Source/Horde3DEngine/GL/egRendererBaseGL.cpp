@@ -232,6 +232,7 @@ bool RenderDevice::init()
 
 	_caps.tex3D = true;
 	_caps.texNPOT = glExt::ARB_texture_non_power_of_two;
+	_caps.texSRGB = glExt::EXT_texture_sRGB;
 
 	_caps.rtMultisampling = glExt::EXT_framebuffer_multisample;
 	GLint maxColorAttachments;
