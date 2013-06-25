@@ -140,10 +140,10 @@ struct RDIRenderBuffer
 	uint32  width, height;
 	uint32  samples;
 
-	uint32  depthTex, colTexs[MaxColorAttachmentCount];
-	uint32  depthBuf, colBufs[MaxColorAttachmentCount];  // Used for multisampling
+	uint32  depthTex, depthBuf, colTexs[MaxColorAttachmentCount];	//depthBuf is used when no depthTexture Support
+	uint32  depthBufMS, colBufs[MaxColorAttachmentCount];  // Used for multisampling
 
-	RDIRenderBuffer() : fbo( 0 ), fboMS( 0 ), width( 0 ), height( 0 ), depthTex( 0 ), depthBuf( 0 )
+	RDIRenderBuffer() : fbo( 0 ), fboMS( 0 ), width( 0 ), height( 0 ), depthTex( 0 ), depthBuf( 0 ), depthBufMS( 0 )
 	{
 		for( uint32 i = 0; i < MaxColorAttachmentCount; ++i ) colTexs[i] = colBufs[i] = 0;
 	}
