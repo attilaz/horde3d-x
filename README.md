@@ -2,7 +2,7 @@ horde3d-x
 =========
 
 Horde3D is a small open source 3D rendering engine.
-The goal of this project is to add new features to the original engine.
+The goal of this project is to add new features to the original engine, see the branches for subprojects.
 
 Copyright (C) 2006-2013 Nicolas Schulz and the Horde3D Team
 
