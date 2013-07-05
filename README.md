@@ -2,8 +2,9 @@ horde3d-x
 =========
 Horde3D is a small open source 3D rendering engine.
 
-This branch is still WORK-IN-PROGRESS don't expect anything to work, and anything is subject to change!
+This branch is still WORK-IN-PROGRESS and anything is subject to change!
 The goal of this branch is to add GLES2 and D3D11 support with samples on multiple platforms (iOS, android, nacl, emscripten, win8, winrt,...).
+GLES2 version is fairly stable, already used in commercial products.
 
 Copyright (C) 2006-2013 Nicolas Schulz and the Horde3D Team
 
