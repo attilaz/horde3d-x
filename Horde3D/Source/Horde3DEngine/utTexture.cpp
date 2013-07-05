@@ -343,14 +343,14 @@ bool utTextureLoadPVR( const char* data, uint32 size, utTextureInfo* info)
 	}
 
     // Upload texture subresources
-    int numSlices = info->_type == utTextureTypes::TexCube ? 6 : 1;
+    info->_sliceCount = info->_type == utTextureTypes::TexCube ? 6 : 1;
     unsigned char *pixels = (unsigned char *)(data + 52);
 
 	uint32 surfaceIndex = 0;
 	info->_surfaceCount = info->_sliceCount * info->_mipCount;
 	info->_surfaces = new utTextureSurfaceInfo[info->_surfaceCount];
 
-    for( int i = 0; i < numSlices; ++i )
+    for( uint32 i = 0; i < info->_sliceCount; ++i )
     {
         int width = pvrHeader.dwWidth, height = pvrHeader.dwHeight;
 

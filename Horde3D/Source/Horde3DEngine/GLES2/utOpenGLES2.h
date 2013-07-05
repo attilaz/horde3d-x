@@ -64,7 +64,7 @@ namespace glExt
 	//						EXT_color_buffer_half_float, EXT_color_buffer_float
 
 	//extern bool ARB_texture_non_power_of_two; todo: GL_OES_texture_npot
-	extern bool ARB_timer_query;
+	extern bool EXT_disjoint_timer_query;
 
 	extern bool EXT_occlusion_query_boolean; // supported on sgx 543+ and Angle(NaCL,emscripten)
 
@@ -92,10 +92,13 @@ bool initOpenGLExtensions();
 #elif defined(PLATFORM_IOS)
 #import <OpenGLES/ES2/gl.h>
 #import <OpenGLES/ES2/glext.h>
+#define GL_GLEXT_PROTOTYPES
 #elif defined(PLATFORM_ANDROID) || defined(PLATFORM_NACL) || defined(PLATFORM_QNX)
 #include <GLES2/gl2.h>
+#define GL_GLEXT_PROTOTYPES
 #include <GLES2/gl2ext.h>
 #endif
+
 
 // =================================================================================================
 // Extensions
@@ -107,6 +110,7 @@ namespace h3dGL
 // GL_OES_texture_3D 
 #ifndef GL_OES_texture_3D
 #define GL_OES_texture_3D 1
+#define H3DGL_OES_texture_3D 1
 
 #define GL_TEXTURE_WRAP_R_OES                                   0x8072
 #define GL_TEXTURE_3D_OES                                       0x806F
@@ -138,6 +142,7 @@ extern PFNGLCOMPRESSEDTEXSUBIMAGE3DOESPROC glCompressedTexSubImage3DOES;
 // GL_EXT_occlusion_query_boolean
 #ifndef GL_EXT_occlusion_query_boolean
 #define GL_EXT_occlusion_query_boolean 1
+#define H3DGL_EXT_occlusion_query_boolean 1
 
 #define GL_ANY_SAMPLES_PASSED_EXT                               0x8C2F
 #define GL_ANY_SAMPLES_PASSED_CONSERVATIVE_EXT                  0x8D6A
@@ -202,6 +207,7 @@ extern PFNGLGETQUERYOBJECTUIVEXTPROC glGetQueryObjectuivEXT;
 // GL_EXT_multisampled_render_to_texture
 #ifndef GL_EXT_multisampled_render_to_texture
 #define GL_EXT_multisampled_render_to_texture 1
+#define H3DGL_EXT_multisampled_render_to_texture 1
 
 #define GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_SAMPLES_EXT           0x8D6C
 #define GL_RENDERBUFFER_SAMPLES_EXT                             0x9133
@@ -219,6 +225,8 @@ extern PFNGLFRAMEBUFFERTEXTURE2DMULTISAMPLEEXTPROC glFramebufferTexture2DMultisa
 // GL_ANGLE_framebuffer_blit
 #ifndef GL_ANGLE_framebuffer_blit
 #define GL_ANGLE_framebuffer_blit 1
+#define H3DGL_ANGLE_framebuffer_blit 1
+
 #define GL_READ_FRAMEBUFFER_ANGLE                               0x8CA8
 #define GL_DRAW_FRAMEBUFFER_ANGLE                               0x8CA9
 #define GL_DRAW_FRAMEBUFFER_BINDING_ANGLE                       0x8CA6
@@ -233,6 +241,8 @@ extern PFNGLBLITFRAMEBUFFERANGLEPROC glBlitFramebufferANGLE;
 // GL_ANGLE_framebuffer_multisample
 #ifndef GL_ANGLE_framebuffer_multisample
 #define GL_ANGLE_framebuffer_multisample 1
+#define H3DGL_ANGLE_framebuffer_multisample 1
+
 #define GL_RENDERBUFFER_SAMPLES_ANGLE                           0x8CAB
 #define GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE_ANGLE             0x8D56
 #define GL_MAX_SAMPLES_ANGLE                                    0x8D57
@@ -250,42 +260,17 @@ extern PFNGLRENDERBUFFERSTORAGEMULTISAMPLEANGLEPROC glRenderbufferStorageMultisa
 #endif
 
 
-// ARB_timer_query
-#ifndef GL_ARB_timer_query
-#define GL_ARB_timer_query 1
-
-#define GL_TIME_ELAPSED  0x88BF
-#define GL_TIMESTAMP     0x8E28
-
-typedef int64           GLint64;
-typedef uint64          GLuint64;
-
-typedef void (GLAPIENTRYP PFNGLQUERYCOUNTERPROC) (GLuint id, GLenum target);
-typedef void (GLAPIENTRYP PFNGLGETQUERYOBJECTI64VPROC) (GLuint id, GLenum pname, GLint64 *params);
-typedef void (GLAPIENTRYP PFNGLGETQUERYOBJECTUI64VPROC) (GLuint id, GLenum pname, GLuint64 *params);
-extern PFNGLQUERYCOUNTERPROC glQueryCounter; 
-extern PFNGLGETQUERYOBJECTI64VPROC glGetQueryObjecti64v;
-extern PFNGLGETQUERYOBJECTUI64VPROC glGetQueryObjectui64v;
-
-#ifndef GL_QUERY_RESULT_AVAILABLE
-#define GL_QUERY_RESULT_AVAILABLE               0x8867
-#endif
-#ifndef GL_QUERY_RESULT
-#define GL_QUERY_RESULT                         0x8866
-#endif
-
-typedef void (GLAPIENTRYP PFNGLGENQUERIESPROC) (GLsizei n, GLuint *ids);
-typedef void (GLAPIENTRYP PFNGLDELETEQUERIESPROC) (GLsizei n, const GLuint *ids);
-typedef void (GLAPIENTRYP PFNGLGETQUERYOBJECTIVPROC) (GLuint id, GLenum pname, GLint *params);
-
-extern PFNGLGENQUERIESPROC glGenQueries;
-extern PFNGLDELETEQUERIESPROC glDeleteQueries;
-extern PFNGLGETQUERYOBJECTIVPROC glGetQueryObjectiv;
-#endif //ARB_timer_query
+// EXT_disjoint_timer_query
+#ifndef GL_EXT_disjoint_timer_query
+#define GL_EXT_disjoint_timer_query 1
+#define H3DGL_EXT_disjoint_timer_query 1
+    //TODO
+#endif //GL_EXT_disjoint_timer_query
 
 
 }  // namespace h3dGL
 
 using namespace h3dGL;
+
 
 #endif // _utOpenGL_H_

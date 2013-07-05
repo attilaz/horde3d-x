@@ -52,17 +52,18 @@ GPUTimer::GPUTimer() : _numQueries( 0 ),  _queryFrame( 0 ), _time( 0 ), _activeQ
 
 GPUTimer::~GPUTimer()
 {
-	if( !_queryPool.empty() )
+/*	if( !_queryPool.empty() )
 		glDeleteQueries( (uint32)_queryPool.size(), &_queryPool[0] );
+ */
 }
 
 
 void GPUTimer::beginQuery( uint32 frameID )
 {
-	if( !glExt::ARB_timer_query ) return;
+	if( !glExt::EXT_disjoint_timer_query ) return;
 	ASSERT( !_activeQuery );
 	
-	if( _queryFrame != frameID )
+/*	if( _queryFrame != frameID )
 	{
 		if( !updateResults() ) return;
 
@@ -85,24 +86,25 @@ void GPUTimer::beginQuery( uint32 frameID )
 	
 	_activeQuery = true;
 	 glQueryCounter( queryObjs[0], GL_TIMESTAMP );
+ */
 }
 
 
 void GPUTimer::endQuery()
 {
-	if( _activeQuery )
+/*	if( _activeQuery )
 	{	
 		glQueryCounter( _queryPool[_numQueries * 2 - 1], GL_TIMESTAMP );
 		_activeQuery = false;
-	}
+	}*/
 }
 
 
 bool GPUTimer::updateResults()
 {
-	if( !glExt::ARB_timer_query ) return false;
+	if( !glExt::EXT_disjoint_timer_query ) return false;
 	
-	if( _numQueries == 0 )
+/*	if( _numQueries == 0 )
 	{
 		_time = 0;
 		return true;
@@ -123,13 +125,14 @@ bool GPUTimer::updateResults()
 	}
 	
 	_time = (float)((double)timeAccum / 1000000.0);
-	return true;
+	return true;*/
+	return false;
 }
 
 
 void GPUTimer::reset()
 {
-	_time = glExt::ARB_timer_query ? 0.f : -1.f;
+	_time = glExt::EXT_disjoint_timer_query ? 0.f : -1.f;
 }
 
 
@@ -240,7 +243,7 @@ bool RenderDevice::init()
 	_caps.rtMaxColBufs = 1;
 
 	_caps.occQuery = glExt::EXT_occlusion_query_boolean;
-	_caps.timerQuery = glExt::ARB_timer_query;
+	_caps.timerQuery = glExt::EXT_disjoint_timer_query;
 
 	_depthFormat = GL_DEPTH_COMPONENT16;
 	
@@ -1184,7 +1187,7 @@ bool RenderDevice::getRenderBufferData( uint32 rbObj, int bufIndex, int *width, 
 uint32 RenderDevice::createOcclusionQuery()
 {
 	uint32 queryObj;
-	glGenQueries( 1, &queryObj );
+	glGenQueriesEXT( 1, &queryObj );
 	return queryObj;
 }
 
@@ -1193,7 +1196,7 @@ void RenderDevice::destroyQuery( uint32 queryObj )
 {
 	if( queryObj == 0 ) return;
 	
-	glDeleteQueries( 1, &queryObj );
+	glDeleteQueriesEXT( 1, &queryObj );
 }
 
 

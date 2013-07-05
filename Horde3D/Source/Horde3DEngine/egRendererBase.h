@@ -4,6 +4,7 @@
 #include "egPrerequisites.h"
 #include "utMath.h"
 #include <vector>
+#include <string>
 
 #if defined(HORDE3D_D3D11)
 #define WIN32_LEAN_AND_MEAN 1
@@ -303,6 +304,8 @@ private:
 #include "GLES2/egRendererBaseGLES2.h"
 #elif defined(HORDE3D_GL)
 #include "GL/egRendererBaseGL.h"
+#else
+#error "Horde3D no platform specified"
 #endif
 
 

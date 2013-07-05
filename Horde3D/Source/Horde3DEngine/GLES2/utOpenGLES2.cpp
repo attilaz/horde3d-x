@@ -35,7 +35,7 @@ namespace glExt
 	bool OES_rgb8_rgba8 = false;
 
 	bool EXT_texture_filter_anisotropic = false;
-	bool ARB_timer_query = false;
+	bool EXT_disjoint_timer_query = false;
 	bool EXT_occlusion_query_boolean = false;
 
 	bool OES_texture_3D = false;
@@ -48,44 +48,40 @@ namespace glExt
 	bool IMG_texture_compression_pvrtc = false;
 	bool OES_compressed_ETC1_RGB8_texture = false;
 
-	extern bool OES_depth_texture = false;
-	extern bool ANGLE_depth_texture = false;
+	bool OES_depth_texture = false;
+	bool ANGLE_depth_texture = false;
 
-	extern bool EXT_shadow_samplers = false;
+	bool EXT_shadow_samplers = false;
 
 	int	majorVersion = 1, minorVersion = 0;
 }
 
 
+
 namespace h3dGL
 {
-// GL_OES_texture_3D 
+#ifdef H3DGL_OES_texture_3D
 PFNGLTEXIMAGE3DOESPROC glTexImage3DOES = 0x0;
 PFNGLTEXSUBIMAGE3DOESPROC glTexSubImage3DOES = 0x0;
 PFNGLCOPYTEXSUBIMAGE3DOESPROC glCopyTexSubImage3DOES = 0x0;
 PFNGLCOMPRESSEDTEXIMAGE3DOESPROC glCompressedTexImage3DOES = 0x0;
 PFNGLCOMPRESSEDTEXSUBIMAGE3DOESPROC glCompressedTexSubImage3DOES = 0x0;
+#endif
 
-// GL_EXT_multisampled_render_to_texture
+#ifdef H3DGL_EXT_multisampled_render_to_texture
 PFNGLRENDERBUFFERSTORAGEMULTISAMPLEEXTPROC glRenderbufferStorageMultisampleEXT = 0x0;
 PFNGLFRAMEBUFFERTEXTURE2DMULTISAMPLEEXTPROC glFramebufferTexture2DMultisampleEXT = 0x0;
+#endif
 
-// GL_ANGLE_framebuffer_blit 
+#ifdef H3DGL_ANGLE_framebuffer_blit
 PFNGLBLITFRAMEBUFFERANGLEPROC glBlitFramebufferANGLE = 0x0;
+#endif
 
-// GL_ANGLE_framebuffer_multisample
+#ifdef H3DGL_ANGLE_framebuffer_multisample
 PFNGLRENDERBUFFERSTORAGEMULTISAMPLEANGLEPROC glRenderbufferStorageMultisampleANGLE = 0x0;
+#endif
 
-// GL_ARB_timer_query
-PFNGLQUERYCOUNTERPROC glQueryCounter = 0x0;
-PFNGLGETQUERYOBJECTI64VPROC glGetQueryObjecti64v = 0x0;
-PFNGLGETQUERYOBJECTUI64VPROC glGetQueryObjectui64v = 0x0;
-
-PFNGLGENQUERIESPROC glGenQueries = 0x0;
-PFNGLDELETEQUERIESPROC glDeleteQueries = 0x0;
-PFNGLGETQUERYOBJECTIVPROC glGetQueryObjectiv = 0x0;
-
-// GL_EXT_occlusion_query_boolean
+#ifdef H3DGL_EXT_occlusion_query_boolean
 PFNGLGENQUERIESEXTPROC glGenQueriesEXT = 0x0;
 PFNGLDELETEQUERIESEXTPROC glDeleteQueriesEXT = 0x0;
 PFNGLISQUERYEXTPROC glIsQueryEXT = 0x0;
@@ -93,6 +89,7 @@ PFNGLBEGINQUERYEXTPROC glBeginQueryEXT = 0x0;
 PFNGLENDQUERYEXTPROC glEndQueryEXT = 0x0;
 PFNGLGETQUERYIVEXTPROC glGetQueryivEXT = 0x0;
 PFNGLGETQUERYOBJECTUIVEXTPROC glGetQueryObjectuivEXT = 0x0;
+#endif
 
 }  // namespace h3dGL
 
@@ -128,50 +125,22 @@ void getOpenGLVersion()
 	glExt::minorVersion = atoi( version.substr( pos1 + 1, pos2 ).c_str() );
 }
 
+#ifdef GL_GLEXT_PROTOTYPES
 
-#define platGetProcAddress(funcName) platGetProcAddressFn(#funcName)
+#define platGetProcAddress(funcName) ((void*)0x0)
 
-void *platGetProcAddressFn( const char *funcName )
+#else
+
+void *platGetProcAddress( const char *funcName )
 {
 #if defined( PLATFORM_WIN )
 	return (void *)eglGetProcAddress( funcName );
-#elif defined( PLATFORM_WIN_CE )
-	return (void *)eglGetProcAddress( funcName );
-#elif defined( PLATFORM_ANDROID )
-	return (void *)NULL; //eglGetProcAddress( funcName );
-#elif defined( PLATFORM_NACL )
-	return (void*)0x0;
-#elif defined( PLATFORM_IOS)
-	CFStringRef functionName = CFStringCreateWithCString( kCFAllocatorDefault, funcName, kCFStringEncodingASCII );
-	CFURLRef bundleURL = CFURLCreateWithFileSystemPath(
-                                                       kCFAllocatorDefault, CFSTR( "/System/Library/Frameworks/OpenGLES.framework" ), kCFURLPOSIXPathStyle, true );
-	CFBundleRef bundle = CFBundleCreate( kCFAllocatorDefault, bundleURL );
-    
-	void *function = CFBundleGetFunctionPointerForName( bundle, functionName );
-    
-	CFRelease( bundle );
-	CFRelease( bundleURL );
-	CFRelease( functionName );
-    
-	return function; 
-#elif defined( PLATFORM_MAC )
-	CFStringRef functionName = CFStringCreateWithCString( kCFAllocatorDefault, funcName, kCFStringEncodingASCII );
-	CFURLRef bundleURL = CFURLCreateWithFileSystemPath(
-                                                       kCFAllocatorDefault, CFSTR( "/System/Library/Frameworks/OpenGL.framework" ), kCFURLPOSIXPathStyle, true );
-	CFBundleRef bundle = CFBundleCreate( kCFAllocatorDefault, bundleURL );
-   
-	void *function = CFBundleGetFunctionPointerForName( bundle, functionName );
-   
-	CFRelease( bundle );
-	CFRelease( bundleURL );
-	CFRelease( functionName );
-   
-	return function; 
 #else
-	return (void *)glXGetProcAddressARB( (const GLubyte *)funcName );
+	return (void*)0x0;
 #endif
 }
 
+#endif
 
 bool initOpenGLExtensions()
 {
@@ -180,70 +149,68 @@ bool initOpenGLExtensions()
 	getOpenGLVersion();
 
 	// Extensions
+    glExt::OES_texture_3D = isExtensionSupported( "GL_OES_texture_3D" );
+#ifdef H3DGL_OES_texture_3D
+	if ( glExt::OES_texture_3D )
+	{
+		bool v = true;
+		v &= (glTexImage3DOES = (PFNGLTEXIMAGE3DOESPROC) platGetProcAddress( "glTexImage3DOES" )) != 0x0;
+		v &= (glTexSubImage3DOES = (PFNGLTEXSUBIMAGE3DOESPROC) platGetProcAddress( "glTexSubImage3DOES" )) != 0x0;
+		v &= (glCopyTexSubImage3DOES = (PFNGLCOPYTEXSUBIMAGE3DOESPROC) platGetProcAddress( "glCopyTexSubImage3DOES" )) != 0x0;
+		v &= (glCompressedTexImage3DOES = (PFNGLCOMPRESSEDTEXIMAGE3DOESPROC) platGetProcAddress( "glCompressedTexImage3DOES" )) != 0x0;
+		v &= (glCompressedTexSubImage3DOES = (PFNGLCOMPRESSEDTEXSUBIMAGE3DOESPROC) platGetProcAddress( "glCompressedTexSubImage3DOES" )) != 0x0;
+		glExt::OES_texture_3D = v;
+	}
+#endif
+    
 	glExt::EXT_multisampled_render_to_texture = isExtensionSupported( "GL_EXT_multisampled_render_to_texture" );
+#ifdef H3DGL_EXT_multisampled_render_to_texture
 	if ( glExt::EXT_multisampled_render_to_texture )
 	{
 		bool v = true;
-		v &= (glFramebufferTexture2DMultisampleEXT = (PFNGLFRAMEBUFFERTEXTURE2DMULTISAMPLEEXTPROC) platGetProcAddress( glFramebufferTexture2DMultisampleEXT )) != 0x0;
-		v &= (glRenderbufferStorageMultisampleEXT = (PFNGLRENDERBUFFERSTORAGEMULTISAMPLEEXTPROC) platGetProcAddress( glRenderbufferStorageMultisampleEXT )) != 0x0;
+		v &= (glFramebufferTexture2DMultisampleEXT = (PFNGLFRAMEBUFFERTEXTURE2DMULTISAMPLEEXTPROC) platGetProcAddress( "glFramebufferTexture2DMultisampleEXT" )) != 0x0;
+		v &= (glRenderbufferStorageMultisampleEXT = (PFNGLRENDERBUFFERSTORAGEMULTISAMPLEEXTPROC) platGetProcAddress( "glRenderbufferStorageMultisampleEXT" )) != 0x0;
 		glExt::EXT_multisampled_render_to_texture = v;
 	}
+#endif
 
 		// ANGLE_framebuffer_blit and ANGLE_framebuffer_multisample
 	glExt::ANGLE_framebuffer_blit = glExt::ANGLE_framebuffer_multisample = 
 		isExtensionSupported( "GL_ANGLE_framebuffer_multisample" ) && isExtensionSupported( "GL_ANGLE_framebuffer_blit" );
 
+#if defined(H3DGL_ANGLE_framebuffer_blit) || defined(H3DGL_ANGLE_framebuffer_multisample)
 	if( glExt::ANGLE_framebuffer_multisample )
 	{
 		bool v = true;
 
 		// From GL_ANGLE_framebuffer_blit
-		v &= (glBlitFramebufferANGLE = (PFNGLBLITFRAMEBUFFERANGLEPROC) platGetProcAddress( glBlitFramebufferANGLE )) != 0x0;
+		v &= (glBlitFramebufferANGLE = (PFNGLBLITFRAMEBUFFERANGLEPROC) platGetProcAddress( "glBlitFramebufferANGLE" )) != 0x0;
 		// From GL_ANGLE_framebuffer_multisample
-		v &= (glRenderbufferStorageMultisampleANGLE = (PFNGLRENDERBUFFERSTORAGEMULTISAMPLEANGLEPROC) platGetProcAddress( glRenderbufferStorageMultisampleANGLE )) != 0x0;
+		v &= (glRenderbufferStorageMultisampleANGLE = (PFNGLRENDERBUFFERSTORAGEMULTISAMPLEANGLEPROC) platGetProcAddress( "glRenderbufferStorageMultisampleANGLE" )) != 0x0;
 
 		glExt::ANGLE_framebuffer_multisample = v;
 	}
-
-	glExt::OES_rgb8_rgba8 = isExtensionSupported( "GL_OES_rgb8_rgba8" );
-
-	glExt::EXT_texture_filter_anisotropic = isExtensionSupported( "GL_EXT_texture_filter_anisotropic" );
-
-	glExt::ARB_timer_query = isExtensionSupported( "GL_ARB_timer_query" );
-	if( glExt::ARB_timer_query )
-	{
-		bool v = true;
-		v &= (glQueryCounter = (PFNGLQUERYCOUNTERPROC) platGetProcAddress( glQueryCounter )) != 0x0;
-		v &= (glGetQueryObjecti64v = (PFNGLGETQUERYOBJECTI64VPROC) platGetProcAddress( glGetQueryObjecti64v )) != 0x0;
-		v &= (glGetQueryObjectui64v = (PFNGLGETQUERYOBJECTUI64VPROC) platGetProcAddress( glGetQueryObjectui64v )) != 0x0;
-		glExt::ARB_timer_query = v;
-	}
+#endif
 
 	glExt::EXT_occlusion_query_boolean = isExtensionSupported( "GL_EXT_occlusion_query_boolean" );
+#ifdef H3DGL_EXT_occlusion_query_boolean
 	if ( glExt::EXT_occlusion_query_boolean )
 	{
 		bool v = true;
-		v &= (glGenQueriesEXT = (PFNGLGENQUERIESEXTPROC) platGetProcAddress( glGenQueriesEXT )) != 0x0;
-		v &= (glDeleteQueriesEXT = (PFNGLDELETEQUERIESEXTPROC) platGetProcAddress( glDeleteQueriesEXT )) != 0x0;
-		v &= (glIsQueryEXT = (PFNGLISQUERYEXTPROC) platGetProcAddress( glIsQueryEXT )) != 0x0;
-		v &= (glBeginQueryEXT = (PFNGLBEGINQUERYEXTPROC) platGetProcAddress( glBeginQueryEXT )) != 0x0;
-		v &= (glEndQueryEXT = (PFNGLENDQUERYEXTPROC) platGetProcAddress( glEndQueryEXT )) != 0x0;
-		v &= (glGetQueryivEXT = (PFNGLGETQUERYIVEXTPROC) platGetProcAddress( glGetQueryivEXT )) != 0x0;
-		v &= (glGetQueryObjectuivEXT = (PFNGLGETQUERYOBJECTUIVEXTPROC) platGetProcAddress( glGetQueryObjectuivEXT )) != 0x0;
+		v &= (glGenQueriesEXT = (PFNGLGENQUERIESEXTPROC) platGetProcAddress( "glGenQueriesEXT" )) != 0x0;
+		v &= (glDeleteQueriesEXT = (PFNGLDELETEQUERIESEXTPROC) platGetProcAddress( "glDeleteQueriesEXT" )) != 0x0;
+		v &= (glIsQueryEXT = (PFNGLISQUERYEXTPROC) platGetProcAddress( "glIsQueryEXT" )) != 0x0;
+		v &= (glBeginQueryEXT = (PFNGLBEGINQUERYEXTPROC) platGetProcAddress( "glBeginQueryEXT" )) != 0x0;
+		v &= (glEndQueryEXT = (PFNGLENDQUERYEXTPROC) platGetProcAddress( "glEndQueryEXT" )) != 0x0;
+		v &= (glGetQueryivEXT = (PFNGLGETQUERYIVEXTPROC) platGetProcAddress( "glGetQueryivEXT" )) != 0x0;
+		v &= (glGetQueryObjectuivEXT = (PFNGLGETQUERYOBJECTUIVEXTPROC) platGetProcAddress( "glGetQueryObjectuivEXT" )) != 0x0;
 		glExt::EXT_occlusion_query_boolean = v;
 	}
+#endif
+    
+	glExt::OES_rgb8_rgba8 = isExtensionSupported( "GL_OES_rgb8_rgba8" );
 
-    glExt::OES_texture_3D = isExtensionSupported( "GL_OES_texture_3D" );
-	if ( glExt::OES_texture_3D )
-	{
-		bool v = true;
-		v &= (glTexImage3DOES = (PFNGLTEXIMAGE3DOESPROC) platGetProcAddress( glTexImage3DOES )) != 0x0;
-		v &= (glTexSubImage3DOES = (PFNGLTEXSUBIMAGE3DOESPROC) platGetProcAddress( glTexSubImage3DOES )) != 0x0;
-		v &= (glCopyTexSubImage3DOES = (PFNGLCOPYTEXSUBIMAGE3DOESPROC) platGetProcAddress( glCopyTexSubImage3DOES )) != 0x0;
-		v &= (glCompressedTexImage3DOES = (PFNGLCOMPRESSEDTEXIMAGE3DOESPROC) platGetProcAddress( glCompressedTexImage3DOES )) != 0x0;
-		v &= (glCompressedTexSubImage3DOES = (PFNGLCOMPRESSEDTEXSUBIMAGE3DOESPROC) platGetProcAddress( glCompressedTexSubImage3DOES )) != 0x0;
-		glExt::OES_texture_3D = v;
-	}
+	glExt::EXT_texture_filter_anisotropic = isExtensionSupported( "GL_EXT_texture_filter_anisotropic" );
 
 	glExt::IMG_texture_compression_pvrtc = isExtensionSupported( "GL_IMG_texture_compression_pvrtc" );
 
