@@ -216,7 +216,7 @@ public:
 	
 	void initStates();
 	bool init();
-	void handleContextLost();
+	void handleContextReset();
 
 	void beginRendering();
 	void finishRendering();
@@ -240,7 +240,6 @@ public:
 	                      bool hasMips, bool genMips, bool sRGB );
 	void uploadTextureData( uint32 texObj, int slice, int mipLevel, const void *pixels );
 	void destroyTexture( uint32 texObj );
-	void updateTextureData( uint32 texObj, int slice, int mipLevel, const void *pixels );
 	bool getTextureData( uint32 texObj, int slice, int mipLevel, void *buffer );
 	uint32 getTextureMem( uint32 texObj );
 	uint32 getTextureMem() { return _textureMem; }
@@ -292,11 +291,7 @@ public:
 	void setTexture( uint32 slot, uint32 texObj, uint16 samplerState )
 		{ ASSERT( slot < 16 ); _texSlots[slot] = RDITexSlot( texObj, samplerState ); _pendingTextureMask |= (1<<slot);
 	      /*_pendingMask |= PM_TEXTURES;*/ }
-	void clearPendingMask( uint32 mask ) { _pendingMask &= ~mask; if ( mask&PM_TEXTURES ) _pendingTextureMask = 0x0; } 
-	void setPendingMask( uint32 mask ) { _pendingMask |= mask; 
-										if ( mask & PM_RENDERSTATES) {	_curRasterState.hash = 0xffffffff;	_curBlendState.hash = 0xffffffff; _curDepthStencilState.hash = 0xffffffff; } 
-										if ( mask & PM_TEXTURES) _pendingTextureMask = 0xffffffff;  
-										}
+
 	// Render states
 	void setColorWriteMask( bool enabled )
 		{ _newRasterState.renderTargetWriteMask = enabled; _pendingMask |= PM_RENDERSTATES; }

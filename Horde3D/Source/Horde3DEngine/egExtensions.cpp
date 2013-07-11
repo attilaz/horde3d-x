@@ -12,6 +12,7 @@
 
 #include "egExtensions.h"
 #include <cstring>
+#include <string.h>
 
 #include "utDebug.h"
 

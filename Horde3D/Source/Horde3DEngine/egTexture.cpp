@@ -458,7 +458,7 @@ void TextureResource::unmapStream()
 		{
 			int slice = mappedWriteImage / (getMipCount() + 1);
 			int mipLevel = mappedWriteImage % (getMipCount() + 1);
-			gRDI->updateTextureData( _texObject, slice, mipLevel, mappedData );
+			gRDI->uploadTextureData( _texObject, slice, mipLevel, mappedData );
 			mappedWriteImage = -1;
 		}
 		

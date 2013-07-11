@@ -253,7 +253,7 @@ bool RenderDevice::init()
 	return true;
 }
 
-void RenderDevice::handleContextLost()
+void RenderDevice::handleContextReset()
 {
 	RDIBuffer *buffer;
 	for(unsigned int i=0; (buffer=_buffers.get(i))!=NULL; ++i)
@@ -594,13 +594,6 @@ void RenderDevice::destroyTexture( uint32 texObj )
 	_textureMem -= tex.memSize;
 	_textures.remove( texObj );
 }
-
-
-void RenderDevice::updateTextureData( uint32 texObj, int slice, int mipLevel, const void *pixels )
-{
-	uploadTextureData( texObj, slice, mipLevel, pixels );
-}
-
 
 bool RenderDevice::getTextureData( uint32 texObj, int slice, int mipLevel, void *buffer )
 {

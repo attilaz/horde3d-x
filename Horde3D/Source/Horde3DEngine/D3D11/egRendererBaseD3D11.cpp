@@ -601,12 +601,6 @@ void RenderDevice::destroyTexture( uint32 texObj )
 }
 
 
-void RenderDevice::updateTextureData( uint32 texObj, int slice, int mipLevel, const void *pixels )
-{
-	uploadTextureData( texObj, slice, mipLevel, pixels );
-}
-
-
 bool RenderDevice::getTextureData( uint32 texObj, int slice, int mipLevel, void *buffer )
 {
 	const RDITexture &tex = _textures.getRef( texObj );
