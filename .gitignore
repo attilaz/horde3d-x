@@ -114,3 +114,23 @@
 /Horde3D/Samples/ChicagoX/Win32/ChicagoX.vcproj.Attila-HP.Attila.user
 
 /Horde3D/Debug/*.lib
+
+/Horde3D/Debug_d3d11/*.lib
+
+/Horde3D/Debug_gl/*.lib
+
+/Horde3D/Debug_gles2/*.lib
+
+/Horde3D/Samples/ChicagoX/proj.win32/ChicagoX.vcproj.Attila-PC.Attila.user
+
+/Horde3D/Samples/KnightX/proj.win32/Sample KnightX.vcproj.Attila-PC.Attila.user
+
+/Horde3D/Samples/cocos2d-x-mini/proj.win32/Debug
+
+/Horde3D/Samples/cocos2d-x-mini/proj.win32/Debug_d3d11
+
+/Horde3D/Samples/cocos2d-x-mini/proj.win32/Debug_gl
+
+/Horde3D/Samples/cocos2d-x-mini/proj.win32/Debug_gles2
+
+/Horde3D/Samples/cocos2d-x-mini/proj.win32/cocos2d-x-mini.vcproj.Attila-PC.Attila.user
