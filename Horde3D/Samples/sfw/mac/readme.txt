@@ -1,1 +1,0 @@
-sfw application init, window creation, event handling

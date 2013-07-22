@@ -112,3 +112,5 @@
 /Horde3D/Build/Sample KnightX/Debug_gl
 
 /Horde3D/Samples/ChicagoX/Win32/ChicagoX.vcproj.Attila-HP.Attila.user
+
+/Horde3D/Debug/*.lib

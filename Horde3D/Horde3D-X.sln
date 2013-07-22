@@ -30,13 +30,19 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Horde3D Utils", "Source\Hor
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Extension Terrain", "..\Extensions\Terrain\Source\Extension Terrain.vcproj", "{7D7F9530-C61A-4BF2-B1C8-DE9D369880B6}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sample KnightX", "Samples\KnightX\win32\Sample KnightX.vcproj", "{3DC2C65F-B880-4094-9905-25F427E04BF2}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cocos2d-x-mini", "Samples\cocos2d-x-mini\proj.win32\cocos2d-x-mini.vcproj", "{C5299D27-C783-42FF-B26A-C407F1EA5E6A}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sample KnightX", "Samples\KnightX\proj.win32\Sample KnightX.vcproj", "{3DC2C65F-B880-4094-9905-25F427E04BF2}"
 	ProjectSection(ProjectDependencies) = postProject
+		{C5299D27-C783-42FF-B26A-C407F1EA5E6A} = {C5299D27-C783-42FF-B26A-C407F1EA5E6A}
 		{1D558D7D-DA57-4908-BCFC-902054FE6B63} = {1D558D7D-DA57-4908-BCFC-902054FE6B63}
-		{AE8EB9B3-D2C2-4372-AB4B-FC980EE69D2D} = {AE8EB9B3-D2C2-4372-AB4B-FC980EE69D2D}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sample ChicagoX", "Samples\ChicagoX\Win32\ChicagoX.vcproj", "{9425A6D2-70FB-406A-BF0C-26330389E46D}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sample ChicagoX", "Samples\ChicagoX\proj.win32\ChicagoX.vcproj", "{9425A6D2-70FB-406A-BF0C-26330389E46D}"
+	ProjectSection(ProjectDependencies) = postProject
+		{C5299D27-C783-42FF-B26A-C407F1EA5E6A} = {C5299D27-C783-42FF-B26A-C407F1EA5E6A}
+		{1D558D7D-DA57-4908-BCFC-902054FE6B63} = {1D558D7D-DA57-4908-BCFC-902054FE6B63}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -70,6 +76,14 @@ Global
 		{7D7F9530-C61A-4BF2-B1C8-DE9D369880B6}.Debug_gles2|Win32.Build.0 = Debug_gles2|Win32
 		{7D7F9530-C61A-4BF2-B1C8-DE9D369880B6}.Release_gl|Win32.ActiveCfg = Release_gl|Win32
 		{7D7F9530-C61A-4BF2-B1C8-DE9D369880B6}.Release_gl|Win32.Build.0 = Release_gl|Win32
+		{C5299D27-C783-42FF-B26A-C407F1EA5E6A}.Debug_d3d11|Win32.ActiveCfg = Debug_d3d11|Win32
+		{C5299D27-C783-42FF-B26A-C407F1EA5E6A}.Debug_d3d11|Win32.Build.0 = Debug_d3d11|Win32
+		{C5299D27-C783-42FF-B26A-C407F1EA5E6A}.Debug_gl|Win32.ActiveCfg = Debug_gl|Win32
+		{C5299D27-C783-42FF-B26A-C407F1EA5E6A}.Debug_gl|Win32.Build.0 = Debug_gl|Win32
+		{C5299D27-C783-42FF-B26A-C407F1EA5E6A}.Debug_gles2|Win32.ActiveCfg = Debug_gles2|Win32
+		{C5299D27-C783-42FF-B26A-C407F1EA5E6A}.Debug_gles2|Win32.Build.0 = Debug_gles2|Win32
+		{C5299D27-C783-42FF-B26A-C407F1EA5E6A}.Release_gl|Win32.ActiveCfg = Release_gl|Win32
+		{C5299D27-C783-42FF-B26A-C407F1EA5E6A}.Release_gl|Win32.Build.0 = Release_gl|Win32
 		{3DC2C65F-B880-4094-9905-25F427E04BF2}.Debug_d3d11|Win32.ActiveCfg = Debug_d3d11|Win32
 		{3DC2C65F-B880-4094-9905-25F427E04BF2}.Debug_d3d11|Win32.Build.0 = Debug_d3d11|Win32
 		{3DC2C65F-B880-4094-9905-25F427E04BF2}.Debug_gl|Win32.ActiveCfg = Debug_gl|Win32
