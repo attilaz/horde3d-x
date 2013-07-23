@@ -234,7 +234,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(ProjectDir)../../../Horde3D/Source/Horde3DEngine&quot;;&quot;$(ProjectDir)../../../Horde3D/Source/Shared&quot;;&quot;$(ProjectDir)../../../Horde3D/Source/Win32-GLES2&quot;"
+				AdditionalIncludeDirectories="&quot;$(ProjectDir)../../../Horde3D/Source/Horde3DEngine&quot;;&quot;$(ProjectDir)../../../Horde3D/Source/Shared&quot;;&quot;$(ProjectDir)../../../Horde3D/Samples/cocos2d-x-mini/platform/win32/ANGLE&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;HORDE3D_GLES2"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
