@@ -24,6 +24,7 @@ THE SOFTWARE.
 
 #include "CCFileUtils.h"
 #include "CCDirector.h"
+#include "CCCommon.h"
 #include "support/tinyxml2/tinyxml2.h"
 #ifdef HAVE_GET_DATA_FROM_ZIP
 #include "support/zip_support/unzip.h"

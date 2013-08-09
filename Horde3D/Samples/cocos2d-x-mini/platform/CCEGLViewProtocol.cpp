@@ -1,5 +1,6 @@
 #include "CCEGLViewProtocol.h"
 #include "CCDirector.h"
+#include "CCCommon.h"
 #include <map>
 #include <set>
 
@@ -70,7 +71,11 @@ void CCEGLViewProtocol::setViewName(const char* pszViewName)
 {
     if (pszViewName != NULL && strlen(pszViewName) > 0)
     {
+#ifdef WIN32
         strcpy_s(m_szViewName, pszViewName);
+#else
+        strncpy(m_szViewName, pszViewName, sizeof(m_szViewName));
+#endif
     }
 }
 

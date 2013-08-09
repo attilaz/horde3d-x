@@ -36,6 +36,7 @@ THE SOFTWARE.
 #include "CCApplication.h"
 #include "CCAccelerometer.h"
 #include "CCEGLView.h"
+#include "cocos2d.h"
 #include "Horde3D.h"
 #include <fstream>
 

@@ -80,6 +80,9 @@ public:
      * Get scale factor of the vertical direction.
      */
     float getScaleY() const;
+
+	virtual void* getDevice() { return NULL; }
+
 private:
     void getSetOfTouchesEndOrCancel(CCSet& set, int num, int ids[], float xs[], float ys[]);
 

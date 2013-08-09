@@ -140,3 +140,6 @@
 /Horde3D/Samples/KnightX/proj.win32/Sample KnightX.vcproj.Attila-HP.Attila.user
 
 /Horde3D/Samples/cocos2d-x-mini/proj.win32/cocos2d-x-mini.vcproj.Attila-HP.Attila.user
+/Horde3D/Samples/KnightX/proj.android/obj/local/armeabi
+
+/Horde3D/Samples/KnightX/proj.android/obj/convert-dependencies.sh
