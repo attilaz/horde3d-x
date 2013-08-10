@@ -30,7 +30,8 @@ LOCAL_SRC_FILES := \
 ../support/tinyxml2/tinyxml2.cpp \
 ../support/zip_support/ZipUtils.cpp \
 ../support/zip_support/ioapi.cpp \
-../support/zip_support/unzip.cpp
+../support/zip_support/unzip.cpp \
+../nodes/CCNode.cpp
 
 LOCAL_EXPORT_C_INCLUDES := $(LOCAL_PATH)/../ \
                     $(LOCAL_PATH)/../include \

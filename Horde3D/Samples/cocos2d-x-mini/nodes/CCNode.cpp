@@ -26,6 +26,8 @@ THE SOFTWARE.
 ****************************************************************************/
 #include "CCNode.h"
 #include "CCDirector.h"
+#include "platform/CCCommon.h"
+#include <algorithm>
 
 #if CC_NODE_RENDER_SUBPIXEL
 #define RENDER_IN_SUBPIXEL

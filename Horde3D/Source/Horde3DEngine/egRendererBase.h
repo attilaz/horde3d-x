@@ -6,15 +6,15 @@
 #include <vector>
 #include <string>
 
-#if defined(HORDE3D_D3D11)
+#if (H3D_RENDERER == H3D_RENDERER_D3D11)
 #define WIN32_LEAN_AND_MEAN 1
 #ifndef NOMINMAX
 #	define NOMINMAX
 #endif
 #include <d3d11.h>
-#elif defined(HORDE3D_GLES2)
+#elif (H3D_RENDERER == H3D_RENDERER_GLES2)
 #include "GLES2/utOpenGLES2.h"
-#elif defined(HORDE3D_GL)
+#elif (H3D_RENDERER == H3D_RENDERER_GL)
 #include "GL/utOpenGL.h"
 #endif
 
@@ -66,11 +66,11 @@ struct TextureTypes
 {
 	enum List
 	{
-#if defined(HORDE3D_GL)
+#if (H3D_RENDERER == H3D_RENDERER_GL)
 		Tex2D = GL_TEXTURE_2D,
 		Tex3D = GL_TEXTURE_3D,
 		TexCube = GL_TEXTURE_CUBE_MAP
-#elif defined(HORDE3D_GLES2)
+#elif (H3D_RENDERER == H3D_RENDERER_GLES2)
 		Tex2D = GL_TEXTURE_2D,
 		Tex3D = GL_TEXTURE_3D_OES,
 		TexCube = GL_TEXTURE_CUBE_MAP
@@ -204,10 +204,10 @@ enum RDIDepthFunc
 
 enum RDIIndexFormat
 {
-#if defined(HORDE3D_GL) || defined(HORDE3D_GLES2)
+#if (H3D_RENDERER == H3D_RENDERER_GL) || (H3D_RENDERER == H3D_RENDERER_GLES2)
 	IDXFMT_16 = GL_UNSIGNED_SHORT,
 	IDXFMT_32 = GL_UNSIGNED_INT
-#elif defined(HORDE3D_D3D11)
+#elif (H3D_RENDERER == H3D_RENDERER_D3D11)
 	IDXFMT_16 = DXGI_FORMAT_R16_UINT,
 	IDXFMT_32 = DXGI_FORMAT_R32_UINT
 #else
@@ -218,11 +218,11 @@ enum RDIIndexFormat
 
 enum RDIPrimType
 {
-#if defined(HORDE3D_GL) || defined(HORDE3D_GLES2)
+#if (H3D_RENDERER == H3D_RENDERER_GL) || (H3D_RENDERER == H3D_RENDERER_GLES2)
 	PRIM_TRILIST = GL_TRIANGLES,
 	PRIM_TRISTRIP = GL_TRIANGLE_STRIP,
 	PRIM_LINELIST = GL_LINES,
-#elif defined(HORDE3D_D3D11)
+#elif (H3D_RENDERER == H3D_RENDERER_D3D11)
 	PRIM_TRILIST = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST,
 	PRIM_TRISTRIP = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP,
 	PRIM_LINELIST = D3D11_PRIMITIVE_TOPOLOGY_LINELIST,
@@ -301,14 +301,14 @@ private:
 }
 
 
-#if defined(HORDE3D_D3D11)
+#if (H3D_RENDERER == H3D_RENDERER_D3D11)
 #include "D3D11/egRendererBaseD3D11.h"
-#elif defined(HORDE3D_GLES2)
+#elif (H3D_RENDERER == H3D_RENDERER_GLES2)
 #include "GLES2/egRendererBaseGLES2.h"
-#elif defined(HORDE3D_GL)
+#elif (H3D_RENDERER == H3D_RENDERER_GL)
 #include "GL/egRendererBaseGL.h"
 #else
-#error "Horde3D no platform specified"
+#error "Horde3D no renderer specified"
 #endif
 
 

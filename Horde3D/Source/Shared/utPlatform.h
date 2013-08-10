@@ -27,14 +27,42 @@
 #		define PLATFORM_WIN
 #	endif
 #elif defined( __APPLE__ ) || defined( __APPLE_CC__ )
-#   if !defined( PLATFORM_MAC )
-#      define PLATFORM_MAC
+#include <TargetConditionals.h>
+#	if TARGET_OS_IPHONE
+#	  if !defined( PLATFORM_IOS )
+#		   define PLATFORM_IOS
+#		endif
+#	else
+#	  if !defined( PLATFORM_MAC )
+#		   define PLATFORM_MAC
+#		endif
+#	endif
+#elif defined(__ANDROID__)
+#   if !defined( PLATFORM_ANDROID )
+#      define PLATFORM_ANDROID
 #   endif
 #else
 #	if !defined( PLATFORM_LINUX )
 #		define PLATFORM_LINUX
 #	endif
 #endif
+
+#define H3D_RENDERER_GL		0
+#define H3D_RENDERER_GLES2	1
+#define H3D_RENDERER_D3D11	2
+
+#ifndef H3D_RENDERER
+#	if defined(PLATFORM_WIN) || defined(PLATFORM_WIN_CE) || defined(PLATFORM_MAC) || defined(PLATFORM_LINUX)
+#		define	H3D_RENDERER H3D_RENDERER_GL
+#	elif defined(PLATFORM_ANDROID) || defined(PLATFORM_IOS)
+#		define	H3D_RENDERER H3D_RENDERER_GLES2
+#	endif
+#endif
+
+#if !H3D_RENDERER
+    #error  "Cannot recognize renderer backend type"
+#endif 
+
 
 
 #ifndef DLLEXP

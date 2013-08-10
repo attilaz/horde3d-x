@@ -39,13 +39,13 @@ fi
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 # ... use paths relative to current directory
-COCOS2DX_ROOT="$DIR/../../cocos2d-x-mini"
-APP_ROOT="$DIR/.."
+ASSETS_ROOT="$DIR/../../../Binaries/Content"
 APP_ANDROID_ROOT="$DIR"
+HORDE3D_ROOT="$DIR/../../../.."
 
 echo "NDK_ROOT = $NDK_ROOT"
-echo "COCOS2DX_ROOT = $COCOS2DX_ROOT"
-echo "APP_ROOT = $APP_ROOT"
+echo "HORDE3D_ROOT = $HORDE3D_ROOT"
+echo "ASSETS_ROOT = $ASSETS_ROOT"
 echo "APP_ANDROID_ROOT = $APP_ANDROID_ROOT"
 
 # make sure assets is exist
@@ -56,7 +56,7 @@ fi
 mkdir "$APP_ANDROID_ROOT"/assets
 
 # copy resources
-for file in "$APP_ROOT"/Resources/*
+for file in "$ASSETS_ROOT"/*
 do
 if [ -d "$file" ]; then
     cp -rf "$file" "$APP_ANDROID_ROOT"/assets
@@ -69,5 +69,5 @@ done
 
 # run ndk-build
     "$NDK_ROOT"/ndk-build V=1 -C "$APP_ANDROID_ROOT" $* \
-	   "NDK_MODULE_PATH=${COCOS2DX_ROOT}"
+	   "NDK_MODULE_PATH=${HORDE3D_ROOT}"
 #        "NDK_MODULE_PATH=${COCOS2DX_ROOT}:${COCOS2DX_ROOT}/cocos2dx/platform/third_party/android/prebuilt"
