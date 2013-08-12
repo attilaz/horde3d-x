@@ -1,0 +1,181 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug_d3d11|Win32">
+      <Configuration>Debug_d3d11</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug_gles2|Win32">
+      <Configuration>Debug_gles2</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug_gl|Win32">
+      <Configuration>Debug_gl</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release_gl|Win32">
+      <Configuration>Release_gl</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{C5299D27-C783-42FF-B26A-C407F1EA5E6A}</ProjectGuid>
+    <RootNamespace>cocos2dxmini</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_d3d11|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v110</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_gles2|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v110</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_gl|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v110</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_gl|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v110</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug_d3d11|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug_gles2|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release_gl|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug_gl|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>11.0.60315.1</_ProjectFileVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_gl|Win32'">
+    <OutDir>$(ProjectDir)../../../Build/$(ProjectName)/$(Configuration)\</OutDir>
+    <IntDir>$(ProjectDir)../../../Build/$(ProjectName)/$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_gl|Win32'">
+    <OutDir>$(ProjectDir)../../../Build/$(ProjectName)/$(Configuration)\</OutDir>
+    <IntDir>$(ProjectDir)../../../Build/$(ProjectName)/$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_gles2|Win32'">
+    <OutDir>$(ProjectDir)../../../Build/$(ProjectName)/$(Configuration)\</OutDir>
+    <IntDir>$(ProjectDir)../../../Build/$(ProjectName)/$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_d3d11|Win32'">
+    <OutDir>$(ProjectDir)../../../Build/$(ProjectName)/$(Configuration)\</OutDir>
+    <IntDir>$(ProjectDir)../../../Build/$(ProjectName)/$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_gl|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>$(ProjectDir)..;$(ProjectDir)../platform/win32;$(ProjectDir)../include;$(ProjectDir)../../../Bindings/C++;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;_WINDOWS;_USRDLL;RENDERER_GL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <PrecompiledHeader />
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_gl|Win32'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <AdditionalIncludeDirectories>$(ProjectDir)..;$(ProjectDir)../platform/win32;$(ProjectDir)../include;$(ProjectDir)../../../Bindings/C++;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;_WINDOWS;_USRDLL;RENDERER_GL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader />
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_gles2|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>$(ProjectDir)..;$(ProjectDir)../platform/win32;$(ProjectDir)../include;$(ProjectDir)../../../Bindings/C++;$(ProjectDir)../platform/win32/ANGLE;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;_WINDOWS;_USRDLL;RENDERER_GLES2;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <PrecompiledHeader />
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_d3d11|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>$(ProjectDir)..;$(ProjectDir)../platform/win32;$(ProjectDir)../include;$(ProjectDir)../../../Bindings/C++;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;_WINDOWS;_USRDLL;RENDERER_D3D11;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <PrecompiledHeader />
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\nodes\CCNode.cpp" />
+    <ClCompile Include="..\platform\CCEGLViewProtocol.cpp" />
+    <ClCompile Include="..\platform\CCFileUtils.cpp" />
+    <ClCompile Include="..\platform\platform.cpp" />
+    <ClCompile Include="..\platform\win32\CCAccelerometer.cpp" />
+    <ClCompile Include="..\platform\win32\CCApplication.cpp" />
+    <ClCompile Include="..\platform\win32\CCCommon.cpp" />
+    <ClCompile Include="..\platform\win32\CCDevice.cpp" />
+    <ClCompile Include="..\platform\win32\CCEGLView.cpp" />
+    <ClCompile Include="..\platform\win32\CCFileUtilsWin32.cpp" />
+    <ClCompile Include="..\platform\win32\CCStdC.cpp" />
+    <ClCompile Include="..\support\user_default\CCUserDefault.cpp" />
+    <ClCompile Include="..\support\tinyxml2\tinyxml2.cpp" />
+    <ClCompile Include="..\cocoa\CCGeometry.cpp" />
+    <ClCompile Include="..\CCDirector.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\nodes\CCNode.h" />
+    <ClInclude Include="..\platform\CCAccelerometerDelegate.h" />
+    <ClInclude Include="..\platform\CCApplicationProtocol.h" />
+    <ClInclude Include="..\platform\CCCommon.h" />
+    <ClInclude Include="..\platform\CCDevice.h" />
+    <ClInclude Include="..\platform\CCEGLViewProtocol.h" />
+    <ClInclude Include="..\platform\CCFileUtils.h" />
+    <ClInclude Include="..\platform\CCPlatformConfig.h" />
+    <ClInclude Include="..\platform\CCPlatformMacros.h" />
+    <ClInclude Include="..\platform\platform.h" />
+    <ClInclude Include="..\platform\win32\CCAccelerometer.h" />
+    <ClInclude Include="..\platform\win32\CCApplication.h" />
+    <ClInclude Include="..\platform\win32\CCEGLView.h" />
+    <ClInclude Include="..\platform\win32\CCFileUtilsWin32.h" />
+    <ClInclude Include="..\platform\win32\CCGL.h" />
+    <ClInclude Include="..\platform\win32\CCPlatformDefine.h" />
+    <ClInclude Include="..\platform\win32\CCStdC.h" />
+    <ClInclude Include="..\platform\win32\compat\stdint.h" />
+    <ClInclude Include="..\support\user_default\CCUserDefault.h" />
+    <ClInclude Include="..\support\tinyxml2\tinyxml2.h" />
+    <ClInclude Include="..\cocoa\CCGeometry.h" />
+    <ClInclude Include="..\CCDirector.h" />
+    <ClInclude Include="..\CCEvent.h" />
+    <ClInclude Include="..\cocos2d.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

@@ -1,0 +1,100 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="GLES2">
+      <UniqueIdentifier>{71075641-9273-4cbe-ab4e-33b79e5c406a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="D3D11">
+      <UniqueIdentifier>{a9564724-c689-4512-9adf-19d3f8831a45}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
+    </Filter>
+    <Filter Include="GL">
+      <UniqueIdentifier>{85814800-0517-449f-907f-437f94f85703}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\GLES2\egRendererBaseGLES2.cpp">
+      <Filter>GLES2</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GLES2\utOpenGLES2.cpp">
+      <Filter>GLES2</Filter>
+    </ClCompile>
+    <ClCompile Include="..\D3D11\egRendererBaseD3D11.cpp">
+      <Filter>D3D11</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GL\egRendererBaseGL.cpp">
+      <Filter>GL</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GL\utOpenGL.cpp">
+      <Filter>GL</Filter>
+    </ClCompile>
+    <ClCompile Include="..\egAnimatables.cpp" />
+    <ClCompile Include="..\egAnimation.cpp" />
+    <ClCompile Include="..\egCamera.cpp" />
+    <ClCompile Include="..\egCom.cpp" />
+    <ClCompile Include="..\egExtensions.cpp" />
+    <ClCompile Include="..\egGeometry.cpp" />
+    <ClCompile Include="..\egLight.cpp" />
+    <ClCompile Include="..\egMain.cpp" />
+    <ClCompile Include="..\egMaterial.cpp" />
+    <ClCompile Include="..\egModel.cpp" />
+    <ClCompile Include="..\egModules.cpp" />
+    <ClCompile Include="..\egParticle.cpp" />
+    <ClCompile Include="..\egPipeline.cpp" />
+    <ClCompile Include="..\egPrimitives.cpp" />
+    <ClCompile Include="..\egRenderer.cpp" />
+    <ClCompile Include="..\egRendererBase.cpp" />
+    <ClCompile Include="..\egResource.cpp" />
+    <ClCompile Include="..\egScene.cpp" />
+    <ClCompile Include="..\egSceneGraphRes.cpp" />
+    <ClCompile Include="..\egShader.cpp" />
+    <ClCompile Include="..\egTexture.cpp" />
+    <ClCompile Include="..\utImage.cpp" />
+    <ClCompile Include="..\utTexture.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\GLES2\egRendererBaseGLES2.h">
+      <Filter>GLES2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GLES2\utOpenGLES2.h">
+      <Filter>GLES2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\D3D11\egRendererBaseD3D11.h">
+      <Filter>D3D11</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GL\egRendererBaseGL.h">
+      <Filter>GL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GL\utOpenGL.h">
+      <Filter>GL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\config.h" />
+    <ClInclude Include="..\egAnimatables.h" />
+    <ClInclude Include="..\egAnimation.h" />
+    <ClInclude Include="..\egCamera.h" />
+    <ClInclude Include="..\egCom.h" />
+    <ClInclude Include="..\egExtensions.h" />
+    <ClInclude Include="..\egGeometry.h" />
+    <ClInclude Include="..\egLight.h" />
+    <ClInclude Include="..\egMaterial.h" />
+    <ClInclude Include="..\egModel.h" />
+    <ClInclude Include="..\egModules.h" />
+    <ClInclude Include="..\egParticle.h" />
+    <ClInclude Include="..\egPipeline.h" />
+    <ClInclude Include="..\egPrerequisites.h" />
+    <ClInclude Include="..\egPrimitives.h" />
+    <ClInclude Include="..\egRenderer.h" />
+    <ClInclude Include="..\egRendererBase.h" />
+    <ClInclude Include="..\egResource.h" />
+    <ClInclude Include="..\egScene.h" />
+    <ClInclude Include="..\egSceneGraphRes.h" />
+    <ClInclude Include="..\egShader.h" />
+    <ClInclude Include="..\egTexture.h" />
+    <ClInclude Include="..\utImage.h" />
+    <ClInclude Include="..\utTexture.h" />
+    <ClInclude Include="..\utTimer.h" />
+  </ItemGroup>
+</Project>

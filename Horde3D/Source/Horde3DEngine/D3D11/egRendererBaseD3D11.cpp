@@ -18,7 +18,7 @@
 
 #include "utDebug.h"
 #include <D3Dcompiler.h>
-#include <D3DX11tex.h>
+//#include <D3DX11tex.h>
 #include <float.h>
 
 #define SAFE_RELEASE(obj) if (obj!=NULL) { obj->Release(); obj=NULL; }
@@ -453,6 +453,8 @@ uint32 RenderDevice::createTexture( TextureTypes::List type, int width, int heig
                                     bool hasMips, bool genMips, bool sRGB, bool bindRenderbuffer, int samples )
 {
 	ASSERT( depth > 0 );
+//TODO
+	if ( genMips)	{ genMips = false; hasMips = false; }
 
 	if( !_caps.texNPOT )
 	{
@@ -583,7 +585,8 @@ void RenderDevice::uploadTextureData( uint32 texObj, int slice, int mipLevel, co
 	{
 		// Note: for cube maps mips are only generated when the side with the highest index is uploaded
 			//Issue #4 on github: According MSDN D3DX11FilterTexture is obsolete and we must use DirectXTex library, GenerateMipMaps and GenerateMipMaps3D.
-		D3DX11FilterTexture( _d3dContext, tex.d3dTexture, 0, D3DX11_DEFAULT );
+//TODO: generate mipmaps
+//		D3DX11FilterTexture( _d3dContext, tex.d3dTexture, 0, D3DX11_DEFAULT );
 	}
 }
 
