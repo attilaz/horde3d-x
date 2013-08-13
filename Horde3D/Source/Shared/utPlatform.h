@@ -92,6 +92,7 @@ typedef unsigned short uint16;
 typedef unsigned int uint32;
 typedef long long int64;
 typedef unsigned long long uint64;
+#include <stdlib.h>
 
 
 #if !defined( PLATFORM_WIN ) && !defined( PLATFORM_WIN_CE )

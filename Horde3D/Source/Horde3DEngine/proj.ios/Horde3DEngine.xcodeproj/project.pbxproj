@@ -1,0 +1,424 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		FCB31E5617BA6464006F51C0 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FCB31E5517BA6464006F51C0 /* Foundation.framework */; };
+		FCB31EEB17BA64FB006F51C0 /* egAnimatables.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FCB31EB617BA64FB006F51C0 /* egAnimatables.cpp */; };
+		FCB31EEC17BA64FB006F51C0 /* egAnimation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FCB31EB817BA64FB006F51C0 /* egAnimation.cpp */; };
+		FCB31EED17BA64FB006F51C0 /* egCamera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FCB31EBA17BA64FB006F51C0 /* egCamera.cpp */; };
+		FCB31EEE17BA64FB006F51C0 /* egCom.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FCB31EBC17BA64FB006F51C0 /* egCom.cpp */; };
+		FCB31EEF17BA64FB006F51C0 /* egExtensions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FCB31EC017BA64FB006F51C0 /* egExtensions.cpp */; };
+		FCB31EF017BA64FB006F51C0 /* egGeometry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FCB31EC217BA64FB006F51C0 /* egGeometry.cpp */; };
+		FCB31EF117BA64FB006F51C0 /* egLight.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FCB31EC417BA64FB006F51C0 /* egLight.cpp */; };
+		FCB31EF217BA64FB006F51C0 /* egMain.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FCB31EC617BA64FB006F51C0 /* egMain.cpp */; };
+		FCB31EF317BA64FB006F51C0 /* egMaterial.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FCB31EC717BA64FB006F51C0 /* egMaterial.cpp */; };
+		FCB31EF417BA64FB006F51C0 /* egModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FCB31EC917BA64FB006F51C0 /* egModel.cpp */; };
+		FCB31EF517BA64FB006F51C0 /* egModules.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FCB31ECB17BA64FB006F51C0 /* egModules.cpp */; };
+		FCB31EF617BA64FB006F51C0 /* egParticle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FCB31ECD17BA64FB006F51C0 /* egParticle.cpp */; };
+		FCB31EF717BA64FB006F51C0 /* egPipeline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FCB31ECF17BA64FB006F51C0 /* egPipeline.cpp */; };
+		FCB31EF817BA64FB006F51C0 /* egPrimitives.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FCB31ED217BA64FB006F51C0 /* egPrimitives.cpp */; };
+		FCB31EF917BA64FB006F51C0 /* egRenderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FCB31ED417BA64FB006F51C0 /* egRenderer.cpp */; };
+		FCB31EFA17BA64FB006F51C0 /* egRendererBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FCB31ED617BA64FB006F51C0 /* egRendererBase.cpp */; };
+		FCB31EFB17BA64FB006F51C0 /* egResource.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FCB31ED717BA64FB006F51C0 /* egResource.cpp */; };
+		FCB31EFC17BA64FB006F51C0 /* egScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FCB31ED917BA64FB006F51C0 /* egScene.cpp */; };
+		FCB31EFD17BA64FB006F51C0 /* egSceneGraphRes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FCB31EDB17BA64FB006F51C0 /* egSceneGraphRes.cpp */; };
+		FCB31EFE17BA64FB006F51C0 /* egShader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FCB31EDD17BA64FB006F51C0 /* egShader.cpp */; };
+		FCB31EFF17BA64FB006F51C0 /* egTexture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FCB31EDF17BA64FB006F51C0 /* egTexture.cpp */; };
+		FCB31F0017BA64FB006F51C0 /* egRendererBaseGLES2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FCB31EE217BA64FB006F51C0 /* egRendererBaseGLES2.cpp */; };
+		FCB31F0117BA64FB006F51C0 /* utOpenGLES2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FCB31EE417BA64FB006F51C0 /* utOpenGLES2.cpp */; };
+		FCB31F0217BA64FB006F51C0 /* utImage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FCB31EE617BA64FB006F51C0 /* utImage.cpp */; };
+		FCB31F0317BA64FB006F51C0 /* utTexture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FCB31EE817BA64FB006F51C0 /* utTexture.cpp */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		FCB31E5017BA6464006F51C0 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "include/${PRODUCT_NAME}";
+			dstSubfolderSpec = 16;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		FCB31E5217BA6464006F51C0 /* libHorde3DEngine.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libHorde3DEngine.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		FCB31E5517BA6464006F51C0 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		FCB31EB417BA64FB006F51C0 /* egRendererBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = egRendererBase.h; path = ../egRendererBase.h; sourceTree = "<group>"; };
+		FCB31EB517BA64FB006F51C0 /* config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = config.h; path = ../config.h; sourceTree = "<group>"; };
+		FCB31EB617BA64FB006F51C0 /* egAnimatables.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = egAnimatables.cpp; path = ../egAnimatables.cpp; sourceTree = "<group>"; };
+		FCB31EB717BA64FB006F51C0 /* egAnimatables.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = egAnimatables.h; path = ../egAnimatables.h; sourceTree = "<group>"; };
+		FCB31EB817BA64FB006F51C0 /* egAnimation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = egAnimation.cpp; path = ../egAnimation.cpp; sourceTree = "<group>"; };
+		FCB31EB917BA64FB006F51C0 /* egAnimation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = egAnimation.h; path = ../egAnimation.h; sourceTree = "<group>"; };
+		FCB31EBA17BA64FB006F51C0 /* egCamera.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = egCamera.cpp; path = ../egCamera.cpp; sourceTree = "<group>"; };
+		FCB31EBB17BA64FB006F51C0 /* egCamera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = egCamera.h; path = ../egCamera.h; sourceTree = "<group>"; };
+		FCB31EBC17BA64FB006F51C0 /* egCom.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = egCom.cpp; path = ../egCom.cpp; sourceTree = "<group>"; };
+		FCB31EBD17BA64FB006F51C0 /* egCom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = egCom.h; path = ../egCom.h; sourceTree = "<group>"; };
+		FCB31EBE17BA64FB006F51C0 /* egExtensions_auto_include.h.in */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = egExtensions_auto_include.h.in; path = ../egExtensions_auto_include.h.in; sourceTree = "<group>"; };
+		FCB31EBF17BA64FB006F51C0 /* egExtensions_auto_install.h.in */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = egExtensions_auto_install.h.in; path = ../egExtensions_auto_install.h.in; sourceTree = "<group>"; };
+		FCB31EC017BA64FB006F51C0 /* egExtensions.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = egExtensions.cpp; path = ../egExtensions.cpp; sourceTree = "<group>"; };
+		FCB31EC117BA64FB006F51C0 /* egExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = egExtensions.h; path = ../egExtensions.h; sourceTree = "<group>"; };
+		FCB31EC217BA64FB006F51C0 /* egGeometry.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = egGeometry.cpp; path = ../egGeometry.cpp; sourceTree = "<group>"; };
+		FCB31EC317BA64FB006F51C0 /* egGeometry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = egGeometry.h; path = ../egGeometry.h; sourceTree = "<group>"; };
+		FCB31EC417BA64FB006F51C0 /* egLight.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = egLight.cpp; path = ../egLight.cpp; sourceTree = "<group>"; };
+		FCB31EC517BA64FB006F51C0 /* egLight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = egLight.h; path = ../egLight.h; sourceTree = "<group>"; };
+		FCB31EC617BA64FB006F51C0 /* egMain.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = egMain.cpp; path = ../egMain.cpp; sourceTree = "<group>"; };
+		FCB31EC717BA64FB006F51C0 /* egMaterial.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = egMaterial.cpp; path = ../egMaterial.cpp; sourceTree = "<group>"; };
+		FCB31EC817BA64FB006F51C0 /* egMaterial.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = egMaterial.h; path = ../egMaterial.h; sourceTree = "<group>"; };
+		FCB31EC917BA64FB006F51C0 /* egModel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = egModel.cpp; path = ../egModel.cpp; sourceTree = "<group>"; };
+		FCB31ECA17BA64FB006F51C0 /* egModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = egModel.h; path = ../egModel.h; sourceTree = "<group>"; };
+		FCB31ECB17BA64FB006F51C0 /* egModules.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = egModules.cpp; path = ../egModules.cpp; sourceTree = "<group>"; };
+		FCB31ECC17BA64FB006F51C0 /* egModules.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = egModules.h; path = ../egModules.h; sourceTree = "<group>"; };
+		FCB31ECD17BA64FB006F51C0 /* egParticle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = egParticle.cpp; path = ../egParticle.cpp; sourceTree = "<group>"; };
+		FCB31ECE17BA64FB006F51C0 /* egParticle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = egParticle.h; path = ../egParticle.h; sourceTree = "<group>"; };
+		FCB31ECF17BA64FB006F51C0 /* egPipeline.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = egPipeline.cpp; path = ../egPipeline.cpp; sourceTree = "<group>"; };
+		FCB31ED017BA64FB006F51C0 /* egPipeline.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = egPipeline.h; path = ../egPipeline.h; sourceTree = "<group>"; };
+		FCB31ED117BA64FB006F51C0 /* egPrerequisites.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = egPrerequisites.h; path = ../egPrerequisites.h; sourceTree = "<group>"; };
+		FCB31ED217BA64FB006F51C0 /* egPrimitives.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = egPrimitives.cpp; path = ../egPrimitives.cpp; sourceTree = "<group>"; };
+		FCB31ED317BA64FB006F51C0 /* egPrimitives.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = egPrimitives.h; path = ../egPrimitives.h; sourceTree = "<group>"; };
+		FCB31ED417BA64FB006F51C0 /* egRenderer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = egRenderer.cpp; path = ../egRenderer.cpp; sourceTree = "<group>"; };
+		FCB31ED517BA64FB006F51C0 /* egRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = egRenderer.h; path = ../egRenderer.h; sourceTree = "<group>"; };
+		FCB31ED617BA64FB006F51C0 /* egRendererBase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = egRendererBase.cpp; path = ../egRendererBase.cpp; sourceTree = "<group>"; };
+		FCB31ED717BA64FB006F51C0 /* egResource.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = egResource.cpp; path = ../egResource.cpp; sourceTree = "<group>"; };
+		FCB31ED817BA64FB006F51C0 /* egResource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = egResource.h; path = ../egResource.h; sourceTree = "<group>"; };
+		FCB31ED917BA64FB006F51C0 /* egScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = egScene.cpp; path = ../egScene.cpp; sourceTree = "<group>"; };
+		FCB31EDA17BA64FB006F51C0 /* egScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = egScene.h; path = ../egScene.h; sourceTree = "<group>"; };
+		FCB31EDB17BA64FB006F51C0 /* egSceneGraphRes.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = egSceneGraphRes.cpp; path = ../egSceneGraphRes.cpp; sourceTree = "<group>"; };
+		FCB31EDC17BA64FB006F51C0 /* egSceneGraphRes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = egSceneGraphRes.h; path = ../egSceneGraphRes.h; sourceTree = "<group>"; };
+		FCB31EDD17BA64FB006F51C0 /* egShader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = egShader.cpp; path = ../egShader.cpp; sourceTree = "<group>"; };
+		FCB31EDE17BA64FB006F51C0 /* egShader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = egShader.h; path = ../egShader.h; sourceTree = "<group>"; };
+		FCB31EDF17BA64FB006F51C0 /* egTexture.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = egTexture.cpp; path = ../egTexture.cpp; sourceTree = "<group>"; };
+		FCB31EE017BA64FB006F51C0 /* egTexture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = egTexture.h; path = ../egTexture.h; sourceTree = "<group>"; };
+		FCB31EE217BA64FB006F51C0 /* egRendererBaseGLES2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = egRendererBaseGLES2.cpp; sourceTree = "<group>"; };
+		FCB31EE317BA64FB006F51C0 /* egRendererBaseGLES2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = egRendererBaseGLES2.h; sourceTree = "<group>"; };
+		FCB31EE417BA64FB006F51C0 /* utOpenGLES2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = utOpenGLES2.cpp; sourceTree = "<group>"; };
+		FCB31EE517BA64FB006F51C0 /* utOpenGLES2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = utOpenGLES2.h; sourceTree = "<group>"; };
+		FCB31EE617BA64FB006F51C0 /* utImage.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = utImage.cpp; path = ../utImage.cpp; sourceTree = "<group>"; };
+		FCB31EE717BA64FB006F51C0 /* utImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = utImage.h; path = ../utImage.h; sourceTree = "<group>"; };
+		FCB31EE817BA64FB006F51C0 /* utTexture.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = utTexture.cpp; path = ../utTexture.cpp; sourceTree = "<group>"; };
+		FCB31EE917BA64FB006F51C0 /* utTexture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = utTexture.h; path = ../utTexture.h; sourceTree = "<group>"; };
+		FCB31EEA17BA64FB006F51C0 /* utTimer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = utTimer.h; path = ../utTimer.h; sourceTree = "<group>"; };
+		FCB31F0517BA657B006F51C0 /* rapidxml.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = rapidxml.h; sourceTree = "<group>"; };
+		FCB31F0617BA657B006F51C0 /* rapidxml_print.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = rapidxml_print.h; sourceTree = "<group>"; };
+		FCB31F0717BA657B006F51C0 /* utDebug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = utDebug.h; sourceTree = "<group>"; };
+		FCB31F0817BA657B006F51C0 /* utMath.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = utMath.h; sourceTree = "<group>"; };
+		FCB31F0917BA657B006F51C0 /* utPlatform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = utPlatform.h; sourceTree = "<group>"; };
+		FCB31F0A17BA657B006F51C0 /* utXML.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = utXML.h; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		FCB31E4F17BA6464006F51C0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FCB31E5617BA6464006F51C0 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		FCB31E4917BA6464006F51C0 = {
+			isa = PBXGroup;
+			children = (
+				FCB31EB317BA64DC006F51C0 /* Sources */,
+				FCB31E5417BA6464006F51C0 /* Frameworks */,
+				FCB31E5317BA6464006F51C0 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		FCB31E5317BA6464006F51C0 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				FCB31E5217BA6464006F51C0 /* libHorde3DEngine.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		FCB31E5417BA6464006F51C0 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				FCB31E5517BA6464006F51C0 /* Foundation.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		FCB31EB317BA64DC006F51C0 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				FCB31F0417BA657B006F51C0 /* Shared */,
+				FCB31EB417BA64FB006F51C0 /* egRendererBase.h */,
+				FCB31EB517BA64FB006F51C0 /* config.h */,
+				FCB31EB617BA64FB006F51C0 /* egAnimatables.cpp */,
+				FCB31EB717BA64FB006F51C0 /* egAnimatables.h */,
+				FCB31EB817BA64FB006F51C0 /* egAnimation.cpp */,
+				FCB31EB917BA64FB006F51C0 /* egAnimation.h */,
+				FCB31EBA17BA64FB006F51C0 /* egCamera.cpp */,
+				FCB31EBB17BA64FB006F51C0 /* egCamera.h */,
+				FCB31EBC17BA64FB006F51C0 /* egCom.cpp */,
+				FCB31EBD17BA64FB006F51C0 /* egCom.h */,
+				FCB31EBE17BA64FB006F51C0 /* egExtensions_auto_include.h.in */,
+				FCB31EBF17BA64FB006F51C0 /* egExtensions_auto_install.h.in */,
+				FCB31EC017BA64FB006F51C0 /* egExtensions.cpp */,
+				FCB31EC117BA64FB006F51C0 /* egExtensions.h */,
+				FCB31EC217BA64FB006F51C0 /* egGeometry.cpp */,
+				FCB31EC317BA64FB006F51C0 /* egGeometry.h */,
+				FCB31EC417BA64FB006F51C0 /* egLight.cpp */,
+				FCB31EC517BA64FB006F51C0 /* egLight.h */,
+				FCB31EC617BA64FB006F51C0 /* egMain.cpp */,
+				FCB31EC717BA64FB006F51C0 /* egMaterial.cpp */,
+				FCB31EC817BA64FB006F51C0 /* egMaterial.h */,
+				FCB31EC917BA64FB006F51C0 /* egModel.cpp */,
+				FCB31ECA17BA64FB006F51C0 /* egModel.h */,
+				FCB31ECB17BA64FB006F51C0 /* egModules.cpp */,
+				FCB31ECC17BA64FB006F51C0 /* egModules.h */,
+				FCB31ECD17BA64FB006F51C0 /* egParticle.cpp */,
+				FCB31ECE17BA64FB006F51C0 /* egParticle.h */,
+				FCB31ECF17BA64FB006F51C0 /* egPipeline.cpp */,
+				FCB31ED017BA64FB006F51C0 /* egPipeline.h */,
+				FCB31ED117BA64FB006F51C0 /* egPrerequisites.h */,
+				FCB31ED217BA64FB006F51C0 /* egPrimitives.cpp */,
+				FCB31ED317BA64FB006F51C0 /* egPrimitives.h */,
+				FCB31ED417BA64FB006F51C0 /* egRenderer.cpp */,
+				FCB31ED517BA64FB006F51C0 /* egRenderer.h */,
+				FCB31ED617BA64FB006F51C0 /* egRendererBase.cpp */,
+				FCB31ED717BA64FB006F51C0 /* egResource.cpp */,
+				FCB31ED817BA64FB006F51C0 /* egResource.h */,
+				FCB31ED917BA64FB006F51C0 /* egScene.cpp */,
+				FCB31EDA17BA64FB006F51C0 /* egScene.h */,
+				FCB31EDB17BA64FB006F51C0 /* egSceneGraphRes.cpp */,
+				FCB31EDC17BA64FB006F51C0 /* egSceneGraphRes.h */,
+				FCB31EDD17BA64FB006F51C0 /* egShader.cpp */,
+				FCB31EDE17BA64FB006F51C0 /* egShader.h */,
+				FCB31EDF17BA64FB006F51C0 /* egTexture.cpp */,
+				FCB31EE017BA64FB006F51C0 /* egTexture.h */,
+				FCB31EE117BA64FB006F51C0 /* GLES2 */,
+				FCB31EE617BA64FB006F51C0 /* utImage.cpp */,
+				FCB31EE717BA64FB006F51C0 /* utImage.h */,
+				FCB31EE817BA64FB006F51C0 /* utTexture.cpp */,
+				FCB31EE917BA64FB006F51C0 /* utTexture.h */,
+				FCB31EEA17BA64FB006F51C0 /* utTimer.h */,
+			);
+			name = Sources;
+			sourceTree = "<group>";
+		};
+		FCB31EE117BA64FB006F51C0 /* GLES2 */ = {
+			isa = PBXGroup;
+			children = (
+				FCB31EE217BA64FB006F51C0 /* egRendererBaseGLES2.cpp */,
+				FCB31EE317BA64FB006F51C0 /* egRendererBaseGLES2.h */,
+				FCB31EE417BA64FB006F51C0 /* utOpenGLES2.cpp */,
+				FCB31EE517BA64FB006F51C0 /* utOpenGLES2.h */,
+			);
+			name = GLES2;
+			path = ../GLES2;
+			sourceTree = "<group>";
+		};
+		FCB31F0417BA657B006F51C0 /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				FCB31F0517BA657B006F51C0 /* rapidxml.h */,
+				FCB31F0617BA657B006F51C0 /* rapidxml_print.h */,
+				FCB31F0717BA657B006F51C0 /* utDebug.h */,
+				FCB31F0817BA657B006F51C0 /* utMath.h */,
+				FCB31F0917BA657B006F51C0 /* utPlatform.h */,
+				FCB31F0A17BA657B006F51C0 /* utXML.h */,
+			);
+			name = Shared;
+			path = ../../Shared;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		FCB31E5117BA6464006F51C0 /* Horde3DEngine */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FCB31E6017BA6464006F51C0 /* Build configuration list for PBXNativeTarget "Horde3DEngine" */;
+			buildPhases = (
+				FCB31E4E17BA6464006F51C0 /* Sources */,
+				FCB31E4F17BA6464006F51C0 /* Frameworks */,
+				FCB31E5017BA6464006F51C0 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Horde3DEngine;
+			productName = Horde3DEngine;
+			productReference = FCB31E5217BA6464006F51C0 /* libHorde3DEngine.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		FCB31E4A17BA6464006F51C0 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0460;
+				ORGANIZATIONNAME = "Horde3D Community";
+			};
+			buildConfigurationList = FCB31E4D17BA6464006F51C0 /* Build configuration list for PBXProject "Horde3DEngine" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = FCB31E4917BA6464006F51C0;
+			productRefGroup = FCB31E5317BA6464006F51C0 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				FCB31E5117BA6464006F51C0 /* Horde3DEngine */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		FCB31E4E17BA6464006F51C0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FCB31EEB17BA64FB006F51C0 /* egAnimatables.cpp in Sources */,
+				FCB31EEC17BA64FB006F51C0 /* egAnimation.cpp in Sources */,
+				FCB31EED17BA64FB006F51C0 /* egCamera.cpp in Sources */,
+				FCB31EEE17BA64FB006F51C0 /* egCom.cpp in Sources */,
+				FCB31EEF17BA64FB006F51C0 /* egExtensions.cpp in Sources */,
+				FCB31EF017BA64FB006F51C0 /* egGeometry.cpp in Sources */,
+				FCB31EF117BA64FB006F51C0 /* egLight.cpp in Sources */,
+				FCB31EF217BA64FB006F51C0 /* egMain.cpp in Sources */,
+				FCB31EF317BA64FB006F51C0 /* egMaterial.cpp in Sources */,
+				FCB31EF417BA64FB006F51C0 /* egModel.cpp in Sources */,
+				FCB31EF517BA64FB006F51C0 /* egModules.cpp in Sources */,
+				FCB31EF617BA64FB006F51C0 /* egParticle.cpp in Sources */,
+				FCB31EF717BA64FB006F51C0 /* egPipeline.cpp in Sources */,
+				FCB31EF817BA64FB006F51C0 /* egPrimitives.cpp in Sources */,
+				FCB31EF917BA64FB006F51C0 /* egRenderer.cpp in Sources */,
+				FCB31EFA17BA64FB006F51C0 /* egRendererBase.cpp in Sources */,
+				FCB31EFB17BA64FB006F51C0 /* egResource.cpp in Sources */,
+				FCB31EFC17BA64FB006F51C0 /* egScene.cpp in Sources */,
+				FCB31EFD17BA64FB006F51C0 /* egSceneGraphRes.cpp in Sources */,
+				FCB31EFE17BA64FB006F51C0 /* egShader.cpp in Sources */,
+				FCB31EFF17BA64FB006F51C0 /* egTexture.cpp in Sources */,
+				FCB31F0017BA64FB006F51C0 /* egRendererBaseGLES2.cpp in Sources */,
+				FCB31F0117BA64FB006F51C0 /* utOpenGLES2.cpp in Sources */,
+				FCB31F0217BA64FB006F51C0 /* utImage.cpp in Sources */,
+				FCB31F0317BA64FB006F51C0 /* utTexture.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		FCB31E5E17BA6464006F51C0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		FCB31E5F17BA6464006F51C0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		FCB31E6117BA6464006F51C0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DSTROOT = /tmp/Horde3DEngine.dst;
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
+				HEADER_SEARCH_PATHS = (
+					../../Shared,
+					../../../../Extensions,
+				);
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		FCB31E6217BA6464006F51C0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DSTROOT = /tmp/Horde3DEngine.dst;
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
+				HEADER_SEARCH_PATHS = (
+					../../Shared,
+					../../../../Extensions,
+				);
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		FCB31E4D17BA6464006F51C0 /* Build configuration list for PBXProject "Horde3DEngine" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FCB31E5E17BA6464006F51C0 /* Debug */,
+				FCB31E5F17BA6464006F51C0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		FCB31E6017BA6464006F51C0 /* Build configuration list for PBXNativeTarget "Horde3DEngine" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FCB31E6117BA6464006F51C0 /* Debug */,
+				FCB31E6217BA6464006F51C0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = FCB31E4A17BA6464006F51C0 /* Project object */;
+}

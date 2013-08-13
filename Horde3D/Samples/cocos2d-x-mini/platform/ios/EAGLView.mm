@@ -66,9 +66,6 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
 #import "EAGLView.h"
 #import "CCES2Renderer.h"
 #import "CCDirector.h"
-#import "CCSet.h"
-#import "CCTouch.h"
-#import "CCIMEDispatcher.h"
 #import "OpenGL_Internal.h"
 #import "CCEGLView.h"
 //CLASS IMPLEMENTATIONS:

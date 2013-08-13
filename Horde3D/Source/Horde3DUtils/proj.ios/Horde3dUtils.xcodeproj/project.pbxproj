@@ -1,0 +1,240 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		FCB31F1817BA67F0006F51C0 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FCB31F1717BA67F0006F51C0 /* Foundation.framework */; };
+		FCB31F2717BA6818006F51C0 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FCB31F2617BA6818006F51C0 /* main.cpp */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		FCB31F1217BA67F0006F51C0 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "include/${PRODUCT_NAME}";
+			dstSubfolderSpec = 16;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		FCB31F1417BA67F0006F51C0 /* libHorde3dUtils.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libHorde3dUtils.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		FCB31F1717BA67F0006F51C0 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		FCB31F2617BA6818006F51C0 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = main.cpp; path = ../main.cpp; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		FCB31F1117BA67F0006F51C0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FCB31F1817BA67F0006F51C0 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		FCB31F0B17BA67F0006F51C0 = {
+			isa = PBXGroup;
+			children = (
+				FCB31F2517BA6807006F51C0 /* Sources */,
+				FCB31F1617BA67F0006F51C0 /* Frameworks */,
+				FCB31F1517BA67F0006F51C0 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		FCB31F1517BA67F0006F51C0 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				FCB31F1417BA67F0006F51C0 /* libHorde3dUtils.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		FCB31F1617BA67F0006F51C0 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				FCB31F1717BA67F0006F51C0 /* Foundation.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		FCB31F2517BA6807006F51C0 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				FCB31F2617BA6818006F51C0 /* main.cpp */,
+			);
+			name = Sources;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		FCB31F1317BA67F0006F51C0 /* Horde3dUtils */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FCB31F2217BA67F0006F51C0 /* Build configuration list for PBXNativeTarget "Horde3dUtils" */;
+			buildPhases = (
+				FCB31F1017BA67F0006F51C0 /* Sources */,
+				FCB31F1117BA67F0006F51C0 /* Frameworks */,
+				FCB31F1217BA67F0006F51C0 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Horde3dUtils;
+			productName = Horde3dUtils;
+			productReference = FCB31F1417BA67F0006F51C0 /* libHorde3dUtils.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		FCB31F0C17BA67F0006F51C0 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0460;
+				ORGANIZATIONNAME = "Horde3D Community";
+			};
+			buildConfigurationList = FCB31F0F17BA67F0006F51C0 /* Build configuration list for PBXProject "Horde3dUtils" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = FCB31F0B17BA67F0006F51C0;
+			productRefGroup = FCB31F1517BA67F0006F51C0 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				FCB31F1317BA67F0006F51C0 /* Horde3dUtils */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		FCB31F1017BA67F0006F51C0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FCB31F2717BA6818006F51C0 /* main.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		FCB31F2017BA67F0006F51C0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		FCB31F2117BA67F0006F51C0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		FCB31F2317BA67F0006F51C0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DSTROOT = /tmp/Horde3dUtils.dst;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				HEADER_SEARCH_PATHS = (
+					"../../../Bindings/C++",
+					../../Shared,
+				);
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		FCB31F2417BA67F0006F51C0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DSTROOT = /tmp/Horde3dUtils.dst;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				HEADER_SEARCH_PATHS = (
+					"../../../Bindings/C++",
+					../../Shared,
+				);
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		FCB31F0F17BA67F0006F51C0 /* Build configuration list for PBXProject "Horde3dUtils" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FCB31F2017BA67F0006F51C0 /* Debug */,
+				FCB31F2117BA67F0006F51C0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		FCB31F2217BA67F0006F51C0 /* Build configuration list for PBXNativeTarget "Horde3dUtils" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FCB31F2317BA67F0006F51C0 /* Debug */,
+				FCB31F2417BA67F0006F51C0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = FCB31F0C17BA67F0006F51C0 /* Project object */;
+}

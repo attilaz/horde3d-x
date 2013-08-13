@@ -24,16 +24,11 @@ THE SOFTWARE.
 #include "EAGLView.h"
 #include "CCDirectorCaller.h"
 #include "CCEGLView.h"
-#include "CCSet.h"
-#include "CCTouch.h"
-#include "CCTouchDispatcher.h"
 
 NS_CC_BEGIN
 
 CCEGLView::CCEGLView()
 {
-    m_obScreenSize.width = m_obDesignResolutionSize.width = [[EAGLView sharedEGLView] getWidth];
-    m_obScreenSize.height = m_obDesignResolutionSize.height = [[EAGLView sharedEGLView] getHeight];
 }
 
 CCEGLView::~CCEGLView()
@@ -48,8 +43,6 @@ bool CCEGLView::isOpenGLReady()
     
 bool CCEGLView::setContentScaleFactor(float contentScaleFactor)
 {
-    assert(m_eResolutionPolicy == kResolutionUnKnown); // cannot enable retina mode
-	
 	m_fScaleX = m_fScaleY = contentScaleFactor;
 	[[EAGLView sharedEGLView] setNeedsLayout];
         
