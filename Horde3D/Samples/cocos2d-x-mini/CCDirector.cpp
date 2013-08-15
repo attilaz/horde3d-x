@@ -375,7 +375,7 @@ void CCDirector::loadResourcesFromDisk( const char *contentDir, const char* plat
 
 	while( res != 0 )
 	{
-		ifstream inf;
+		string fullFilename;
 
 		// Loop over search paths and try to open files
 		for( unsigned int i = 0; i < dirs.size(); ++i )
@@ -387,42 +387,33 @@ void CCDirector::loadResourcesFromDisk( const char *contentDir, const char* plat
 				splitPath( h3dGetResName( res ), resPath, resName);
 
 				string fileName = dirs[i] + resPath + platformSubDir + "/" + resName;
-				inf.clear();
-				inf.open( fileName.c_str(), ios::binary );
-				if( inf.good() ) break;
+
+				string path = CCFileUtils::sharedFileUtils()->fullPathForFilename( fileName.c_str() );
+				if ( CCFileUtils::sharedFileUtils()->isFileExist( path ) )
+				{
+					fullFilename = path;
+					break;
+				}
 			}
 
 			//without suffix
 			string fileName = dirs[i] + h3dGetResName( res );
-			inf.clear();
-			inf.open( fileName.c_str(), ios::binary );
-			if( inf.good() ) break;
+			string path = CCFileUtils::sharedFileUtils()->fullPathForFilename( fileName.c_str() );
+			if ( CCFileUtils::sharedFileUtils()->isFileExist( path ) )
+			{
+				fullFilename = path;
+				break;
+			}
 		}
 
 		// Open resource file
-		if( inf.good() ) // Resource file found
+		if( !fullFilename.empty() ) // Resource file found
 		{
-			// Find size of resource file
-			inf.seekg( 0, ios::end );
-			int fileSize = inf.tellg();
-			if( bufSize < fileSize  )
-			{
-				delete[] dataBuf;				
-				dataBuf = new char[fileSize];
-				if( !dataBuf )
-				{
-					bufSize = 0;
-					continue;
-				}
-				bufSize = fileSize;
-			}
-			if( fileSize == 0 )	continue;
-			// Copy resource file to memory
-			inf.seekg( 0 );
-			inf.read( dataBuf, fileSize );
-			inf.close();
+			unsigned long size = 0;
+			unsigned char* data = CCFileUtils::sharedFileUtils()->getFileData( fullFilename.c_str(), "rb", &size);
+
 			// Send resource data to engine
-			h3dLoadResource( res, dataBuf, fileSize );
+			h3dLoadResource( res, (char*)data, size );
 		}
 		else // Resource file not found
 		{

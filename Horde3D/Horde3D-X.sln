@@ -12,15 +12,18 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cocos2d-x-mini", "Samples\cocos2d-x-mini\proj.win32\cocos2d-x-mini.vcxproj", "{C5299D27-C783-42FF-B26A-C407F1EA5E6A}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sample KnightX", "Samples\KnightX\proj.win32\Sample KnightX.vcxproj", "{3DC2C65F-B880-4094-9905-25F427E04BF2}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sample_KnightX", "Samples\KnightX\proj.win32\Sample KnightX.vcxproj", "{3DC2C65F-B880-4094-9905-25F427E04BF2}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sample ChicagoX", "Samples\ChicagoX\proj.win32\ChicagoX.vcxproj", "{9425A6D2-70FB-406A-BF0C-26330389E46D}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sample_ChicagoX", "Samples\ChicagoX\proj.win32\ChicagoX.vcxproj", "{9425A6D2-70FB-406A-BF0C-26330389E46D}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Horde3D Utils", "Source\Horde3DUtils\proj.win32\Horde3D Utils.vcxproj", "{AE8EB9B3-D2C2-4372-AB4B-FC980EE69D2D}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Horde3D_Utils", "Source\Horde3DUtils\proj.win32\Horde3D Utils.vcxproj", "{AE8EB9B3-D2C2-4372-AB4B-FC980EE69D2D}"
+	ProjectSection(ProjectDependencies) = postProject
+		{1D558D7D-DA57-4908-BCFC-902054FE6B63} = {1D558D7D-DA57-4908-BCFC-902054FE6B63}
+	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Extension Terrain", "..\Extensions\Terrain\Source\proj.win32\Extension Terrain.vcxproj", "{7D7F9530-C61A-4BF2-B1C8-DE9D369880B6}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Extension_Terrain", "..\Extensions\Terrain\Source\proj.win32\Extension Terrain.vcxproj", "{7D7F9530-C61A-4BF2-B1C8-DE9D369880B6}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Horde3D Engine", "Source\Horde3DEngine\proj.win32\Horde3D Engine.vcxproj", "{1D558D7D-DA57-4908-BCFC-902054FE6B63}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Horde3D_Engine", "Source\Horde3DEngine\proj.win32\Horde3D Engine.vcxproj", "{1D558D7D-DA57-4908-BCFC-902054FE6B63}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
