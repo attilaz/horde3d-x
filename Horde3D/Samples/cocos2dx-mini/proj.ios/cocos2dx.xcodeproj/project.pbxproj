@@ -67,6 +67,8 @@
 		46A393F716E5D01B00210B16 /* CCUserDefault.h in Headers */ = {isa = PBXBuildFile; fileRef = 46A393F316E5D01B00210B16 /* CCUserDefault.h */; };
 		46A393F816E5D01B00210B16 /* CCUserDefault.mm in Sources */ = {isa = PBXBuildFile; fileRef = 46A393F416E5D01B00210B16 /* CCUserDefault.mm */; };
 		46A393F916E5D01B00210B16 /* CCUserDefaultAndroid.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 46A393F516E5D01B00210B16 /* CCUserDefaultAndroid.cpp */; };
+		FC097E1317BDF6AB0061A51D /* CCNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FC097E0E17BDF6AB0061A51D /* CCNode.cpp */; };
+		FC097E1417BDF6AB0061A51D /* CCNode.h in Headers */ = {isa = PBXBuildFile; fileRef = FC097E0F17BDF6AB0061A51D /* CCNode.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -132,6 +134,8 @@
 		46A393F316E5D01B00210B16 /* CCUserDefault.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCUserDefault.h; sourceTree = "<group>"; };
 		46A393F416E5D01B00210B16 /* CCUserDefault.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CCUserDefault.mm; sourceTree = "<group>"; };
 		46A393F516E5D01B00210B16 /* CCUserDefaultAndroid.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CCUserDefaultAndroid.cpp; sourceTree = "<group>"; };
+		FC097E0E17BDF6AB0061A51D /* CCNode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CCNode.cpp; sourceTree = "<group>"; };
+		FC097E0F17BDF6AB0061A51D /* CCNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCNode.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -176,6 +180,7 @@
 		1551A353158F2ADE00E66CFE /* cocos2dx */ = {
 			isa = PBXGroup;
 			children = (
+				FC097E0C17BDF6AB0061A51D /* nodes */,
 				1551A379158F2ADE00E66CFE /* CCDirector.cpp */,
 				1551A37A158F2ADE00E66CFE /* CCDirector.h */,
 				1551A37F158F2ADE00E66CFE /* cocoa */,
@@ -311,6 +316,15 @@
 			path = user_default;
 			sourceTree = "<group>";
 		};
+		FC097E0C17BDF6AB0061A51D /* nodes */ = {
+			isa = PBXGroup;
+			children = (
+				FC097E0E17BDF6AB0061A51D /* CCNode.cpp */,
+				FC097E0F17BDF6AB0061A51D /* CCNode.h */,
+			);
+			path = nodes;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -353,6 +367,7 @@
 				469A7DF416C24787006FFCB2 /* tinyxml2.h in Headers */,
 				1AA6226216CF6BDF0028C05E /* CCDevice.h in Headers */,
 				46A393F716E5D01B00210B16 /* CCUserDefault.h in Headers */,
+				FC097E1417BDF6AB0061A51D /* CCNode.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -431,6 +446,7 @@
 				46A393F616E5D01B00210B16 /* CCUserDefault.cpp in Sources */,
 				46A393F816E5D01B00210B16 /* CCUserDefault.mm in Sources */,
 				46A393F916E5D01B00210B16 /* CCUserDefaultAndroid.cpp in Sources */,
+				FC097E1317BDF6AB0061A51D /* CCNode.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -494,6 +510,8 @@
 		1551A34D158F2AB200E66CFE /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
 				DSTROOT = /tmp/cocos2dx.dst;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "cocos2dx-Prefix.pch";
@@ -522,6 +540,8 @@
 		1551A34E158F2AB200E66CFE /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
 				DSTROOT = /tmp/cocos2dx.dst;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "cocos2dx-Prefix.pch";

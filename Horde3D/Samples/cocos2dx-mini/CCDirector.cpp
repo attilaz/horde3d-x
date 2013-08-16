@@ -370,9 +370,6 @@ void CCDirector::loadResourcesFromDisk( const char *contentDir, const char* plat
 	// Get the first resource that needs to be loaded
 	int res = h3dQueryUnloadedResource( 0 );
 	
-	char *dataBuf = 0;
-	int bufSize = 0;
-
 	while( res != 0 )
 	{
 		string fullFilename;
@@ -423,7 +420,6 @@ void CCDirector::loadResourcesFromDisk( const char *contentDir, const char* plat
 		// Get next unloaded resource
 		res = h3dQueryUnloadedResource( 0 );
 	}
-	delete[] dataBuf;
 }
 
 

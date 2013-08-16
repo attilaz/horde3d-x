@@ -29,6 +29,8 @@ NS_CC_BEGIN
 
 CCEGLView::CCEGLView()
 {
+    m_obScreenSize.width = [[EAGLView sharedEGLView] getWidth];
+    m_obScreenSize.height = [[EAGLView sharedEGLView] getHeight];
 }
 
 CCEGLView::~CCEGLView()
