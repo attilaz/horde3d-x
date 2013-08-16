@@ -88,7 +88,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_gl|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(ProjectDir)../../../Bindings/C++;$(ProjectDir)../../cocos2d-x-mini;$(ProjectDir)../../cocos2d-x-mini/platform/win32;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)../../../Bindings/C++;$(ProjectDir)../../cocos2dx-mini;$(ProjectDir)../../cocos2dx-mini/platform/win32;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;HORDE3D_GL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -113,7 +113,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_gl|Win32'">
     <ClCompile>
-      <AdditionalIncludeDirectories>$(ProjectDir)../../../Bindings/C++;$(ProjectDir)../../cocos2d-x-mini;$(ProjectDir)../../cocos2d-x-mini/platform/win32;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)../../../Bindings/C++;$(ProjectDir)../../cocos2dx-mini;$(ProjectDir)../../cocos2dx-mini/platform/win32;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;HORDE3D_GL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <PrecompiledHeader />
@@ -139,7 +139,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_d3d11|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(ProjectDir)../../../Bindings/C++;$(ProjectDir)../../cocos2d-x-mini;$(ProjectDir)../../cocos2d-x-mini/platform/win32;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)../../../Bindings/C++;$(ProjectDir)../../cocos2dx-mini;$(ProjectDir)../../cocos2dx-mini/platform/win32;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;HORDE3D_D3D11;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -165,7 +165,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_gles2|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(ProjectDir)../../../Bindings/C++;$(ProjectDir)../../cocos2d-x-mini;$(ProjectDir)../../cocos2d-x-mini/platform/win32;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)../../../Bindings/C++;$(ProjectDir)../../cocos2dx-mini;$(ProjectDir)../../cocos2dx-mini/platform/win32;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;HORDE3D_GLES2;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -177,7 +177,7 @@
     <Link>
       <AdditionalDependencies>Horde3D_vc8.lib;Horde3DUtils_vc8.lib;libEGL.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)$(RootNamespace).exe</OutputFile>
-      <AdditionalLibraryDirectories>$(ProjectDir)../../../Bindings/C++;$(ProjectDir)../../cocos2d-x-mini/platform/win32/ANGLE;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(ProjectDir)../../../Bindings/C++;$(ProjectDir)../../cocos2dx-mini/platform/win32/ANGLE;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
@@ -203,7 +203,7 @@
       <Project>{1d558d7d-da57-4908-bcfc-902054fe6b63}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
-    <ProjectReference Include="..\..\cocos2d-x-mini\proj.win32\cocos2d-x-mini.vcxproj">
+    <ProjectReference Include="..\..\cocos2dx-mini\proj.win32\cocos2dx-mini.vcxproj">
       <Project>{c5299d27-c783-42ff-b26a-c407f1ea5e6a}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>

@@ -182,3 +182,9 @@
 /Horde3D/Samples/Build/Sample_ChicagoX/Release_gl
 
 /Horde3D/Samples/Build/Sample_KnightX/Release_gl
+
+/Horde3D/Build/cocos2dx-mini/Debug_d3d11
+
+/Horde3D/Build/cocos2dx-mini/Debug_gl
+
+/Horde3D/Build/cocos2dx-mini/Debug_gles2

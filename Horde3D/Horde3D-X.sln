@@ -10,7 +10,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Release.AspNetCompiler.Debug = "False"
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cocos2d-x-mini", "Samples\cocos2d-x-mini\proj.win32\cocos2d-x-mini.vcxproj", "{C5299D27-C783-42FF-B26A-C407F1EA5E6A}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cocos2dx-mini", "Samples\cocos2dx-mini\proj.win32\cocos2dx-mini.vcxproj", "{C5299D27-C783-42FF-B26A-C407F1EA5E6A}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sample_KnightX", "Samples\KnightX\proj.win32\Sample KnightX.vcxproj", "{3DC2C65F-B880-4094-9905-25F427E04BF2}"
 EndProject

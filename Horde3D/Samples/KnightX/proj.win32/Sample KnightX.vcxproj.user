@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_gl|Win32'">
+    <LocalDebuggerWorkingDirectory>$(ProjectDir)..\..\..\Binaries\Win32</LocalDebuggerWorkingDirectory>
+    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+    <LocalDebuggerEnvironment>PATH=%PATH%;$(ProjectDir)..\..\..\Binaries\Win32</LocalDebuggerEnvironment>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_gl|Win32'">
+    <LocalDebuggerEnvironment>PATH=%PATH%;$(ProjectDir)..\..\..\Binaries\Win32</LocalDebuggerEnvironment>
+    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+    <LocalDebuggerWorkingDirectory>$(ProjectDir)..\..\..\Binaries\Win32</LocalDebuggerWorkingDirectory>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_gles2|Win32'">
+    <LocalDebuggerWorkingDirectory>$(ProjectDir)..\..\..\Binaries\win32_gles2</LocalDebuggerWorkingDirectory>
+    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+    <LocalDebuggerEnvironment>PATH=%PATH%;$(ProjectDir)..\..\..\Binaries\win32_gles2</LocalDebuggerEnvironment>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_d3d11|Win32'">
+    <LocalDebuggerWorkingDirectory>$(ProjectDir)..\..\..\Binaries\win32_d3d11</LocalDebuggerWorkingDirectory>
+    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+    <LocalDebuggerEnvironment>PATH=%PATH%;$(ProjectDir)..\..\..\Binaries\win32_d3d11</LocalDebuggerEnvironment>
+  </PropertyGroup>
+</Project>
