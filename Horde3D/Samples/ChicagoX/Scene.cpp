@@ -47,7 +47,11 @@ Scene::Scene( )
 	_freezeMode = 0; _debugViewMode = false; _wireframeMode = false;
 	_cam = 0;
 
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS) || (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+	_contentDir = "Content";
+#else
 	_contentDir = "../Content";
+#endif
 
 	// Initialize engine
 	if( !h3dInit( CCDirector::sharedDirector()->getOpenGLView()->getDevice() ) )
