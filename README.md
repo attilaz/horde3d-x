@@ -1,7 +1,7 @@
 horde3d-x
 =========
 
-Horde3D now has an official github repository here: https://github.com/Volki21/Horde3D/.
+Horde3D now has an official github repository here: https://github.com/horde3d/Horde3D/.
 
 Horde3D is a small open source 3D rendering engine.
 The goal of this project is to add new features to the original engine, see the branches for subprojects.
